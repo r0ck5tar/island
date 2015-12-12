@@ -60,7 +60,7 @@ public class IslandMap {
         //update map with ground detected by echo
         else {
             // Ground detected is at range +/- 1
-            updateMap(false, range, direction);
+            updateMap(false, range+1, direction);
             switch(direction) {
                 case "N": map[posX][posY + range + 1].setType(TileTypeEnum.GROUND); break;
                 case "E": map[posX + range + 1][posY].setType(TileTypeEnum.GROUND); break;
@@ -73,11 +73,6 @@ public class IslandMap {
     public void updateMap(List<BiomeEnum> biomes){
         Tile scannedTile = getCurrentTile();
         scannedTile.addBiomes(biomes);
-        /*List<Tile> scannedTiles = getNeighbouringTiles(getCurrentTile());
-
-        for (Tile t: scannedTiles) {
-            t.addBiomes(biomes);
-        }*/
     }
 
     public void updateMap(Resource resource, int range){

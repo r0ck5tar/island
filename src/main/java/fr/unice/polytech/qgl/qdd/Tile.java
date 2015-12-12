@@ -90,4 +90,12 @@ public class Tile {
         }
         return true;
     }
+
+    public boolean alignedVerticallyWith(Tile tile) {
+        return (xAxis == tile.xAxis);
+    }
+
+    public boolean alignedHorizontallyWith(Tile tile) {
+        return (yAxis == tile.yAxis);
+    }
 }

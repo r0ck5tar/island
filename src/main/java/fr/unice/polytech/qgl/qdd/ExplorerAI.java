@@ -177,7 +177,7 @@ public class ExplorerAI {
     }
     private String orientedToTile(Tile tile, String facing){
         if(facing.equals("N") || facing.equals("S")) {
-            if(tile.getxAxis() == map.getPosX()) {
+            if(map.getCurrentTile().alignedVerticallyWith(tile)) {
                 if(facing.equals("N") && tile.getyAxis() > map.getPosY()){
                     return "front";
                 }
@@ -185,7 +185,7 @@ public class ExplorerAI {
                     return "front";
                 }
             }
-            else if(tile.getyAxis() == map.getPosY()) {
+            else if(map.getCurrentTile().alignedHorizontallyWith(tile)) {
                 if(facing.equals("N") && tile.getxAxis() < map.getPosX()
                         || facing.equals("S") && tile.getxAxis() > map.getPosX()) {
                     return "left";

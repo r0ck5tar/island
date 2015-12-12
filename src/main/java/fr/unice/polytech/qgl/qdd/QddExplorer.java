@@ -99,7 +99,6 @@ public class QddExplorer {
                 map.setPosX(map.getPosX() + 1);
                 map.setPosY(map.getPosY() + 1);
                 break;
-                //fallthrough
             case "EN":
                 map.setPosX(map.getPosX() + 1);
                 map.setPosY(map.getPosY() + 1);
@@ -108,7 +107,6 @@ public class QddExplorer {
                 map.setPosX(map.getPosX() - 1);
                 map.setPosY(map.getPosY() - 1);
                 break;
-                //fallthrough
             case "WS":
                 map.setPosX(map.getPosX() - 1);
                 map.setPosY(map.getPosY() - 1);
@@ -117,7 +115,6 @@ public class QddExplorer {
                 map.setPosX(map.getPosX() - 1);
                 map.setPosY(map.getPosY() + 1);
                 break;
-                //fallthrough
             case "WN":
                 map.setPosX(map.getPosX() - 1);
                 map.setPosY(map.getPosY() + 1);
@@ -126,7 +123,6 @@ public class QddExplorer {
                 map.setPosX(map.getPosX() + 1);
                 map.setPosY(map.getPosY() - 1);
                 break;
-                //fallthrough
             case "ES":
                 map.setPosX(map.getPosX() + 1);
                 map.setPosY(map.getPosY() - 1);
