@@ -57,12 +57,16 @@ public class ExplorerAI {
             else if (!checkList.isAboveGround()) {
                 action = flyToGroundSequence();
             }
+            else if (!checkList.findCreeks()){
+                action = searchForCreeks();
+            }
             else{
                 action = stop();
             }
         }
         return action;
     }
+
 
     public Action computeTerrestrialStrategy() {
         return null;
@@ -101,14 +105,14 @@ public class ExplorerAI {
 
     private Action echoForGroundSequence() {
         Action action = new Action(ActionEnum.ECHO);
-        if (!checkList.isTilesInFrontDiscovered()){
-            action.addParameter("direction", explorer.getNavigator().front());
-        }
-        else if (!checkList.isTilesAtLeftDiscovered()){
+        if (!checkList.isTilesAtLeftDiscovered()){
             action.addParameter("direction", explorer.getNavigator().left());
         }
         else if (!checkList.isTilesAtRightDiscovered()){
             action.addParameter("direction", explorer.getNavigator().right());
+        }
+        else if (!checkList.isTilesInFrontDiscovered()){
+            action.addParameter("direction", explorer.getNavigator().front());
         }
         else {
             action = new Action(ActionEnum.FLY);
@@ -117,14 +121,20 @@ public class ExplorerAI {
         return action;
     }
 
-   private Action flyToGroundSequence() {
+    private Action flyToGroundSequence() {
         if (destinationTile==null) {
             destinationTile = checkList.findTileWithGround();
         }
 
-       List<Tile> destinationTiles = map.getNeighbouringTiles(destinationTile);
+        if (destinationTile == null){
+            //return searchForCreeks();
+            //return echoForGroundSequence();
+            return stop();
+        }
+
+        List<Tile> destinationTiles = map.getNeighbouringTiles(destinationTile);
        // If we are not within the neighbouring tile of the destination
-        if (!destinationReached()) {
+        if (!neighbouringDestinationReached()) {
             return flyToDestination(destinationTiles);
         }
         else {
@@ -138,17 +148,21 @@ public class ExplorerAI {
         return action;
     }
 
-    private boolean destinationReached() {
+    private boolean neighbouringDestinationReached() {
         return map.getNeighbouringTiles(destinationTile).contains(map.getCurrentTile());
     }
 
-    public Action orientedToTiles(List<Tile> tiles, String facing){
+    private boolean destinationReached(){
+        return destinationTile.equals(map.getCurrentTile());
+    }
+
+    private Action orientedToTiles(List<Tile> tiles, String facing){
         Action action  = new Action(ActionEnum.FLY);
         for (int i = 0; i < tiles.size(); i++){
             String actionString = orientedToTile(tiles.get(i), facing);
             switch (actionString){
                 case "front":
-                    return action = new Action(ActionEnum.FLY);
+                    return action;
                 case "left":
                     action = new Action(ActionEnum.HEADING);
                     action.addParameter("direction", explorer.getNavigator().left());
@@ -161,7 +175,7 @@ public class ExplorerAI {
         }
         return action;
     }
-    public String orientedToTile(Tile tile, String facing){
+    private String orientedToTile(Tile tile, String facing){
         if(facing.equals("N") || facing.equals("S")) {
             if(tile.getxAxis() == map.getPosX()) {
                 if(facing.equals("N") && tile.getyAxis() > map.getPosY()){
@@ -203,6 +217,41 @@ public class ExplorerAI {
 
         return "";
     }
+
+    private Action searchForCreeks() {
+        if (destinationTile == null){
+            switch (explorer.getNavigator().front()) {
+                case "N":
+                    destinationTile = map.getTile(map.getPosX(), map.getPosY() + 1);
+                    break;
+                case "E":
+                    destinationTile = map.getTile(map.getPosX() + 1, map.getPosY());
+                    break;
+                case "S":
+                    destinationTile = map.getTile(map.getPosX(), map.getPosY() - 1);
+                    break;
+                case "W":
+                    destinationTile = map.getTile(map.getPosX() - 1, map.getPosY());
+                    break;
+            }
+        }
+
+        if (destinationTile == null) {
+            return stop();
+        }
+
+        List<Tile> destinationTiles = map.getNeighbouringTiles(destinationTile);
+
+        // If we are not within the neighbouring tile of the destination
+        if (!destinationReached()) {
+            return flyToDestination(destinationTiles);
+        }
+        else {
+            destinationTile = null;
+            return new Action(ActionEnum.SCAN);
+        }
+    }
+
     private Action stop(){
         return new Action(ActionEnum.STOP);
     }
@@ -210,9 +259,11 @@ public class ExplorerAI {
     public void logExplorer(Action action) {
         StringBuilder sb = new StringBuilder("\n");
         sb.append(explorer.toString());
+
         sb.append("\n" + action.toJSON() + "\n\n");
 
         if(map.isInitialized()) {
+            sb.append("\nCurrent tile type : " + map.getCurrentTile().toString() + "\n\n");
             for(int y = map.getWidth()-1; y >= 0; y--) {
                 for(int x = 0; x <map.getLength(); x++) {
                     if((x == map.getPosX()) && (y == map.getPosY())) {

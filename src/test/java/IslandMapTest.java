@@ -1,5 +1,6 @@
 import fr.unice.polytech.qgl.qdd.IslandMap;
 import fr.unice.polytech.qgl.qdd.Tile;
+import fr.unice.polytech.qgl.qdd.enums.TileTypeEnum;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,8 +23,6 @@ public class IslandMapTest {
         map.setPosX(0);
         map.setPosY(9);
         map.initializeMap();
-
-        map.getMap()[5][5] = new Tile(5, 5);
     }
 
     @After
@@ -64,6 +63,27 @@ public class IslandMapTest {
 
         Assert.assertTrue(expectedNeighbouringTiles.containsAll(map.getNeighbouringTiles(centerTile)));
         Assert.assertTrue(map.getNeighbouringTiles(centerTile).containsAll(expectedNeighbouringTiles));
+    }
+
+    @Test
+    public void testUpdateMap(){
+        IslandMap testMap = new IslandMap();
+        testMap.setLength(10);
+        testMap.setWidth(10);
+        testMap.setPosX(0);
+        testMap.setPosY(9);
+        testMap.initializeMap();
+
+        /*for(int w = testMap.getPosX(); w < testMap.getWidth(); w++){
+            testMap.getTile(w,testMap.getPosY()).setType(TileTypeEnum.SEA);
+        }*/
+        testMap.updateMap(false,10,"E");
+        map.updateMap(false, 10, "E");
+
+        for (int w = 0; w < map.getWidth(); w++) {
+
+        }
+
     }
 
 }

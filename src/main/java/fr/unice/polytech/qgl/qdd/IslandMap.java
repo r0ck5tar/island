@@ -59,22 +59,25 @@ public class IslandMap {
         }
         //update map with ground detected by echo
         else {
+            // Ground detected is at range +/- 1
             updateMap(false, range, direction);
             switch(direction) {
-                case "N": map[posX][posY + range].setType(TileTypeEnum.GROUND); break;
-                case "E": map[posX + range][posY].setType(TileTypeEnum.GROUND); break;
-                case "S": map[posX][posY - range].setType(TileTypeEnum.GROUND); break;
-                case "W": map[posX - range][posY].setType(TileTypeEnum.GROUND); break;
+                case "N": map[posX][posY + range + 1].setType(TileTypeEnum.GROUND); break;
+                case "E": map[posX + range + 1][posY].setType(TileTypeEnum.GROUND); break;
+                case "S": map[posX][posY - range - 1].setType(TileTypeEnum.GROUND); break;
+                case "W": map[posX - range - 1][posY].setType(TileTypeEnum.GROUND); break;
             }
         }
     }
 
     public void updateMap(List<BiomeEnum> biomes){
-        List<Tile> scannedTiles = getNeighbouringTiles(getCurrentTile());
+        Tile scannedTile = getCurrentTile();
+        scannedTile.addBiomes(biomes);
+        /*List<Tile> scannedTiles = getNeighbouringTiles(getCurrentTile());
 
         for (Tile t: scannedTiles) {
             t.addBiomes(biomes);
-        }
+        }*/
     }
 
     public void updateMap(Resource resource, int range){
@@ -199,6 +202,8 @@ public class IslandMap {
     }
 
     public Tile getTile(int x, int y) {
+        if (x< 0 || x >= width || y < 0 || y >= length)
+            return null;
         return map[x][y];
     }
 

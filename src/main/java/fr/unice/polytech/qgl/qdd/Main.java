@@ -44,19 +44,13 @@ public class Main {
                 .withSeed(0L)
 
                 //.startingAt(159, 159, "NORTH") //works
+                //.startingAt(159, 159, "WEST") //works
                 //.startingAt(1, 1, "SOUTH") //works
-                //.startingAt(159, 1, "WEST") //works
-
-                /*The next 4 should work, but seem to fail when  (or just before) turning (action: heading.
-                  Must be a problem when calculating the new position after the turn */
-                .startingAt(159, 159, "WEST") //fails, but should work
-                //.startingAt(1, 1, "EAST") //fails, but should work
-                //.startingAt(1, 159, "NORTH") //fails, but should work
-                //.startingAt(159, 1, "SOUTH") //fails, but should work
-
-                /*This one is a bit more mysterious why it fails. The bot gets stuck from the second move.
-                  Haven't really looked at it, but the mistake is surely before the part the map gets initialized */
-                //.startingAt(159, 1, "EAST") //fails badly, but should work
+                //.startingAt(1, 1, "EAST") //works
+                .startingAt(159, 1, "WEST") //works
+                //.startingAt(159, 1, "SOUTH") //works
+                //.startingAt(1, 159, "NORTH") //works
+                //.startingAt(1, 159, "EAST") //works
 
                 /*Our explorer is not designed to handle the following eight starting positions. It is also not
                   designed to work with any starting position that is not shown here */

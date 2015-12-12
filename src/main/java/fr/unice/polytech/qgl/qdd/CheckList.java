@@ -81,6 +81,7 @@ public class CheckList {
 
     public Tile findTileWithGround(){
         List<Tile> tiles = getTilesInDirection(explorer.getNavigator().left());
+        tiles.addAll(getTilesInDirection(explorer.getNavigator().right()));
 
         for (int i = 0 ; i < tiles.size(); i++) {
             if (tiles.get(i).isGround()) {
@@ -90,4 +91,22 @@ public class CheckList {
         return null;
     }
 
+    public boolean findCreeks() {
+        for (int w = 0; w < map.getWidth(); w++) {
+            for (int l = 0; l < map.getLength(); l++) {
+                if (map.getTile(w,l).hasCreek()) return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Tile makeAuTurn() {
+        return null;
+    }
+
+   /* public List<Tile> findNearbyUnscannedTile(){
+        List<Tile> tiles = map.getNeighbouringTiles()
+
+    }*/
 }

@@ -98,6 +98,7 @@ public class QddExplorer {
             case "NE":
                 map.setPosX(map.getPosX() + 1);
                 map.setPosY(map.getPosY() + 1);
+                break;
                 //fallthrough
             case "EN":
                 map.setPosX(map.getPosX() + 1);
@@ -106,6 +107,7 @@ public class QddExplorer {
             case "SW":
                 map.setPosX(map.getPosX() - 1);
                 map.setPosY(map.getPosY() - 1);
+                break;
                 //fallthrough
             case "WS":
                 map.setPosX(map.getPosX() - 1);
@@ -114,6 +116,7 @@ public class QddExplorer {
             case "NW":
                 map.setPosX(map.getPosX() - 1);
                 map.setPosY(map.getPosY() + 1);
+                break;
                 //fallthrough
             case "WN":
                 map.setPosX(map.getPosX() - 1);
@@ -122,6 +125,7 @@ public class QddExplorer {
             case "SE":
                 map.setPosX(map.getPosX() + 1);
                 map.setPosY(map.getPosY() - 1);
+                break;
                 //fallthrough
             case "ES":
                 map.setPosX(map.getPosX() + 1);
@@ -170,7 +174,7 @@ public class QddExplorer {
         for(String s: contract.keySet()) {
             sb.append(" " + s + " x " + contract.get(s) + "\t");
         }
-        sb.append("\nFacing " + navigator.front() + "  Coordinates: (" + map.getPosX() + ", " + map.getPosY() + ")");
+        sb.append("\nFacing " + navigator.front() + "  Coordinates: (" + map.getPosX() + ", " + map.getPosY() + ")" );
         return sb.toString();
     }
 }

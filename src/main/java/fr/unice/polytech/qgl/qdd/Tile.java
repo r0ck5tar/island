@@ -16,7 +16,7 @@ public class Tile {
     private TileTypeEnum type;
     private List<BiomeEnum> biomes;
     private List<Resource> resources;
-    private List<String> creeks;
+    private String creek;
     private String condition;
     private int xAxis;
     private int yAxis;
@@ -27,14 +27,13 @@ public class Tile {
         type = TileTypeEnum.UNKNOWN;
         biomes = new ArrayList<>();
         resources = new ArrayList<>();
-        creeks = new ArrayList<>();
     }
 
     public String toString() {
         switch (type) {
             case UNKNOWN: return " · ";
             case SEA: return " ~ ";
-            case GROUND: return " ᚙ ";
+            case GROUND: return " G ";
             //ᚙ✰
         }
         return type.toString();
@@ -52,6 +51,10 @@ public class Tile {
         return type;
     }
 
+    public boolean hasCreek() {
+        return creek != null;
+    }
+
     public void setType(TileTypeEnum type) {
         this.type = type;
     }
@@ -66,8 +69,25 @@ public class Tile {
 
     public void addBiomes(List<BiomeEnum> biomes) {
         this.biomes.addAll(biomes);
-        if (this.isUnknown()){
+        if (this.isUnknown() && !containsOnlySeaTypeBiome(biomes)){
             this.setType(TileTypeEnum.GROUND);
         }
+        else {
+            this.setType(TileTypeEnum.SEA);
+        }
+
+    }
+
+    public boolean isUnscanned() {
+        return biomes.size() == 0;
+    }
+
+    public boolean containsOnlySeaTypeBiome(List<BiomeEnum> biomes){
+        for (int i = 0; i<biomes.size(); i++) {
+            if (!biomes.get(i).equals(BiomeEnum.OCEAN)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
