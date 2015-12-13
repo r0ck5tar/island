@@ -130,7 +130,8 @@ public class QddExplorer {
 
 
     public void land(String creekId, int numberOfPeople){
-
+        //incomplete
+        sendMen(numberOfPeople);
     }
 
     public void move(String direction){

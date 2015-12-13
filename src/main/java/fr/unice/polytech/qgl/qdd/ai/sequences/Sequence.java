@@ -1,13 +1,14 @@
-package fr.unice.polytech.qgl.qdd.ai;
+package fr.unice.polytech.qgl.qdd.ai.sequences;
 
 import fr.unice.polytech.qgl.qdd.Action;
+import fr.unice.polytech.qgl.qdd.ai.CheckList;
 import fr.unice.polytech.qgl.qdd.enums.ActionEnum;
 import fr.unice.polytech.qgl.qdd.navigation.Direction;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
 
 /**
- * Created by Hakim on 12/13/2015.
+ * Created by danial on 12/13/2015.
  */
 public abstract class Sequence {
     protected CheckList checkList;

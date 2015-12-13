@@ -113,16 +113,14 @@ public class Tile {
 
     public void addBiomes(List<BiomeEnum> biomes) {
         this.biomes.addAll(biomes);
-        if (this.isUnknown() && !hasOnlyOceanBiomes(biomes)){
+        if (this.isUnknown() && !this.hasOnlyOceanBiomes(biomes)){
             this.setType(TileTypeEnum.GROUND);
         }
-        else {
+        else if (this.hasOnlyOceanBiomes(biomes) && this.isUnknown()) {
             this.setType(TileTypeEnum.SEA);
         }
         listener.biomeDiscovered(this);
     }
-
-
 
     public void setType(TileTypeEnum type) {
         TileTypeEnum previousType = this.type;

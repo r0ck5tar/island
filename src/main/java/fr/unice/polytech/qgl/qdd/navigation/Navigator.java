@@ -124,6 +124,8 @@ public class Navigator {
             case RIGHT: return getTileInAbsoluteDirection(right());
             case LEFT: return getTileInAbsoluteDirection(left());
             case BACK: return getTileInAbsoluteDirection(back());
+            case FRONT_RIGHT: return getTileInFrontRight();
+            case FRONT_LEFT: return getTileInFrontLeft();
         }
         return null;
     }
@@ -134,6 +136,26 @@ public class Navigator {
             case "E": return map.getTilesEastByRange(1).get(0);
             case "S": return map.getTilesSouthByRange(1).get(0);
             case "W": return map.getTilesWestByRange(1).get(0);
+        }
+        return null;
+    }
+
+    private Tile getTileInFrontRight(){
+        switch (front){
+            case "N": return map.getTile(getPosX()+1, getPosY()+1);
+            case "S": return map.getTile(getPosX()-1, getPosY()-1);
+            case "E": return map.getTile(getPosX()+1, getPosY()-1);
+            case "W": return map.getTile(getPosX()-1, getPosY()+1);
+        }
+        return null;
+    }
+
+    private Tile getTileInFrontLeft(){
+        switch (front){
+            case "N": return map.getTile(getPosX()-1, getPosY()+1);
+            case "S": return map.getTile(getPosX()+1, getPosY()-1);
+            case "E": return map.getTile(getPosX()+1, getPosY()+1);
+            case "W": return map.getTile(getPosX()-1, getPosY()-1);
         }
         return null;
     }
@@ -217,7 +239,13 @@ public class Navigator {
             }
         }
 
-        return unscanned.get(random.nextInt(unscanned.size()));
+        if(unscanned.size() >0) {
+            return unscanned.get(random.nextInt(unscanned.size()));
+        }
+
+        else{
+            return null;
+        }
     }
 
     /*

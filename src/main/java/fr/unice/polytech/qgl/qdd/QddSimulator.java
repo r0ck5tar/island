@@ -25,7 +25,8 @@ public class QddSimulator {
             return action.toJSON();
         }
         else {
-            return "";
+            action = explorerAI.computeTerrestrialStrategy();
+            return action.toJSON();
         }
     }
 
@@ -37,7 +38,8 @@ public class QddSimulator {
                 switch (action.getAction()) {
                     case FLY: explorer.fly(); break;
                     case HEADING: explorer.turn(action.getStringParam("direction")); break;
-                    case LAND: explorer.land(action.getStringParam("creek"), action.getIntParam("people")); break;
+                    case LAND: explorer.land(action.getStringParam("creek"), action.getIntParam("people"));
+                        phase = 2; break;
                     case ECHO: explorer.echo(action.getStringParam("direction"), result); break;
                     case SCAN: explorer.scan(result); break;
                 }

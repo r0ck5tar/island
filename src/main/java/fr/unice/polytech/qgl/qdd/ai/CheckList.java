@@ -5,9 +5,7 @@ import fr.unice.polytech.qgl.qdd.QddExplorer;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Pack200;
 
 /**
  * Created by danial on 12/12/2015.
@@ -24,28 +22,8 @@ public class CheckList {
         this.explorer = explorer;
     }
 
-    public boolean isEchoCoverageSufficient() {
-        float unknownTiles = nav.getMap().getUnknownTileCount();
-        float totalTiles = nav.getMap().getTotalTileCount();
-
-        return (unknownTiles < (totalTiles*((100-ECHO_COVERAGE_QUOTA)/100)));
-    }
-
     public boolean isAboveGround(){
         return nav.getCurrentTile().isGround();
-    }
-
-    public boolean noGroundAround() {
-        List<Tile> tilesAround = new ArrayList<>();
-        tilesAround.addAll(nav.getAllTilesInDirection(Direction.FRONT));
-        tilesAround.addAll(nav.getAllTilesInDirection(Direction.RIGHT));
-        tilesAround.addAll(nav.getAllTilesInDirection(Direction.LEFT));
-
-        for(Tile t: tilesAround) {
-            if(t.isGround()) { return false; }
-        }
-
-        return true;
     }
 
     public boolean isCloseToBoundary(){
@@ -58,19 +36,32 @@ public class CheckList {
         return false;
     }
 
+    public boolean foundCreek() { return nav.getMap().getCreeks().size() >0; }
+
+    /*
+        Checks for echo
+     */
+
+    public boolean isEchoCoverageSufficient() {
+        float unknownTiles = nav.getMap().getUnknownTileCount();
+        float totalTiles = nav.getMap().getTotalTileCount();
+
+        return (unknownTiles < (totalTiles*((100-ECHO_COVERAGE_QUOTA)/100)));
+    }
+
     public boolean isTilesInFrontDiscovered(){
-        return checkAllTileDiscovered(nav.getAllTilesInDirection(Direction.FRONT));
+        return checkAllTilesDiscovered(nav.getAllTilesInDirection(Direction.FRONT));
     }
 
     public boolean isTilesAtLeftDiscovered(){
-        return checkAllTileDiscovered(nav.getAllTilesInDirection(Direction.LEFT));
+        return checkAllTilesDiscovered(nav.getAllTilesInDirection(Direction.LEFT));
     }
 
     public boolean isTilesAtRightDiscovered(){
-        return checkAllTileDiscovered(nav.getAllTilesInDirection(Direction.RIGHT));
+        return checkAllTilesDiscovered(nav.getAllTilesInDirection(Direction.RIGHT));
     }
 
-    private boolean checkAllTileDiscovered(List<Tile> tiles){
+    private boolean checkAllTilesDiscovered(List<Tile> tiles){
         for (int i = 0; i < tiles.size(); i++) {
             if (tiles.get(i).isGround()) {
                 return true;
@@ -85,15 +76,4 @@ public class CheckList {
 
         return true;
     }
-
-    public boolean findCreeks() {
-        for (int w = 0; w < nav.getMap().getWidth(); w++) {
-            for (int l = 0; l < nav.getMap().getLength(); l++) {
-                if (nav.getMap().getTile(w,l).hasCreek()) return true;
-            }
-        }
-
-        return false;
-    }
-
 }

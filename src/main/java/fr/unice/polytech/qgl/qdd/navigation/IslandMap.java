@@ -25,6 +25,7 @@ public class IslandMap implements TileListener{
     private List<Tile> seaTiles = new ArrayList<>();
     private List<Tile> groundTiles = new ArrayList<>();
     private List<Tile> unknownTiles = new ArrayList<>();
+
     private List<String> creeks = new ArrayList<>();
 
     public boolean isInitialized() {
@@ -255,6 +256,10 @@ public class IslandMap implements TileListener{
 
     public List<Tile> getUnknownTiles() {
         return unknownTiles;
+    }
+
+    public List<String> getCreeks() {
+        return creeks;
     }
 
     /*

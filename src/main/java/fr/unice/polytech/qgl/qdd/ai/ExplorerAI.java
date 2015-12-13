@@ -1,16 +1,12 @@
 package fr.unice.polytech.qgl.qdd.ai;
 
 import fr.unice.polytech.qgl.qdd.Action;
-import fr.unice.polytech.qgl.qdd.navigation.Direction;
+import fr.unice.polytech.qgl.qdd.ai.sequences.*;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.QddExplorer;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
-import fr.unice.polytech.qgl.qdd.enums.ActionEnum;
-import sun.security.krb5.internal.crypto.Des;
 
-import java.awt.*;
 import java.io.IOException;
-import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -51,8 +47,14 @@ public class ExplorerAI {
             else if(!checkList.isAboveGround()) {
                 return new FlyToUnscannedGroundSequence(nav, checkList);
             }
+            else if(!checkList.foundCreek()) {
+                return new ScanSequence(nav, checkList);
+            }
             else{
                 //return new FlyToRandomNearbyTileSequence(nav, checkList);
+                if(checkList.foundCreek()) {
+                    return new LandSequence(nav, checkList, explorer.getMen()/2);
+                }
                 return new StopSequence(nav, checkList);
             }
         }
@@ -60,7 +62,7 @@ public class ExplorerAI {
     }
 
     public Action computeTerrestrialStrategy() {
-        return null;
+        return new StopSequence(nav, checkList).execute();
     }
 
     private Tile determineDestination() {
