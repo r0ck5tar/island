@@ -45,10 +45,11 @@ public class QddExplorer {
         //the width/length of the map is detected
         if (range >0){
             switch (direction) {
-                case "N": getMap().setLength(range); break;
-                case "E": getMap().setWidth(range); break;
-                case "S": getMap().setLength(range); setPosY(getMap().getLength()-1); break;
-                case "W": getMap().setWidth(range); setPosX(getMap().getWidth()-1); break;
+                // +1 inlcluding the drone current position
+                case "N": getMap().setLength(range + 1); break;
+                case "E": getMap().setWidth(range + 1); break;
+                case "S": getMap().setLength(range + 1); setPosY(getMap().getLength()-1); break;
+                case "W": getMap().setWidth(range + 1); setPosX(getMap().getWidth()-1); break;
             }
         }
         //The edge of the map is detected immediately to the right/left of the drone

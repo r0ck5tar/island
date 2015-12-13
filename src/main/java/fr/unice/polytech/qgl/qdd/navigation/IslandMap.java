@@ -38,20 +38,20 @@ public class IslandMap {
         map[posX][posY].setType(TileTypeEnum.SEA);
 
         if(posX == 0 && posY == 0) {
-            updateMapThroughEcho(false, length, "N");
-            updateMapThroughEcho(false, width, "E");
+            updateMapThroughEcho(false, length -1, "N");
+            updateMapThroughEcho(false, width -1, "E");
         }
         else if (posX == 0) {
-            updateMapThroughEcho(false, length, "S");
-            updateMapThroughEcho(false, width, "E");
+            updateMapThroughEcho(false, length - 1, "S");
+            updateMapThroughEcho(false, width - 1, "E");
         }
         else if (posY == 0 ) {
-            updateMapThroughEcho(false, length, "N");
-            updateMapThroughEcho(false, width, "W");
+            updateMapThroughEcho(false, length - 1, "N");
+            updateMapThroughEcho(false, width - 1, "W");
         }
         else{
-            updateMapThroughEcho(false, length, "S");
-            updateMapThroughEcho(false, width, "W");
+            updateMapThroughEcho(false, length - 1, "S");
+            updateMapThroughEcho(false, width - 1, "W");
         }
 
     }
@@ -60,16 +60,16 @@ public class IslandMap {
         //update map with sea detected by echo
         if(!isGround) {
             switch(direction) {
-                case "N": for(Tile t: getTilesNorthByRange(range-1)) {t.setType(TileTypeEnum.SEA);} break;
-                case "E": for(Tile t: getTilesEastByRange(range-1)) {t.setType(TileTypeEnum.SEA);} break;
-                case "S": for(Tile t: getTilesSouthByRange(range-1)) {t.setType(TileTypeEnum.SEA);} break;
-                case "W": for(Tile t: getTilesWestByRange(range-1)) {t.setType(TileTypeEnum.SEA);} break;
+                case "N": for(Tile t: getTilesNorthByRange(range)) {t.setType(TileTypeEnum.SEA);} break;
+                case "E": for(Tile t: getTilesEastByRange(range)) {t.setType(TileTypeEnum.SEA);} break;
+                case "S": for(Tile t: getTilesSouthByRange(range)) {t.setType(TileTypeEnum.SEA);} break;
+                case "W": for(Tile t: getTilesWestByRange(range)) {t.setType(TileTypeEnum.SEA);} break;
             }
         }
         //update map with ground detected by echo
         else {
             // Ground detected is at range +/- 1
-            updateMapThroughEcho(false, range+1, direction);
+            updateMapThroughEcho(false, range, direction);
             switch(direction) {
                 case "N": map[posX][posY + range + 1].setType(TileTypeEnum.GROUND); break;
                 case "E": map[posX + range + 1][posY].setType(TileTypeEnum.GROUND); break;
@@ -106,7 +106,7 @@ public class IslandMap {
 
     public List<Tile> getTilesNorthByRange(int range){
         List<Tile> tiles = new ArrayList<>();
-        if(posY < length-1) {
+        if(posY < length - 1) {
             for (int i = posY + 1; i <= posY + range ; i++){
                 tiles.add(map[posX][i]);
             }
@@ -120,7 +120,7 @@ public class IslandMap {
 
     public List<Tile> getTilesEastByRange(int range){
         List<Tile> tiles = new ArrayList<>();
-        if((posX < width-1)) {
+        if((posX < width - 1)) {
             for (int i = posX + 1; i <= posX + range ; i++){
                 tiles.add(map[i][posY]);
             }
