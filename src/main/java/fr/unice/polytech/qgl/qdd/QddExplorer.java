@@ -1,6 +1,7 @@
 package fr.unice.polytech.qgl.qdd;
 
 import fr.unice.polytech.qgl.qdd.enums.BiomeEnum;
+import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
 import fr.unice.polytech.qgl.qdd.navigation.IslandMap;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import org.json.JSONArray;
@@ -14,8 +15,8 @@ import java.util.*;
 public class QddExplorer {
     private int budget;
     private int men;
-    private Map<String, Integer> resources;
-    private Map<String, Integer> contract;
+    private Map<ResourceEnum, Integer> resources;
+    private Map<ResourceEnum, Integer> contract;
     private Navigator nav;
 
     public QddExplorer(String context){
@@ -127,18 +128,44 @@ public class QddExplorer {
         nav.setFront(direction);
     }
 
-
-
     public void land(String creekId, int numberOfPeople){
         //incomplete
         sendMen(numberOfPeople);
     }
 
     public void move(String direction){
+        nav.setPosition(nav.getTileInAbsoluteDirection(direction), direction);
+    }
 
+    public void explore(JSONArray resourcesJSON){
+        Map<ResourceEnum, String> resources = new HashMap<>();
+        for(int i = 0; i < resourcesJSON.length(); i++) {
+            JSONObject resource = resourcesJSON.getJSONObject(i);
+            resources.put(ResourceEnum.valueOf(resource.getString("resource")), resource.getString("amount"));
+        }
+
+        getMap().updateMap(resources);
+    }
+
+    public void exploit(ResourceEnum resource, int amount) {
+        getMap().updateMapAfterExploit(resource);
+        if(resources.containsKey(resource)) {
+            resources.put(resource, resources.get(resource) + amount);
+        }
+
+        boolean fullyExploited = true;
+
+        for(ResourceEnum r: nav.getCurrentTile().getResources().keySet()) {
+            if (contract.keySet().contains(r)) {
+                fullyExploited = false;
+            }
+        }
+
+        nav.getCurrentTile().setExploited(fullyExploited);
     }
 
     private void initializeExplorer(String context) {
+        resources = new HashMap<>();
         JSONObject initialValues = new JSONObject(context);
 
         nav = new Navigator(initialValues.getString("heading"));
@@ -149,7 +176,8 @@ public class QddExplorer {
         JSONArray contractList = initialValues.getJSONArray("contracts");
         for (int i = 0; i < contractList.length(); i++ )
         {
-            contract.put( contractList.getJSONObject(i).getString("resource"), contractList.getJSONObject(i).getInt("amount") );
+            contract.put( ResourceEnum.valueOf(contractList.getJSONObject(i).getString("resource")),
+                     contractList.getJSONObject(i).getInt("amount"));
         }
     }
     /*
@@ -202,19 +230,27 @@ public class QddExplorer {
         this.men -= men;
     }
 
-    public Map<String, Integer> getContract() {
+    public Map<ResourceEnum, Integer> getContract() {
         return contract;
     }
 
-    public Map<String, Integer> getResources() {
+    public Map<ResourceEnum, Integer> getResources() {
         return resources;
+    }
+
+    public int getResourceQuantity(ResourceEnum resource) {
+        if(resources.containsKey(resource)){
+            return resources.get(resource);
+        }
+
+        return 0;
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Budget: " + budget + "\tMen: " + men );
         sb.append("\nContract: ");
-        for(String s: contract.keySet()) {
+        for(ResourceEnum s: contract.keySet()) {
             sb.append(" " + s + " x " + contract.get(s) + "\t");
         }
         sb.append("\nFacing " + nav.front() + "  Coordinates: (" + getPosX() + ", " + getPosY() + ")" );

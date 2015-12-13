@@ -2,10 +2,13 @@ package fr.unice.polytech.qgl.qdd.navigation;
 
 
 import fr.unice.polytech.qgl.qdd.enums.BiomeEnum;
+import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
 import fr.unice.polytech.qgl.qdd.enums.TileTypeEnum;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by danial on 10/12/15.
@@ -13,7 +16,8 @@ import java.util.List;
 public class Tile {
     private TileTypeEnum type;
     private List<BiomeEnum> biomes;
-    private List<Resource> resources;
+    private Map<ResourceEnum, String> resources;
+    private boolean exploited;
 
     private List<String> creeks;
     private String condition;
@@ -28,7 +32,8 @@ public class Tile {
         setType(TileTypeEnum.UNKNOWN);
         biomes = new ArrayList<>();
         creeks = new ArrayList<>();
-        resources = new ArrayList<>();
+        resources = new HashMap<>();
+        exploited = false;
     }
 
     public boolean isUnknown() {
@@ -52,8 +57,8 @@ public class Tile {
             return true;
         }
         else {
-            for(Resource r: resources) {
-                if (r.getAmount() > 0) { return false; }
+            for(ResourceEnum r: resources.keySet()) {
+                if (resources.get(r).length() > 0) { return false; }
             }
         }
         return true;
@@ -71,6 +76,30 @@ public class Tile {
         }
         return true;
     }
+
+    public boolean hasResources() {
+        return !resources.isEmpty();
+    }
+
+    public boolean hasResource(ResourceEnum resource) {
+        return resources.containsKey(resource);
+    }
+
+
+    public void addResources(Map<ResourceEnum, String> resources) {
+        for(ResourceEnum  resource: resources.keySet() ){
+            if(this.resources.containsKey(resource)) {
+                this.resources.put(resource, this.resources.get(resource) + resources.get(resource));
+            }
+            else{
+                this.resources.put(resource, resources.get(resource));
+            }
+        }
+    }
+
+/*    public boolean potentiallyHasResource(ResourceEnum resource) {
+
+    }*/
 
 
     /*
@@ -117,8 +146,12 @@ public class Tile {
         listener.creekDiscovered(this);
     }
 
-    public List<Resource> getResources() {
+    public Map<ResourceEnum, String> getResources() {
         return resources;
+    }
+
+    public void removeResource(ResourceEnum resource) {
+        resources.remove(resource);
     }
 
     public List<BiomeEnum> getBiomes() {
@@ -140,6 +173,14 @@ public class Tile {
         TileTypeEnum previousType = this.type;
         this.type = type;
         listener.typeDiscovered(this, previousType, type);
+    }
+
+    public boolean isExploited() {
+        return exploited;
+    }
+
+    public void setExploited(boolean exploited) {
+        this.exploited = exploited;
     }
 
     public String toString() {

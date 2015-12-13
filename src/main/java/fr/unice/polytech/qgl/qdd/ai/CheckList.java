@@ -1,5 +1,6 @@
 package fr.unice.polytech.qgl.qdd.ai;
 
+import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
 import fr.unice.polytech.qgl.qdd.navigation.Direction;
 import fr.unice.polytech.qgl.qdd.QddExplorer;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
@@ -67,15 +68,22 @@ public class CheckList {
     }
 
     public boolean contractCompleted() {
-        for (String resource : explorer.getContract().keySet()) {
-            if(explorer.getResources().get(resource) == null) {
-                return false;
-            }
-            if (explorer.getResources().get(resource) < explorer.getContract().get(resource)) {
+        for (ResourceEnum resource : explorer.getContract().keySet()) {
+            if(explorer.getResourceQuantity(resource) < explorer.getContract().get(resource)) {
                 return false;
             }
         }
 
+        //TODO
+        return false;
+    }
+
+    public boolean exploitableResourceFound() {
+        for(ResourceEnum resource : explorer.getContract().keySet()) {
+            if (nav.getCurrentTile().hasResource(resource)) {
+                return true;
+            }
+        }
         return false;
     }
 

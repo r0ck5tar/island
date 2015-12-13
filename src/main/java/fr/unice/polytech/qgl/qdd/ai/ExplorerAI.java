@@ -5,6 +5,8 @@ import fr.unice.polytech.qgl.qdd.ai.sequences.*;
 import fr.unice.polytech.qgl.qdd.ai.sequences.common.LandSequence;
 import fr.unice.polytech.qgl.qdd.ai.sequences.common.StopSequence;
 import fr.unice.polytech.qgl.qdd.ai.sequences.phase1.*;
+import fr.unice.polytech.qgl.qdd.ai.sequences.phase2.ExploitSequence;
+import fr.unice.polytech.qgl.qdd.ai.sequences.phase2.ExploreSequence;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.QddExplorer;
 
@@ -79,7 +81,10 @@ public class ExplorerAI {
         }
         else{
             if(!checkList.contractCompleted()) {
-                return new ScanSequence(nav, checkList);
+                if(checkList.exploitableResourceFound()) {
+                    return new ExploitSequence(nav, checkList, explorer.getContract().keySet());
+                }
+                return new ExploreSequence(nav, checkList);
             }
             else{
                 return new StopSequence(nav, checkList);

@@ -1,11 +1,13 @@
 package fr.unice.polytech.qgl.qdd.navigation;
 
 import fr.unice.polytech.qgl.qdd.enums.BiomeEnum;
+import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
 import fr.unice.polytech.qgl.qdd.enums.TileTypeEnum;
 
 import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The map consists of a list of lists which form a grid of tiles.
@@ -96,12 +98,12 @@ public class IslandMap implements TileListener{
         scannedTile.addCreeks(creeks);
     }
 
-    public void updateMap(Resource resource, int range){
-
+    public void updateMap(Map<ResourceEnum, String> resources){
+        getCurrentTile().addResources(resources);
     }
 
-    public void updateMap(Resource resource){
-
+    public void updateMapAfterExploit(ResourceEnum resource){
+        getCurrentTile().removeResource(resource);
     }
 
     /*

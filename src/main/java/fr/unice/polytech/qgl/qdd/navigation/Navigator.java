@@ -130,7 +130,7 @@ public class Navigator {
         return null;
     }
 
-    private Tile getTileInAbsoluteDirection(String direction) {
+    public Tile getTileInAbsoluteDirection(String direction) {
         switch(direction){
             case "N": return map.getTilesNorthByRange(1).get(0);
             case "E": return map.getTilesEastByRange(1).get(0);
@@ -246,6 +246,12 @@ public class Navigator {
         else{
             return null;
         }
+    }
+
+    public void setPosition(Tile tile, String facing) {
+        map.setPosX(tile.getxAxis());
+        map.setPosY(tile.getyAxis());
+        setFront(facing);
     }
 
     /*

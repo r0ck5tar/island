@@ -1,6 +1,7 @@
 package fr.unice.polytech.qgl.qdd;
 
 import fr.unice.polytech.qgl.qdd.ai.ExplorerAI;
+import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
 import org.json.JSONObject;
 
 /**
@@ -48,7 +49,10 @@ public class QddSimulator {
             else {
                 switch (action.getAction()) {
                     case LAND: explorer.land(action.getStringParam("creek"), action.getIntParam("people")); break;
-                    case MOVE_TO: explorer.move(action.getStringParam("direction"));
+                    case MOVE_TO: explorer.move(action.getStringParam("direction")); break;
+                    case EXPLORE: explorer.explore(result.getJSONObject("extras").getJSONArray("resources")); break;
+                    case EXPLOIT: explorer.exploit(ResourceEnum.valueOf(action.getStringParam("resource")),
+                            result.getJSONObject("extras").getInt("amount"));
                 }
             }
 

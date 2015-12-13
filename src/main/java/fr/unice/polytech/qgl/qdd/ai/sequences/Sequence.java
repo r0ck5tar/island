@@ -3,9 +3,12 @@ package fr.unice.polytech.qgl.qdd.ai.sequences;
 import fr.unice.polytech.qgl.qdd.Action;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
 import fr.unice.polytech.qgl.qdd.enums.ActionEnum;
+import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
 import fr.unice.polytech.qgl.qdd.navigation.Direction;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
+
+import java.util.List;
 
 /**
  * Created by danial on 12/13/2015.
@@ -64,8 +67,20 @@ public abstract class Sequence {
         return new Action(ActionEnum.MOVE_TO).addParameter("direction", direction);
     }
 
+    protected Action scout(String direction) {
+        return new Action(ActionEnum.SCOUT).addParameter("direction", direction);
+    }
+
     protected Action explore() {
         return new Action(ActionEnum.EXPLORE);
+    }
+
+    protected Action exploit(List<ResourceEnum> resources)  {
+        Action action = new Action(ActionEnum.EXPLOIT);
+        for(ResourceEnum r: resources) {
+            action.addParameter("resource", r.toString());
+        }
+        return action;
     }
 
 
