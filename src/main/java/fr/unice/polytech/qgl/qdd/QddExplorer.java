@@ -202,6 +202,14 @@ public class QddExplorer {
         this.men -= men;
     }
 
+    public Map<String, Integer> getContract() {
+        return contract;
+    }
+
+    public Map<String, Integer> getResources() {
+        return resources;
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Budget: " + budget + "\tMen: " + men );

@@ -23,7 +23,7 @@ public abstract class Sequence {
 
     public abstract boolean completed();
 
-        /*
+    /*
         Action-building helper methods
      */
 
@@ -59,4 +59,14 @@ public abstract class Sequence {
         if (unknownTilesOnLeft > unknownTilesOnRight){ return heading(nav.left()); }
         else { return heading(nav.right()); }
     }
+
+    protected Action move(String direction) {
+        return new Action(ActionEnum.MOVE_TO).addParameter("direction", direction);
+    }
+
+    protected Action explore() {
+        return new Action(ActionEnum.EXPLORE);
+    }
+
+
 }

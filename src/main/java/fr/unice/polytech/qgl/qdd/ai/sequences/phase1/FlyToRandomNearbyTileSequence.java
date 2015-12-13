@@ -1,4 +1,4 @@
-package fr.unice.polytech.qgl.qdd.ai.sequences;
+package fr.unice.polytech.qgl.qdd.ai.sequences.phase1;
 
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;

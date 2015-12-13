@@ -1,16 +1,16 @@
-package fr.unice.polytech.qgl.qdd.ai.sequences;
+package fr.unice.polytech.qgl.qdd.ai.sequences.phase1;
 
 import fr.unice.polytech.qgl.qdd.Action;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
+import fr.unice.polytech.qgl.qdd.ai.sequences.Sequence;
 import fr.unice.polytech.qgl.qdd.navigation.Direction;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
-import sun.security.x509.AVA;
 
 /**
  * Created by Hakim on 12/13/2015.
  */
-public class ScanSequence extends Sequence{
+public class ScanSequence extends Sequence {
     private int counter;
 
     public ScanSequence(Navigator nav, CheckList checkList) {
@@ -25,7 +25,7 @@ public class ScanSequence extends Sequence{
         if(isUnscannedGround(nav.getTileInDirection(Direction.FRONT))) { return fly(); }
         if(isUnscannedGround(nav.getTileInDirection(Direction.FRONT_RIGHT))) { return heading(nav.right()); }
         if(isUnscannedGround(nav.getTileInDirection(Direction.FRONT_LEFT))) { return  heading(nav.left()); }
-        else{ return getNearbyUnscannedGround(); }
+        else{ return scanNearbyUnscannedGround(); }
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ScanSequence extends Sequence{
         return !tile.isSea() && tile.isUnscanned();
     }
 
-    private Action getNearbyUnscannedGround() {
+    private Action scanNearbyUnscannedGround() {
         for(Tile t: nav.getNeighbouringTiles(nav.getCurrentTile())) {
             if(isUnscannedGround(t)) { return new FlyToDestinationSequence(nav, checkList, t).execute(); }
         }

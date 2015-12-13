@@ -42,7 +42,21 @@ public class Tile {
     public boolean isSea() { return type.equals(TileTypeEnum.SEA); }
 
     public boolean isUnscanned() {
-        return biomes.size() == 0;
+        return biomes.isEmpty();
+    }
+
+    public boolean isUnscouted() { return resources.isEmpty(); }
+
+    public boolean isUnexplored() {
+        if(isUnscouted()) {
+            return true;
+        }
+        else {
+            for(Resource r: resources) {
+                if (r.getAmount() > 0) { return false; }
+            }
+        }
+        return true;
     }
 
     public boolean hasCreek() {

@@ -2,9 +2,11 @@ package fr.unice.polytech.qgl.qdd.ai;
 
 import fr.unice.polytech.qgl.qdd.Action;
 import fr.unice.polytech.qgl.qdd.ai.sequences.*;
+import fr.unice.polytech.qgl.qdd.ai.sequences.common.LandSequence;
+import fr.unice.polytech.qgl.qdd.ai.sequences.common.StopSequence;
+import fr.unice.polytech.qgl.qdd.ai.sequences.phase1.*;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.QddExplorer;
-import fr.unice.polytech.qgl.qdd.navigation.Tile;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -30,12 +32,13 @@ public class ExplorerAI {
     }
 
     public Action computeAerialStrategy() {
-        activeSequence = chooseSequence();
+        activeSequence = chooseSequenceAerial();
 
         return activeSequence.execute();
     }
 
-    private Sequence chooseSequence() {
+    private Sequence chooseSequenceAerial() {
+        if(checkList.needToAbort()) { return new StopSequence(nav, checkList); }
         if(activeSequence == null) { return new InitialDiscoverySequence(nav, checkList); }
         else if(!activeSequence.completed()) {
             return activeSequence;
@@ -51,30 +54,37 @@ public class ExplorerAI {
                 return new ScanSequence(nav, checkList);
             }
             else{
-                //return new FlyToRandomNearbyTileSequence(nav, checkList);
+
                 if(checkList.foundCreek()) {
-                    return new LandSequence(nav, checkList, explorer.getMen()/2);
+                    return new LandSequence(nav, checkList, explorer.getMen()-1);
                 }
-                return new StopSequence(nav, checkList);
+                return new FlyToRandomNearbyTileSequence(nav, checkList);
             }
         }
 
     }
 
     public Action computeTerrestrialStrategy() {
-        return new StopSequence(nav, checkList).execute();
+        activeSequence = chooseSequenceTerrestrial();
+
+        return activeSequence.execute();
     }
 
-    private Tile determineDestination() {
-        Tile destination = null;
-        if (nav.getCenterTile().isUnscanned()){
-            destination =  nav.getCenterTile();
+    private Sequence chooseSequenceTerrestrial() {
+        if(checkList.needToAbort()) { return new StopSequence(nav, checkList); }
+
+        else if(!activeSequence.completed()) {
+            return activeSequence;
+        }
+        else{
+            if(!checkList.contractCompleted()) {
+                return new ScanSequence(nav, checkList);
+            }
+            else{
+                return new StopSequence(nav, checkList);
+            }
         }
 
-        if(!nav.getCurrentTile().isUnscanned()) {
-            destination = nav.findAdjacentTileWithUnscannedGround();
-        }
-        return destination;
     }
 
     /*

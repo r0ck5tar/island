@@ -1,7 +1,8 @@
-package fr.unice.polytech.qgl.qdd.ai.sequences;
+package fr.unice.polytech.qgl.qdd.ai.sequences.common;
 
 import fr.unice.polytech.qgl.qdd.Action;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
+import fr.unice.polytech.qgl.qdd.ai.sequences.Sequence;
 import fr.unice.polytech.qgl.qdd.enums.ActionEnum;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 
@@ -23,6 +24,6 @@ public class LandSequence extends Sequence {
 
     @Override
     public boolean completed() {
-        return false;
+        return true;
     }
 }

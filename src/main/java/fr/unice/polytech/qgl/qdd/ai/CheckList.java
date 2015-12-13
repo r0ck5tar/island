@@ -15,7 +15,8 @@ public class CheckList {
     private QddExplorer explorer;
 
     //Must discover at least 30% of map for echo coverage to be considered sufficient.
-    private float ECHO_COVERAGE_QUOTA = 30;
+    private static final float  ECHO_COVERAGE_QUOTA = 30;
+    private static final int MISSION_ABORT_BUDGET_THRESHOLD = 30;
 
     public CheckList(Navigator nav, QddExplorer explorer) {
         this.nav = nav;
@@ -38,6 +39,10 @@ public class CheckList {
 
     public boolean foundCreek() { return nav.getMap().getCreeks().size() >0; }
 
+    public boolean needToAbort() {
+        return explorer.getBudget() < MISSION_ABORT_BUDGET_THRESHOLD;
+    }
+
     /*
         Checks for echo
      */
@@ -59,6 +64,19 @@ public class CheckList {
 
     public boolean isTilesAtRightDiscovered(){
         return checkAllTilesDiscovered(nav.getAllTilesInDirection(Direction.RIGHT));
+    }
+
+    public boolean contractCompleted() {
+        for (String resource : explorer.getContract().keySet()) {
+            if(explorer.getResources().get(resource) == null) {
+                return false;
+            }
+            if (explorer.getResources().get(resource) < explorer.getContract().get(resource)) {
+                return false;
+            }
+        }
+
+        return false;
     }
 
     private boolean checkAllTilesDiscovered(List<Tile> tiles){

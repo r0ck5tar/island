@@ -1,13 +1,14 @@
-package fr.unice.polytech.qgl.qdd.ai.sequences;
+package fr.unice.polytech.qgl.qdd.ai.sequences.phase1;
 
 import fr.unice.polytech.qgl.qdd.Action;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
+import fr.unice.polytech.qgl.qdd.ai.sequences.Sequence;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 
 /**
  * Created by danial on 12/13/2015.
  */
-public class EchoForGroundSequence extends Sequence{
+public class EchoForGroundSequence extends Sequence {
     private int counter;
     private static int MAX_ITERATIONS = 3;
 
