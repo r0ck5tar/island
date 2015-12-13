@@ -1,7 +1,6 @@
 package fr.unice.polytech.qgl.qdd;
 
-import fr.unice.polytech.qgl.qdd.Action;
-import fr.unice.polytech.qgl.qdd.enums.ActionEnum;
+import fr.unice.polytech.qgl.qdd.ai.ExplorerAI;
 import org.json.JSONObject;
 
 /**

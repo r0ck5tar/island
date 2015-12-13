@@ -1,4 +1,4 @@
-package fr.unice.polytech.qgl.qdd;
+package fr.unice.polytech.qgl.qdd.navigation;
 
 import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
 

@@ -1,6 +1,5 @@
-import fr.unice.polytech.qgl.qdd.IslandMap;
-import fr.unice.polytech.qgl.qdd.Tile;
-import fr.unice.polytech.qgl.qdd.enums.TileTypeEnum;
+import fr.unice.polytech.qgl.qdd.navigation.IslandMap;
+import fr.unice.polytech.qgl.qdd.navigation.Tile;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -77,8 +76,8 @@ public class IslandMapTest {
         /*for(int w = testMap.getPosX(); w < testMap.getWidth(); w++){
             testMap.getTile(w,testMap.getPosY()).setType(TileTypeEnum.SEA);
         }*/
-        testMap.updateMap(false,10,"E");
-        map.updateMap(false, 10, "E");
+        testMap.updateMapThroughEcho(false,10,"E");
+        map.updateMapThroughEcho(false, 10, "E");
 
         for (int w = 0; w < map.getWidth(); w++) {
 

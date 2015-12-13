@@ -19,24 +19,17 @@ public class Action {
         return action;
     }
 
-    public void setAction(ActionEnum action) {
-        this.action = action;
-    }
-
-    public JSONObject getParameters() {
-        return parameters;
-    }
-
-    public void addParameter(String key, String value){
-        parameters.put(key, value);
-    }
-
     public String getStringParam(String param) {
         return parameters.getString(param);
     }
 
     public int getIntParam(String param) {
         return parameters.getInt(param);
+    }
+
+    public Action addParameter(String key, String value){
+        parameters.put(key, value);
+        return this;
     }
 
     public String toJSON() {
