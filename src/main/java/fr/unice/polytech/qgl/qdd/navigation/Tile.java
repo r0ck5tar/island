@@ -14,15 +14,18 @@ public class Tile {
     private TileTypeEnum type;
     private List<BiomeEnum> biomes;
     private List<Resource> resources;
+
     private List<String> creeks;
     private String condition;
+    private TileListener listener;
     private int xAxis;
     private int yAxis;
 
-    public Tile(int xAxis, int yAxis) {
+    public Tile(int xAxis, int yAxis, TileListener listener) {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
-        type = TileTypeEnum.UNKNOWN;
+        this.listener = listener;
+        setType(TileTypeEnum.UNKNOWN);
         biomes = new ArrayList<>();
         creeks = new ArrayList<>();
         resources = new ArrayList<>();
@@ -53,21 +56,6 @@ public class Tile {
             }
         }
         return true;
-    }
-
-
-    public void addBiomes(List<BiomeEnum> biomes) {
-        this.biomes.addAll(biomes);
-        if (this.isUnknown() && !hasOnlyOceanBiomes(biomes)){
-            this.setType(TileTypeEnum.GROUND);
-        }
-        else {
-            this.setType(TileTypeEnum.SEA);
-        }
-    }
-
-    public void addCreeks(List<String> creeks) {
-        this.creeks.addAll(creeks);
     }
 
 
@@ -106,8 +94,40 @@ public class Tile {
         return type;
     }
 
+    public List<String> getCreeks() {
+        return creeks;
+    }
+
+    public void addCreeks(List<String> creeks) {
+        this.creeks.addAll(creeks);
+        listener.creekDiscovered(this);
+    }
+
+    public List<Resource> getResources() {
+        return resources;
+    }
+
+    public List<BiomeEnum> getBiomes() {
+        return biomes;
+    }
+
+    public void addBiomes(List<BiomeEnum> biomes) {
+        this.biomes.addAll(biomes);
+        if (this.isUnknown() && !hasOnlyOceanBiomes(biomes)){
+            this.setType(TileTypeEnum.GROUND);
+        }
+        else {
+            this.setType(TileTypeEnum.SEA);
+        }
+        listener.biomeDiscovered(this);
+    }
+
+
+
     public void setType(TileTypeEnum type) {
+        TileTypeEnum previousType = this.type;
         this.type = type;
+        listener.typeDiscovered(this, previousType, type);
     }
 
     public String toString() {

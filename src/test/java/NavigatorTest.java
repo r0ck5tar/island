@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by Hakim on 12/12/2015.
+ * Created by danial on 12/12/2015.
  */
 public class NavigatorTest {
     private Navigator nav;

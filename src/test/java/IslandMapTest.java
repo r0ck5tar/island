@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Hakim on 12/12/2015.
+ * Created by danial on 12/12/2015.
  */
 public class IslandMapTest {
     private IslandMap map;

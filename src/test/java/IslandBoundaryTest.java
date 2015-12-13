@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * Created by Hakim on 12/13/2015.
+ * Created by danial on 12/13/2015.
  */
 public class IslandBoundaryTest {
     private Navigator nav;

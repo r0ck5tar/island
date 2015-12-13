@@ -2,6 +2,7 @@ package fr.unice.polytech.qgl.qdd.navigation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by danial on 20/11/15.
@@ -10,10 +11,12 @@ public class Navigator {
 
     private String front;
     private IslandMap map;
+    private Random random;
 
     public Navigator(String facing){
         front = facing;
         map = new IslandMap();
+        random = new Random();
     }
     /*
         Map methods
@@ -29,6 +32,8 @@ public class Navigator {
     public List<Tile> getNeighbouringTiles(Tile tile) {return map.getNeighbouringTiles(tile);}
 
     public Tile getCurrentTile() {return map.getCurrentTile(); }
+
+    public Tile getCenterTile() {return map.getTile(map.getWidth()/2 +1, map.getLength()/2 +1); }
 
     public Tile getTile(int x, int y) { return  map.getTile(x, y); }
 
@@ -133,9 +138,10 @@ public class Navigator {
         return null;
     }
 
-    public Tile findTileWithUnscannedGround(){
+    public Tile findAdjacentTileWithUnscannedGround(){
         List<Tile> tiles = getAllTilesInDirection(Direction.LEFT);
         tiles.addAll(getAllTilesInDirection(Direction.RIGHT));
+        tiles.addAll(getAllTilesInDirection(Direction.FRONT));
 
         for (int i = 0 ; i < tiles.size(); i++) {
             if (tiles.get(i).isGround() && tiles.get(i).isUnscanned()) {
@@ -186,6 +192,32 @@ public class Navigator {
                 break;
         }
         return tiles;
+    }
+
+    public Tile getRandomNearbyTile(){
+        int randomX =0;
+        int randomY =0;
+
+        do{
+            randomX = getPosX()-3 + random.nextInt(7);
+            randomY = getPosY()-3 + random.nextInt(7);
+        }
+        while(randomX > map.getWidth()-1 || randomX <0 || randomY > map.getLength()-1 || randomY < 0);
+
+        return getTile(randomX, randomY);
+
+    }
+
+    public Tile getRandomUnscannedGroundTile() {
+        List<Tile> unscanned = new ArrayList<>();
+        for(Tile t: map.getGroundTiles()){
+            if(t.isUnscanned()) {
+                unscanned.add(t);
+
+            }
+        }
+
+        return unscanned.get(random.nextInt(unscanned.size()));
     }
 
     /*

@@ -3,6 +3,7 @@ package fr.unice.polytech.qgl.qdd.navigation;
 import fr.unice.polytech.qgl.qdd.enums.BiomeEnum;
 import fr.unice.polytech.qgl.qdd.enums.TileTypeEnum;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +15,17 @@ import java.util.List;
  * map.get(x).get(y)
  * Created by danial on 10/12/15.
  */
-public class IslandMap {
+public class IslandMap implements TileListener{
     private Tile[][] map = null;
     private int length = 1;
     private int width = 1;
     private int posX = 0;
     private int posY = 0;
+    private List<Tile> scannedTiles = new ArrayList<>();
+    private List<Tile> seaTiles = new ArrayList<>();
+    private List<Tile> groundTiles = new ArrayList<>();
+    private List<Tile> unknownTiles = new ArrayList<>();
+    private List<String> creeks = new ArrayList<>();
 
     public boolean isInitialized() {
         return map!=null;
@@ -31,7 +37,7 @@ public class IslandMap {
 
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < length; y++) {
-                map[x][y] = new Tile(x, y);
+                map[x][y] = new Tile(x, y, this);
             }
         }
 
@@ -215,7 +221,69 @@ public class IslandMap {
         this.posX = posX;
     }
 
+    public int getScannedTileCount() {
+        return scannedTiles.size();
+    }
 
+    public int getSeaTileCount() {
+        return seaTiles.size();
+    }
 
+    public int getUnknownTileCount() {
+        return unknownTiles.size();
+    }
 
+    public int getGroundTileCount() {
+        return groundTiles.size();
+    }
+
+    public int getTotalTileCount() {
+        return seaTiles.size() + unknownTiles.size() + groundTiles.size();
+    }
+
+    public List<Tile> getScannedTiles() {
+        return scannedTiles;
+    }
+
+    public List<Tile> getSeaTiles() {
+        return seaTiles;
+    }
+
+    public List<Tile> getGroundTiles() {
+        return groundTiles;
+    }
+
+    public List<Tile> getUnknownTiles() {
+        return unknownTiles;
+    }
+
+    /*
+            TileListener methods
+        */
+    @Override
+    public void typeDiscovered(Tile tile, TileTypeEnum previousType, TileTypeEnum currentType) {
+        switch (currentType){
+            case SEA: seaTiles.add(tile); break;
+            case GROUND: groundTiles.add(tile); break;
+            case UNKNOWN: unknownTiles.add(tile);
+        }
+
+        if(previousType!=null){
+            switch (previousType){
+                case SEA: seaTiles.remove(tile); break;
+                case GROUND: groundTiles.remove(tile); break;
+                case UNKNOWN: unknownTiles.remove(tile); break;
+            }
+        }
+    }
+
+    @Override
+    public void biomeDiscovered(Tile tile) {
+        scannedTiles.add(tile);
+    }
+
+    @Override
+    public void creekDiscovered(Tile tile) {
+        creeks.addAll(tile.getCreeks());
+    }
 }

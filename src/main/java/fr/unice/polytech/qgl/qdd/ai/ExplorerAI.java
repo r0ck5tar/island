@@ -6,199 +6,73 @@ import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.QddExplorer;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
 import fr.unice.polytech.qgl.qdd.enums.ActionEnum;
+import sun.security.krb5.internal.crypto.Des;
 
+import java.awt.*;
 import java.io.IOException;
-import java.util.List;
+import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 /**
- * Created by Hakim on 12/11/2015.
+ * Created by danial on 12/11/2015.
  */
 public class ExplorerAI {
     private QddExplorer explorer;
     private Navigator nav;
     private CheckList checkList;
-    private Tile destinationTile;
     private Logger gameLogger;
+    private Sequence activeSequence;
 
     public ExplorerAI(QddExplorer explorer){
         this.explorer = explorer;
         nav = explorer.getNavigator();
         checkList = new CheckList(nav, explorer);
-        destinationTile = null ;
         initializeLoggers();
+        activeSequence = null;
     }
 
     public Action computeAerialStrategy() {
-        Action action = null;
+        activeSequence = chooseSequence();
 
-        if (!nav.mapInitialized()){ action = initialDiscoverySequence(); }
-
-        if (nav.mapInitialized()) {
-            if (!checkList.isFoundGround()){
-                action = echoForGroundSequence();
-            }
-            else if (!checkList.isAboveGround()) {
-                action = flyToGroundSequence();
-            }
-            else if (!checkList.findCreeks()){
-                //action = searchForCreeks();
-                action = flyToGroundSequence();
-            }
-            else{
-                action = stop();
-            }
-        }
-        return action;
+        return activeSequence.execute();
     }
 
+    private Sequence chooseSequence() {
+        if(activeSequence == null) { return new InitialDiscoverySequence(nav, checkList); }
+        else if(!activeSequence.completed()) {
+            return activeSequence;
+        }
+        else{
+            if(!checkList.isEchoCoverageSufficient()) {
+                return new EchoForGroundSequence(nav, checkList);
+            }
+            else if(!checkList.isAboveGround()) {
+                return new FlyToUnscannedGroundSequence(nav, checkList);
+            }
+            else{
+                //return new FlyToRandomNearbyTileSequence(nav, checkList);
+                return new StopSequence(nav, checkList);
+            }
+        }
+
+    }
 
     public Action computeTerrestrialStrategy() {
         return null;
     }
 
-    private Action initialDiscoverySequence() {
-        //First echo; echo front
-        if(nav.getMap().getWidth() == 1 && nav.getMap().getLength() == 1) { return echo(explorer.front()); }
-
-        //second echo; echo right
-        else if (nav.getMap().getWidth() == 1 || nav.getMap().getLength() == 1) { return echo(explorer.right()); }
-
-        //third echo; echo left (Only if second echo returned range = 0; i.e. the border is to the right)
-        else if (nav.getMap().getWidth() == -1 || nav.getMap().getLength() == -1) { return echo(explorer.left()); }
-
-        else { nav.initializeMap(); }
-
-        return null;
-    }
-
-    private Action echoForGroundSequence() {
-        Action action = null;
-        if (!checkList.isTilesAtLeftDiscovered()){
-            action = echo( explorer.left());
-        }
-        else if (!checkList.isTilesAtRightDiscovered()){
-            action = echo( explorer.right());
-        }
-        else if (!checkList.isTilesInFrontDiscovered()){
-            action = echo( explorer.front());
-        }
-        else {
-            action = fly();
+    private Tile determineDestination() {
+        Tile destination = null;
+        if (nav.getCenterTile().isUnscanned()){
+            destination =  nav.getCenterTile();
         }
 
-        return action;
-    }
-
-    private Action chooseTurningDirection() {
-        int unknownTilesOnRight = 0, unknownTilesOnLeft = 0;
-
-        for (Tile t: nav.getTilesOnSide(Direction.RIGHT)){
-            if(t.isUnknown()) { unknownTilesOnRight++; }
+        if(!nav.getCurrentTile().isUnscanned()) {
+            destination = nav.findAdjacentTileWithUnscannedGround();
         }
-
-        for (Tile t: nav.getTilesOnSide(Direction.LEFT)){
-            if(t.isUnknown()) { unknownTilesOnLeft++; }
-        }
-
-        if (unknownTilesOnLeft > unknownTilesOnRight){ return heading(explorer.left()); }
-        else { return heading(explorer.right()); }
-    }
-
-    private Action flyToGroundSequence() {
-        if (destinationTile==null) {
-            destinationTile = nav.findTileWithUnscannedGround();
-        }
-
-        if (destinationTile == null){
-            return echoForGroundSequence();
-        }
-
-       // If we are not within the neighbouring tile of the destination
-        if (!neighbouringDestinationReached()) {
-            return flyToDestination();
-        }
-        else if (nav.getCurrentTile().isUnscanned()){
-            destinationTile = null;
-            return scan();
-        }
-        else {
-            return echoForGroundSequence();
-        }
-    }
-
-    private Action flyToDestination(){
-        switch (nav.getRelativeDirectionOfTile(destinationTile)) {
-            case FRONT: return fly();
-            case RIGHT: return heading(explorer.right());
-            case LEFT: return heading(explorer.left());
-        }
-        return fly();
-    }
-
-    private Action searchForCreeks() {
-        if (checkList.isCloseToBoundary()){
-            return chooseTurningDirection();
-        }
-
-        if (destinationTile == null){
-            switch (explorer.getNavigator().front()) {
-                case "N" :destinationTile = nav.getTile(nav.getPosX(), nav.getPosY() + 1);
-                    break;
-                case "E": destinationTile = nav.getTile(nav.getPosX() + 1, nav.getPosY());
-                    break;
-                case "S": destinationTile = nav.getTile(nav.getPosX(), nav.getPosY() - 1);
-                    break;
-                case "W": destinationTile = nav.getTile(nav.getPosX() - 1, nav.getPosY());
-                    break;
-            }
-        }
-
-        if (destinationTile == null) {
-            return stop();
-        }
-
-        // If we are not within the neighbouring tile of the destination
-        if (!destinationReached()) {
-            return flyToDestination();
-        }
-        else {
-            destinationTile = null;
-            return new Action(ActionEnum.SCAN);
-        }
-    }
-
-
-    private boolean neighbouringDestinationReached() {
-        return nav.getNeighbouringTiles(destinationTile).contains(nav.getCurrentTile());
-    }
-
-    private boolean destinationReached(){
-        return destinationTile.equals(nav.getCurrentTile());
-    }
-
-    /*
-        Action-building helper methods
-     */
-
-    private Action echo(String direction){
-        return new Action(ActionEnum.ECHO).addParameter("direction", direction);
-    }
-
-    private Action scan() { return new Action(ActionEnum.SCAN); }
-
-    private Action fly() {
-        return checkList.isCloseToBoundary()?  chooseTurningDirection(): new Action(ActionEnum.FLY);
-    }
-
-    private Action heading(String direction){
-        return new Action(ActionEnum.HEADING).addParameter("direction", direction);
-    }
-
-    private Action stop(){
-        return new Action(ActionEnum.STOP);
+        return destination;
     }
 
     /*
@@ -224,10 +98,16 @@ public class ExplorerAI {
     public void logExplorer(Action action) {
         StringBuilder sb = new StringBuilder("\n");
         sb.append(explorer.toString());
-        sb.append("\n" + action.toJSON() + "\n\n");
+        sb.append("\n" + action.toJSON());
 
         if(nav.mapInitialized()) {
             sb.append("\nCurrent tile type : " + nav.getCurrentTile().toString() + "\n\n");
+            int groundTiles = nav.getMap().getGroundTileCount();
+            int seaTiles = nav.getMap().getSeaTileCount();
+            int unknownTiles = nav.getMap().getUnknownTileCount();
+            int totalTiles = groundTiles + seaTiles + unknownTiles;
+            sb.append("Ground tiles: " + groundTiles + "\tSea tiles: " + seaTiles );
+            sb.append("\tUnknown tiles: " + unknownTiles + "\tTotal: " + totalTiles + "\n");
             for(int y = nav.getMap().getWidth()-1; y >= 0; y--) {
                 for(int x = 0; x <nav.getMap().getLength(); x++) {
                     if((x == nav.getPosX()) && (y == nav.getPosY())) {
@@ -247,4 +127,6 @@ public class ExplorerAI {
         }
         gameLogger.info(sb.toString() + "\n");
     }
+
+
 }
