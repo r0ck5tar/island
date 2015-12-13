@@ -58,7 +58,8 @@ public class ExplorerAI {
                 if(checkList.foundCreek()) {
                     return new LandSequence(nav, checkList, explorer.getMen()-1);
                 }
-                return new FlyToRandomNearbyTileSequence(nav, checkList);
+                //return new FlyToRandomNearbyTileSequence(nav, checkList);
+                return new StopSequence(nav, checkList);
             }
         }
 
