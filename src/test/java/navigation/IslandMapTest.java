@@ -32,8 +32,8 @@ public class IslandMapTest {
     private Method getTilesSouthMethod;
     private Method getTilesWestMethod;
     private Method currentTileMethod;
-    private Method setCurrentPositionMethod;
-    private Method updateMapThroughEchoMethod;
+    private Method setXMethod;
+    private Method setYMethod;
     private Field heightField;
     private Field widthField;
 
@@ -84,8 +84,11 @@ public class IslandMapTest {
             getTilesWestMethod = IslandMap2.class.getDeclaredMethod("getTilesWest", pointClass, int.class);
             getTilesWestMethod.setAccessible(true);
 
-            setCurrentPositionMethod = IslandMap2.class.getDeclaredMethod("setCurrentPosition", pointClass);
-            setCurrentPositionMethod.setAccessible(true);
+            setXMethod = IslandMap2.class.getDeclaredMethod("setX", int.class);
+            setXMethod.setAccessible(true);
+
+            setYMethod = IslandMap2.class.getDeclaredMethod("setY", int.class);
+            setYMethod.setAccessible(true);
 
             currentTileMethod = IslandMap2.class.getDeclaredMethod("currentTile");
             currentTileMethod.setAccessible(true);
@@ -174,7 +177,8 @@ public class IslandMapTest {
 
     protected void setCurrentPositionMethod(int x, int y) {
         try {
-            setCurrentPositionMethod.invoke(map, point(x,y));
+            setXMethod.invoke(map, x);
+            setYMethod.invoke(map, y);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

@@ -46,7 +46,7 @@ public class Move {
     =======================*/
 
     public void walk() {
-        
+
     }
 
 
