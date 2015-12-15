@@ -9,9 +9,9 @@ import java.util.Set;
  * Created by hbinluqman on 14/12/2015.
  */
 public class IslandMap2 implements TileListener{
-    private static final int INITIAL_DIMENSIONS = 3;
-    private int height = INITIAL_DIMENSIONS;
-    private int width = INITIAL_DIMENSIONS;
+    private static final int INITIAL_WIDTH = 3, INITIAL_HEIGHT = 3;
+    private int height = INITIAL_HEIGHT;
+    private int width = INITIAL_WIDTH;
     private Point currentPosition = new Point(1 ,1);
     private Map<Point, Tile> pointsToTiles = new HashMap<>();
     private Map<Tile, Point> tilesToPoints = new HashMap<>();
@@ -22,6 +22,10 @@ public class IslandMap2 implements TileListener{
     private Set<Tile> potentiallyExploitableTiles = new HashSet<>();
     private Set<Tile> exploitableTiles = new HashSet<>();
     private Set<String> creeks = new HashSet<>();
+
+    /*============================================
+    Public methods used in InitialDiscoverySequence
+    =============================================*/
 
     public boolean isInitialized() {return !pointsToTiles.isEmpty();}
 
@@ -42,10 +46,14 @@ public class IslandMap2 implements TileListener{
             }
         }
 
-        if(height > INITIAL_DIMENSIONS && width > INITIAL_DIMENSIONS) {
+        if(height > INITIAL_HEIGHT && width > INITIAL_WIDTH) {
             initializeMap();
         }
     }
+
+    /*=================================
+     Public methods used by QddExplorer.
+     =================================*/
 
     public void updateMapThroughEcho(boolean isGround, int range, Compass direction) {
         int distance = range*3;
@@ -107,9 +115,9 @@ public class IslandMap2 implements TileListener{
         }
     }
 
-    /**************************************************************
+    /*=============================================================
     Package-private methods: only usable in IslandMap and Navigator
-    **************************************************************/
+    =============================================================*/
 
     int getX(Tile tile) {
         return tilesToPoints.get(tile).x;
@@ -176,9 +184,9 @@ public class IslandMap2 implements TileListener{
     }
 
 
-    /*******************
+    /*==================
     TileListener methods
-    *******************/
+    ==================*/
 
     @Override
     public void typeDiscovered(Tile tile, String previousType, String currentType) {
@@ -196,9 +204,9 @@ public class IslandMap2 implements TileListener{
     }
 
 
-    /************************************************************************
+    /*=======================================================================
     Point (private class representing coordinates) and private helper methods
-    ************************************************************************/
+    =======================================================================*/
 
     private static class Point {
         public int x, y;
@@ -232,9 +240,9 @@ public class IslandMap2 implements TileListener{
         return new Point(x, y);
     }
 
-    /***************************************
+    /*======================================
     Private helper methods for finding tiles
-     **************************************/
+     ======================================*/
 
     private Set<Tile> getSurroundingTiles(int xCoordinate, int yCoordinate) {
         Set<Tile> tiles = new HashSet<>();
@@ -287,9 +295,9 @@ public class IslandMap2 implements TileListener{
         return tiles;
     }
 
-    /*************************************
+    /*====================================
      Private  methods for initializing map
-     ************************************/
+     ====================================*/
 
     private void initializeMap() {
         //create all the tiles for the map of size width * height
@@ -306,8 +314,8 @@ public class IslandMap2 implements TileListener{
         }
 
         //set the previously echoed borders as sea tiles.
-        int vRangeToBorder = (height - INITIAL_DIMENSIONS)/3;
-        int hRangeToBorder = (width - INITIAL_DIMENSIONS)/3;
+        int vRangeToBorder = (height - INITIAL_HEIGHT)/3;
+        int hRangeToBorder = (width - INITIAL_WIDTH)/3;
 
         if (getY() == 1) {
             updateMapThroughEcho(false, vRangeToBorder, Compass.NORTH);
