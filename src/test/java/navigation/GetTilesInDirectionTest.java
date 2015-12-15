@@ -14,9 +14,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
     public void testGetTilesInDirectionNorth() {
         createXByYMap(10, 10);
 
-        /*******************************
+        /*==============================
          Testing getTilesNorth from (0,0)
-         *******************************/
+         ==============================*/
 
         //Set the tiles north of (0,0) as ground
         for(int i=1; i<10; i++) {
@@ -36,9 +36,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
         //Verify that the tile (0,0) is unknown
         Assert.assertEquals(UNKNOWN, getTileMethod(0, 0).getType());
 
-        /*******************************
+        /*==============================
          Testing getTilesNorth from (5,5)
-         *******************************/
+         =============================*/
 
         //Set the tiles north of (5,5) as ground
         for(int i=6; i<10; i++) {
@@ -58,9 +58,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
         //Verify that the tile (5,5) is unknown
         Assert.assertTrue(getTileMethod(5, 5).isUnknown());
 
-        /*******************************
+        /*===============================
          Testing getTilesNorth from (6,9)
-         *******************************/
+         ==============================*/
 
         //Get tiles north of (6,9)
         Set<Tile> tilesToNorthOfx6y9 = getTilesInDirectionMethod(NORTH, 6, 9, 4);
@@ -75,9 +75,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
     public void testGetTilesInDirectionSouth() {
         createXByYMap(10, 10);
 
-        /*******************************
+        /*===============================
          Testing getTilesSouth from (0,9)
-         *******************************/
+         ==============================*/
 
         //Set the tiles south of (0,9) as ground
         for(int i=1; i<10; i++) {
@@ -97,9 +97,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
         //Verify that the tile (0,9) is unknown
         Assert.assertTrue(getTileMethod(0, 9).isUnknown());
 
-        /*******************************
+        /*==============================
          Testing getTilesSouth from (5,5)
-         *******************************/
+         ==============================*/
 
         //Set the tiles south of (5,5) as ground
         for(int i=1; i<6; i++) {
@@ -119,9 +119,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
         //Verify that the tile (5,5) is unknown
         Assert.assertTrue(getTileMethod(5, 5).isUnknown());
 
-        /*******************************
+        /*===============================
          Testing getTilesSouth from (6,0)
-         *******************************/
+         ==============================*/
 
         //Get tiles south of (6,0)
         Set<Tile> tilesToSouthOfx6y0 = getTilesInDirectionMethod(SOUTH, 6, 0, 4);
@@ -136,9 +136,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
     public void testGetTilesInDirectionEast() {
         createXByYMap(10, 10);
 
-        /*******************************
+        /*==============================
          Testing getTilesEast from (0,0)
-         *******************************/
+         =============================*/
 
         //Set the tiles east of (0,0) as ground
         for(int i=1; i<10; i++) {
@@ -158,9 +158,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
         //Verify that the tile (0,0) is unknown
         Assert.assertTrue(getTileMethod(0, 0).isUnknown());
 
-        /*******************************
+        /*==============================
          Testing getTilesEast from (5,5)
-         *******************************/
+         =============================*/
 
         //Set the tiles east of (5,5) as ground
         for(int i=1; i<5; i++) {
@@ -180,9 +180,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
         //Verify that the tile (5,5) is unknown
         Assert.assertTrue(getTileMethod(5, 5).isUnknown());
 
-        /*******************************
+        /*==============================
          Testing getTilesEast from (9,6)
-         *******************************/
+         =============================*/
 
         //Get tiles east of (9,6)
         Set<Tile> tilesToEastOfx9y6 = getTilesInDirectionMethod(EAST, 9, 6, 4);
@@ -197,9 +197,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
     public void testGetTilesInDirectionWest() {
         createXByYMap(10, 10);
 
-        /*******************************
+        /*==============================
          Testing getTilesWest from (9,0)
-         *******************************/
+         =============================*/
 
         //Set the tiles west of (9,0) as ground
         for(int i=1; i<10; i++) {
@@ -219,9 +219,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
         //Verify that the tile (9,0) is unknown
         Assert.assertTrue(getTileMethod(9, 0).isUnknown());
 
-        /*******************************
+        /*==============================
          Testing getTilesWest from (5,5)
-         *******************************/
+         =============================*/
 
         //Set the tiles west of (5,5) as ground
         for(int i=1; i<6; i++) {
@@ -241,9 +241,9 @@ public class GetTilesInDirectionTest extends IslandMapTest {
         //Verify that the tile (5,5) is unknown
         Assert.assertTrue(getTileMethod(5, 5).isUnknown());
 
-        /*******************************
+        /*==============================
          Testing getTilesWest from (0,6)
-         *******************************/
+         =============================*/
 
         //Get tiles west of (0,6)
         Set<Tile> tilesToWestOfx0y6 = getTilesInDirectionMethod(WEST, 0, 6, 4);

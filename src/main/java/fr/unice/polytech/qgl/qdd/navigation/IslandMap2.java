@@ -1,9 +1,6 @@
 package fr.unice.polytech.qgl.qdd.navigation;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by hbinluqman on 14/12/2015.
@@ -115,6 +112,26 @@ public class IslandMap2 implements TileListener{
         }
     }
 
+    /*================================
+     Public methods used by Checklist.
+     ===============================*/
+
+    public int getUnknownTileCount() {
+        return unknownTiles.size();
+    }
+
+    public int getGroundTileCount() {
+        return groundTiles.size();
+    }
+
+    public int getTotalTileCount() {
+        return seaTiles.size() + unknownTiles.size() + groundTiles.size();
+    }
+
+    public Set<String> getCreeks() {
+        return creeks;
+    }
+
     /*=============================================================
     Package-private methods: only usable in IslandMap and Navigator
     =============================================================*/
@@ -163,8 +180,12 @@ public class IslandMap2 implements TileListener{
         return getSurroundingTiles(coordinates.x, coordinates.y);
     }
 
-    void setCurrentPosition(Point position) {
-        currentPosition = position;
+    void setX(int x) {
+        currentPosition.x = x;
+    }
+
+    void setY(int y) {
+        currentPosition.y = y;
     }
 
     int getX(){
@@ -190,17 +211,29 @@ public class IslandMap2 implements TileListener{
 
     @Override
     public void typeDiscovered(Tile tile, String previousType, String currentType) {
+        switch (currentType){
+            case Tile.SEA: seaTiles.add(tile); break;
+            case Tile.GROUND: groundTiles.add(tile); break;
+            case Tile.UNKNOWN: unknownTiles.add(tile);
+        }
 
+        if(previousType!=null){
+            switch (previousType){
+                case Tile.SEA: seaTiles.remove(tile); break;
+                case Tile.GROUND: groundTiles.remove(tile); break;
+                case Tile.UNKNOWN: unknownTiles.remove(tile); break;
+            }
+        }
     }
 
     @Override
     public void biomeDiscovered(Tile tile) {
-
+        scannedTiles.add(tile);
     }
 
     @Override
     public void creekDiscovered(Tile tile) {
-
+        creeks.addAll(tile.getCreeks());
     }
 
 
@@ -209,7 +242,7 @@ public class IslandMap2 implements TileListener{
     =======================================================================*/
 
     private static class Point {
-        public int x, y;
+        private int x, y;
         private Point(int x, int y) {this.x = x; this.y =y;}
         @Override
         public boolean equals(Object o) {
@@ -222,14 +255,6 @@ public class IslandMap2 implements TileListener{
         public int hashCode() {
             return ((x+1) << 16) + (y+1);
         }
-    }
-
-    private void setX(int x) {
-        currentPosition.x = x;
-    }
-
-    private void setY(int y) {
-        currentPosition.y = y;
     }
 
     private boolean outOfBounds(int x, int y) {

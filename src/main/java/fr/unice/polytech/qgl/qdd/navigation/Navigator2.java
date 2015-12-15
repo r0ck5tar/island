@@ -4,12 +4,17 @@ package fr.unice.polytech.qgl.qdd.navigation;
  * Created by hbinluqman on 14/12/2015.
  */
 public class Navigator2 {
-    private Compass facing;
     private IslandMap2 map;
+    private Compass facing;
 
     public Navigator2(Compass facing) {
         this.facing = facing;
         map = new IslandMap2();
+        Move.init(map, this);
+    }
+
+    public Move move() {
+        return Move.facing(facing);
     }
 
     public Compass front() {
@@ -28,7 +33,7 @@ public class Navigator2 {
         return RelativeDirection.valueOf("FACING_".concat(facing.toString())).left;
     }
 
-    public void setFacingDirection(Compass facing) {
+    void setFacingDirection(Compass facing) {
         this.facing = facing;
     }
 

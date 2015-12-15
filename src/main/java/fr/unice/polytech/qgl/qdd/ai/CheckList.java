@@ -38,7 +38,7 @@ public class CheckList {
         return false;
     }
 
-    public boolean foundCreek() { return nav.getMap().getCreeks().size() >0; }
+    public boolean foundCreek() { return !nav.getMap().getCreeks().isEmpty(); }
 
     public boolean needToAbort() {
         return explorer.getBudget() < MISSION_ABORT_BUDGET_THRESHOLD;

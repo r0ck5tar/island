@@ -262,9 +262,9 @@ public class IslandMap implements TileListener{
         return creeks;
     }
 
-    /*
-            TileListener methods
-        */
+    /*==================
+    TileListener methods
+    ==================*/
     @Override
     public void typeDiscovered(Tile tile, String previousType, String currentType) {
         switch (currentType){

@@ -20,9 +20,9 @@ public class UpdateMapThroughEchoTest extends IslandMapTest {
         createXByYMap(WIDTH, HEIGHT);
         setCurrentPositionMethod(WEST_BORDER, SOUTH_BORDER);
 
-        /**************
+        /*=============
          Test Echo EAST
-         *************/
+         ============*/
 
         map.updateMapThroughEcho(false, RANGE, Compass.EAST);
 
@@ -36,9 +36,9 @@ public class UpdateMapThroughEchoTest extends IslandMapTest {
             Assert.assertTrue("all 3x3 tiles east of current position should be sea", t.isSea());
         }
 
-        /***************
+        /*==============
          Test Echo NORTH
-         **************/
+         =============*/
 
         map.updateMapThroughEcho(false, RANGE, Compass.NORTH);
 
@@ -58,9 +58,9 @@ public class UpdateMapThroughEchoTest extends IslandMapTest {
         createXByYMap(WIDTH, HEIGHT);
         setCurrentPositionMethod(EAST_BORDER, SOUTH_BORDER);
 
-        /**************
+        /*=============
          Test Echo WEST
-         *************/
+         ============*/
 
         map.updateMapThroughEcho(false, RANGE, Compass.WEST);
 
@@ -80,9 +80,9 @@ public class UpdateMapThroughEchoTest extends IslandMapTest {
         createXByYMap(WIDTH, HEIGHT);
         setCurrentPositionMethod(EAST_BORDER, NORTH_BORDER);
 
-        /***************
+        /*==============
          Test Echo SOUTH
-         **************/
+         =============*/
 
         map.updateMapThroughEcho(false, RANGE, Compass.SOUTH);
 

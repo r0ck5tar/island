@@ -18,9 +18,9 @@ public class Navigator {
         map = new IslandMap();
         random = new Random();
     }
-    /*
-        Map methods
-     */
+    /*=========
+    Map methods
+    =========*/
     public boolean mapInitialized(){
         return map.isInitialized();
     }
@@ -252,9 +252,9 @@ public class Navigator {
         setFront(facing);
     }
 
-    /*
-        Directions
-     */
+    /*========
+    Directions
+    ========*/
     public String front(){
         return front;
     }

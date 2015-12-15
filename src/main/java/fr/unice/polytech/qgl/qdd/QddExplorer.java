@@ -23,9 +23,9 @@ public class QddExplorer {
         initializeExplorer(context);
     }
     
-    /*
-        Updater methods called after actions are successfully acknowledged
-     */
+    /*================================================================
+    Updater methods called after actions are successfully acknowledged
+    ================================================================*/
     public void echo(String direction, JSONObject result) {
         if(!nav.mapInitialized()) {
             int range = result.getJSONObject("extras").getInt("range");
@@ -164,25 +164,9 @@ public class QddExplorer {
         nav.getCurrentTile().setExploited(fullyExploited);
     }
 
-    private void initializeExplorer(String context) {
-        resources = new HashMap<>();
-        JSONObject initialValues = new JSONObject(context);
-
-        nav = new Navigator(initialValues.getString("heading"));
-        budget = initialValues.getInt("budget");
-        men = initialValues.getInt("men");
-
-        contract = new HashMap<>();
-        JSONArray contractList = initialValues.getJSONArray("contracts");
-        for (int i = 0; i < contractList.length(); i++ )
-        {
-            contract.put( Resource.valueOf(contractList.getJSONObject(i).getString("resource")),
-                     contractList.getJSONObject(i).getInt("amount"));
-        }
-    }
-    /*
-        Relative directions
-     */
+    /*=================
+    Relative directions
+    =================*/
     public String front() {
         return nav.front();
     }
@@ -191,9 +175,9 @@ public class QddExplorer {
 
     public String left() { return nav.left(); }
 
-    /*
-        Current position
-     */
+    /*==============
+    Current position
+    ==============*/
     public int getPosX() { return nav.getMap().getPosX(); }
 
     public int getPosY() { return nav.getMap().getPosY(); }
@@ -202,9 +186,9 @@ public class QddExplorer {
 
     public void setPosY(int y) {nav.getMap().setPosY(y);}
     
-    /*
-        Getters and decrementers
-     */
+    /*======================
+    Getters and decrementers
+    ======================*/
     
     public IslandMap getMap() {
         return nav.getMap();
@@ -255,5 +239,26 @@ public class QddExplorer {
         }
         sb.append("\nFacing " + nav.front() + "  Coordinates: (" + getPosX() + ", " + getPosY() + ")" );
         return sb.toString();
+    }
+
+    /*=============
+    Private methods
+     ============*/
+
+    private void initializeExplorer(String context) {
+        resources = new HashMap<>();
+        JSONObject initialValues = new JSONObject(context);
+
+        nav = new Navigator(initialValues.getString("heading"));
+        budget = initialValues.getInt("budget");
+        men = initialValues.getInt("men");
+
+        contract = new HashMap<>();
+        JSONArray contractList = initialValues.getJSONArray("contracts");
+        for (int i = 0; i < contractList.length(); i++ )
+        {
+            contract.put( Resource.valueOf(contractList.getJSONObject(i).getString("resource")),
+                    contractList.getJSONObject(i).getInt("amount"));
+        }
     }
 }
