@@ -74,7 +74,7 @@ public class IslandMapTest {
         testMap.initializeMap();
 
         /*for(int w = testMap.getPosX(); w < testMap.getWidth(); w++){
-            testMap.getTile(w,testMap.getPosY()).setType(TileTypeEnum.SEA);
+            testMap.getTile(w,testMap.getPosY()).setType(Tile.SEA);
         }*/
         testMap.updateMapThroughEcho(false,10,"E");
         map.updateMapThroughEcho(false, 10, "E");

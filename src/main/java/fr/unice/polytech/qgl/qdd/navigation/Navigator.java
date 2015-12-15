@@ -33,8 +33,6 @@ public class Navigator {
 
     public Tile getCurrentTile() {return map.getCurrentTile(); }
 
-    public Tile getCenterTile() {return map.getTile(map.getWidth()/2 +1, map.getLength()/2 +1); }
-
     public Tile getTile(int x, int y) { return  map.getTile(x, y); }
 
     public int getPosX() { return map.getPosX(); }
@@ -72,45 +70,45 @@ public class Navigator {
         switch (front()) {
             case "N":
                 if(hAligned && !strictlyVAligned) {
-                    if(tile.getxAxis() < getPosX()) { return Direction.LEFT; }
-                    else if(tile.getxAxis() > getPosX()) { return Direction.RIGHT;  }
+                    if(tile.getX() < getPosX()) { return Direction.LEFT; }
+                    else if(tile.getX() > getPosX()) { return Direction.RIGHT;  }
                 }
                 else{
-                    if(tile.getyAxis() < getPosY()) { return Direction.BACK; }
-                    else if (tile.getyAxis() > getPosY()) { return Direction.FRONT; }
+                    if(tile.getY() < getPosY()) { return Direction.BACK; }
+                    else if (tile.getY() > getPosY()) { return Direction.FRONT; }
                 }
                 break;
 
             case "E":
                 if(vAligned && !strictlyHAligned) {
-                    if(tile.getyAxis() > getPosY()) { return Direction.LEFT; }
-                    else if(tile.getyAxis() < getPosY()) { return Direction.RIGHT;  }
+                    if(tile.getY() > getPosY()) { return Direction.LEFT; }
+                    else if(tile.getY() < getPosY()) { return Direction.RIGHT;  }
                 }
                 else{
-                    if(tile.getxAxis() < getPosX()) { return Direction.BACK; }
-                    else if (tile.getxAxis() > getPosX()) { return Direction.FRONT; }
+                    if(tile.getX() < getPosX()) { return Direction.BACK; }
+                    else if (tile.getX() > getPosX()) { return Direction.FRONT; }
                 }
                 break;
 
             case "S":
                 if(hAligned && !strictlyVAligned) {
-                    if(tile.getxAxis() > getPosX()) { return Direction.LEFT; }
-                    else if(tile.getxAxis() < getPosX()) { return Direction.RIGHT;  }
+                    if(tile.getX() > getPosX()) { return Direction.LEFT; }
+                    else if(tile.getX() < getPosX()) { return Direction.RIGHT;  }
                 }
                 else{
-                    if(tile.getyAxis() > getPosY()) { return Direction.BACK; }
-                    else if (tile.getyAxis() < getPosY()) { return Direction.FRONT; }
+                    if(tile.getY() > getPosY()) { return Direction.BACK; }
+                    else if (tile.getY() < getPosY()) { return Direction.FRONT; }
                 }
                 break;
 
             case "W":
                 if(vAligned && !strictlyHAligned) {
-                    if(tile.getyAxis() < getPosY()) { return Direction.LEFT; }
-                    else if(tile.getyAxis() > getPosY()) { return Direction.RIGHT;  }
+                    if(tile.getY() < getPosY()) { return Direction.LEFT; }
+                    else if(tile.getY() > getPosY()) { return Direction.RIGHT;  }
                 }
                 else{
-                    if(tile.getxAxis() > getPosX()) { return Direction.BACK; }
-                    else if (tile.getxAxis() < getPosX()) { return Direction.FRONT; }
+                    if(tile.getX() > getPosX()) { return Direction.BACK; }
+                    else if (tile.getX() < getPosX()) { return Direction.FRONT; }
                 }
                 break;
         }
@@ -249,8 +247,8 @@ public class Navigator {
     }
 
     public void setPosition(Tile tile, String facing) {
-        map.setPosX(tile.getxAxis());
-        map.setPosY(tile.getyAxis());
+        map.setPosX(tile.getX());
+        map.setPosY(tile.getY());
         setFront(facing);
     }
 

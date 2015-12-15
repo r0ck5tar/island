@@ -1,7 +1,7 @@
 package fr.unice.polytech.qgl.qdd;
 
-import fr.unice.polytech.qgl.qdd.enums.BiomeEnum;
-import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
+import fr.unice.polytech.qgl.qdd.enums.Biome;
+import fr.unice.polytech.qgl.qdd.enums.Resource;
 import fr.unice.polytech.qgl.qdd.navigation.IslandMap;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import org.json.JSONArray;
@@ -15,8 +15,8 @@ import java.util.*;
 public class QddExplorer {
     private int budget;
     private int men;
-    private Map<ResourceEnum, Integer> resources;
-    private Map<ResourceEnum, Integer> contract;
+    private Map<Resource, Integer> resources;
+    private Map<Resource, Integer> contract;
     private Navigator nav;
 
     public QddExplorer(String context){
@@ -72,9 +72,9 @@ public class QddExplorer {
             creeks.add(creeksJson.getString(i));
         }
 
-        List<BiomeEnum> biomes = new ArrayList<BiomeEnum>();
+        List<Biome> biomes = new ArrayList<Biome>();
         for (int i=0; i<biomesJson.length(); i++) {
-            biomes.add(BiomeEnum.valueOf(biomesJson.getString(i)));
+            biomes.add(Biome.valueOf(biomesJson.getString(i)));
         }
         getMap().updateMapThroughScan(biomes);
         getMap().updateMapWithCreeks(creeks);
@@ -138,16 +138,16 @@ public class QddExplorer {
     }
 
     public void explore(JSONArray resourcesJSON){
-        Map<ResourceEnum, String> resources = new HashMap<>();
+        Map<Resource, String> resources = new HashMap<>();
         for(int i = 0; i < resourcesJSON.length(); i++) {
             JSONObject resource = resourcesJSON.getJSONObject(i);
-            resources.put(ResourceEnum.valueOf(resource.getString("resource")), resource.getString("amount"));
+            resources.put(Resource.valueOf(resource.getString("resource")), resource.getString("amount"));
         }
 
         getMap().updateMap(resources);
     }
 
-    public void exploit(ResourceEnum resource, int amount) {
+    public void exploit(Resource resource, int amount) {
         getMap().updateMapAfterExploit(resource);
         if(resources.containsKey(resource)) {
             resources.put(resource, resources.get(resource) + amount);
@@ -155,7 +155,7 @@ public class QddExplorer {
 
         boolean fullyExploited = true;
 
-        for(ResourceEnum r: nav.getCurrentTile().getResources().keySet()) {
+        for(Resource r: nav.getCurrentTile().getResources().keySet()) {
             if (contract.keySet().contains(r)) {
                 fullyExploited = false;
             }
@@ -176,7 +176,7 @@ public class QddExplorer {
         JSONArray contractList = initialValues.getJSONArray("contracts");
         for (int i = 0; i < contractList.length(); i++ )
         {
-            contract.put( ResourceEnum.valueOf(contractList.getJSONObject(i).getString("resource")),
+            contract.put( Resource.valueOf(contractList.getJSONObject(i).getString("resource")),
                      contractList.getJSONObject(i).getInt("amount"));
         }
     }
@@ -230,15 +230,15 @@ public class QddExplorer {
         this.men -= men;
     }
 
-    public Map<ResourceEnum, Integer> getContract() {
+    public Map<Resource, Integer> getContract() {
         return contract;
     }
 
-    public Map<ResourceEnum, Integer> getResources() {
+    public Map<Resource, Integer> getResources() {
         return resources;
     }
 
-    public int getResourceQuantity(ResourceEnum resource) {
+    public int getResourceQuantity(Resource resource) {
         if(resources.containsKey(resource)){
             return resources.get(resource);
         }
@@ -250,7 +250,7 @@ public class QddExplorer {
         StringBuilder sb = new StringBuilder();
         sb.append("Budget: " + budget + "\tMen: " + men );
         sb.append("\nContract: ");
-        for(ResourceEnum s: contract.keySet()) {
+        for(Resource s: contract.keySet()) {
             sb.append(" " + s + " x " + contract.get(s) + "\t");
         }
         sb.append("\nFacing " + nav.front() + "  Coordinates: (" + getPosX() + ", " + getPosY() + ")" );

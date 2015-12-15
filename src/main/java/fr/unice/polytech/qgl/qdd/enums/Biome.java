@@ -2,7 +2,7 @@ package fr.unice.polytech.qgl.qdd.enums;
 
 import java.util.ArrayList;
 
-public enum BiomeEnum {
+public enum Biome {
 
 	ALPINE,
 	BEACH,

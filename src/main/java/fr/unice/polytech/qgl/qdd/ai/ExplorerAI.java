@@ -41,7 +41,7 @@ public class ExplorerAI {
 
     private Sequence chooseSequenceAerial() {
         if(checkList.needToAbort()) { return new StopSequence(nav, checkList); }
-        if(activeSequence == null) { return new InitialDiscoverySequence(nav, checkList); }
+        if(activeSequence == null) { return InitialDiscoverySequence.get(nav, checkList); }
         else if(!activeSequence.completed()) {
             return activeSequence;
         }
@@ -64,7 +64,6 @@ public class ExplorerAI {
                 return new StopSequence(nav, checkList);
             }
         }
-
     }
 
     public Action computeTerrestrialStrategy() {

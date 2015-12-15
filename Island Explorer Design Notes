@@ -1,0 +1,48 @@
+==Map==
+IslandMap has two HashMaps: HashMap<Point, Tile>) and HashMap<Tile, Point>
+IslandMap knows what the current position is.
+IslandMap does not know where front is (the direction we are facing).
+IslandMap only uses absolute directions AbsoluteDirection (North, East, South, West)
+
+IslandMap absolute navigation methods:
+	getTile(Point point) => returns the tile at the given coordinates
+	getTile(Point reference, AbsDir, range) => returns the tile that is <range> distance to the <AbsDir> of the referece coordinates.
+	getTiles (Point reference, AbsDir, range) => returns all the tiles in a straight line to the <AbsDir> up to <range> distance away from the reference coordinates.
+	getSurroundingTiles (Tile referemce) => returns the tiles surrounding the reference coordinates (does not include the tile at the reference coordinate).
+	updateTile(Tile)?
+	getX (Tile tile) => returns the x-coordinate of the given tile
+	getY (Tile tile) => returns the y-coordinate of the given tile
+	
+==Navigator==
+Knows the direction we are facing.	
+Uses relative direction (Front, Left, Right, Back)
+
+Navigator relative navigation methods:
+	getCurrentTile() => returns the tile at the current position
+	getTile(direction) => get the adjacent tile in the given <direction>
+	getTiles(direction, range) => get the tile that is <range> distance in the given <direction>
+
+
+==Actions==
+=Phase 1=
+fly => forward x3
+
+Heading: 
+	right => forward x3, right x3
+	left => forward x3, left x3
+	
+Echo: 
+When echoing, the range returned represents 3 tiles. 
+
+if ground is detected and range is 5, then there are 15 tiles in the echo direction that are sea, and the tiles at range 15 + 1 is ground. Three tiles are set to ground, because we assume the echo hits three tiles:
+
+drone     echo     ground
+	    ))))))))))))|						
+ -> ))))))))))))))))|
+	    ))))))))))))|
+ 
+
+If out_of_range is detected and range is 10, then the map is (10 + 1) * 3 tiles wide/long. The reason for +1 is that the current position of the drone is not counted in the range. 
+
+
+

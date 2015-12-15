@@ -8,37 +8,6 @@ import static eu.ace_design.island.runner.Runner.*;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        /*
-
-            ##############################################################################################
-
-                                                  NOTE TO YASOI
-
-            ##############################################################################################
-            All the combinations of corner starting positions (4 corners x 4 initial facing direction = 16.
-            The first 8 combinations should be supported by the Explorer, since they follow out assumptions
-            about starting positions.
-
-            After running each one, the logs can be seen in gameLog.log
-
-            I modified how the map works slightly: Now all tiles are created when the map is initialized (instead
-            of leaving undiscovered tiles as null like we did previously). Now we can know if the tile has been
-            discovered by using the tile.isDiscovered() method which returns a boolean. I created a TileTypeEnum
-            for this. I also added a getCurrentTile method to IslandMap.
-
-            I've managed to get scan to work. Now in the CheckList, aboveGround should be true most of the time.
-            I guess one strategy is to switch between setting a destinationTile and flying to it (or within its
-            neighbourhood) and then scanning again (try not to overlap the scans -- this can be used as a criteria
-            for deciding where to set the next destinationTile. If you look in the method
-            ExplorerAI.flyToGroundSequence, you will see that it calls a method destinationReached(). If it's true,
-            it does a scan, and also sets the destinationTile back to null.
-
-            You could probably rename the method flyToGroundSequence to flyToDestinationSequence, then reuse it for
-            flying around to nearby unscanned places to scan them.
-
-            For the cases that fail below, I've provided my guess about why they fail.
-         */
-
         run(Explorer.class)
                 .exploring(new File("map2.json"))
                 .withSeed(0L)

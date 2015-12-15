@@ -3,7 +3,6 @@ package fr.unice.polytech.qgl.qdd.ai.sequences.common;
 import fr.unice.polytech.qgl.qdd.Action;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
 import fr.unice.polytech.qgl.qdd.ai.sequences.Sequence;
-import fr.unice.polytech.qgl.qdd.enums.ActionEnum;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 
 /**
@@ -18,7 +17,7 @@ public class LandSequence extends Sequence {
 
     @Override
     public Action execute() {
-        return new Action(ActionEnum.LAND).addParameter("creek", nav.getMap().getCreeks().get(0))
+        return new Action(Action.LAND).addParameter("creek", nav.getMap().getCreeks().get(0))
                 .addParameter("people", Integer.toString(men));
     }
 

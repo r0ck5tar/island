@@ -1,10 +1,8 @@
 package fr.unice.polytech.qgl.qdd.navigation;
 
-import fr.unice.polytech.qgl.qdd.enums.BiomeEnum;
-import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
-import fr.unice.polytech.qgl.qdd.enums.TileTypeEnum;
+import fr.unice.polytech.qgl.qdd.enums.Biome;
+import fr.unice.polytech.qgl.qdd.enums.Resource;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +42,7 @@ public class IslandMap implements TileListener{
             }
         }
 
-        map[posX][posY].setType(TileTypeEnum.SEA);
+        map[posX][posY].setType(Tile.SEA);
 
         if(posX == 0 && posY == 0) {
             updateMapThroughEcho(false, length -1, "N");
@@ -69,10 +67,10 @@ public class IslandMap implements TileListener{
         //update map with sea detected by echo
         if(!isGround) {
             switch(direction) {
-                case "N": for(Tile t: getTilesNorthByRange(range)) {t.setType(TileTypeEnum.SEA);} break;
-                case "E": for(Tile t: getTilesEastByRange(range)) {t.setType(TileTypeEnum.SEA);} break;
-                case "S": for(Tile t: getTilesSouthByRange(range)) {t.setType(TileTypeEnum.SEA);} break;
-                case "W": for(Tile t: getTilesWestByRange(range)) {t.setType(TileTypeEnum.SEA);} break;
+                case "N": for(Tile t: getTilesNorthByRange(range)) {t.setType(Tile.SEA);} break;
+                case "E": for(Tile t: getTilesEastByRange(range)) {t.setType(Tile.SEA);} break;
+                case "S": for(Tile t: getTilesSouthByRange(range)) {t.setType(Tile.SEA);} break;
+                case "W": for(Tile t: getTilesWestByRange(range)) {t.setType(Tile.SEA);} break;
             }
         }
         //update map with ground detected by echo
@@ -80,15 +78,15 @@ public class IslandMap implements TileListener{
             // Ground detected is at range +/- 1
             updateMapThroughEcho(false, range, direction);
             switch(direction) {
-                case "N": map[posX][posY + range + 1].setType(TileTypeEnum.GROUND); break;
-                case "E": map[posX + range + 1][posY].setType(TileTypeEnum.GROUND); break;
-                case "S": map[posX][posY - range - 1].setType(TileTypeEnum.GROUND); break;
-                case "W": map[posX - range - 1][posY].setType(TileTypeEnum.GROUND); break;
+                case "N": map[posX][posY + range + 1].setType(Tile.GROUND); break;
+                case "E": map[posX + range + 1][posY].setType(Tile.GROUND); break;
+                case "S": map[posX][posY - range - 1].setType(Tile.GROUND); break;
+                case "W": map[posX - range - 1][posY].setType(Tile.GROUND); break;
             }
         }
     }
 
-    public void updateMapThroughScan(List<BiomeEnum> biomes){
+    public void updateMapThroughScan(List<Biome> biomes){
         Tile scannedTile = getCurrentTile();
         scannedTile.addBiomes(biomes);
     }
@@ -98,11 +96,11 @@ public class IslandMap implements TileListener{
         scannedTile.addCreeks(creeks);
     }
 
-    public void updateMap(Map<ResourceEnum, String> resources){
+    public void updateMap(Map<Resource, String> resources){
         getCurrentTile().addResources(resources);
     }
 
-    public void updateMapAfterExploit(ResourceEnum resource){
+    public void updateMapAfterExploit(Resource resource){
         getCurrentTile().removeResource(resource);
     }
 
@@ -168,8 +166,8 @@ public class IslandMap implements TileListener{
     public List<Tile> getNeighbouringTiles(Tile tile){
         List<Tile> tiles = new ArrayList<>();
 
-        for (int w = tile.getxAxis() - 1; w <= tile.getxAxis() + 1; w++) {
-            for (int l = tile.getyAxis() - 1; l <= tile.getyAxis() + 1; l++) {
+        for (int w = tile.getX() - 1; w <= tile.getX() + 1; w++) {
+            for (int l = tile.getY() - 1; l <= tile.getY() + 1; l++) {
                 if (w >= 0 && w < width && l >= 0 && l < length){
                     tiles.add(map[w][l]);
                 }
@@ -268,18 +266,18 @@ public class IslandMap implements TileListener{
             TileListener methods
         */
     @Override
-    public void typeDiscovered(Tile tile, TileTypeEnum previousType, TileTypeEnum currentType) {
+    public void typeDiscovered(Tile tile, String previousType, String currentType) {
         switch (currentType){
-            case SEA: seaTiles.add(tile); break;
-            case GROUND: groundTiles.add(tile); break;
-            case UNKNOWN: unknownTiles.add(tile);
+            case Tile.SEA: seaTiles.add(tile); break;
+            case Tile.GROUND: groundTiles.add(tile); break;
+            case Tile.UNKNOWN: unknownTiles.add(tile);
         }
 
         if(previousType!=null){
             switch (previousType){
-                case SEA: seaTiles.remove(tile); break;
-                case GROUND: groundTiles.remove(tile); break;
-                case UNKNOWN: unknownTiles.remove(tile); break;
+                case Tile.SEA: seaTiles.remove(tile); break;
+                case Tile.GROUND: groundTiles.remove(tile); break;
+                case Tile.UNKNOWN: unknownTiles.remove(tile); break;
             }
         }
     }

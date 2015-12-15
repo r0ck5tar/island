@@ -1,7 +1,7 @@
 package fr.unice.polytech.qgl.qdd;
 
 import fr.unice.polytech.qgl.qdd.ai.ExplorerAI;
-import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
+import fr.unice.polytech.qgl.qdd.enums.Resource;
 import org.json.JSONObject;
 
 /**
@@ -37,21 +37,21 @@ public class QddSimulator {
 
             if(phase == 1) {
                 switch (action.getAction()) {
-                    case FLY: explorer.fly(); break;
-                    case HEADING: explorer.turn(action.getStringParam("direction")); break;
-                    case LAND: explorer.land(action.getStringParam("creek"), action.getIntParam("people"));
+                    case Action.FLY: explorer.fly(); break;
+                    case Action.HEADING: explorer.turn(action.getStringParam("direction")); break;
+                    case Action.LAND: explorer.land(action.getStringParam("creek"), action.getIntParam("people"));
                         phase = 2; break;
-                    case ECHO: explorer.echo(action.getStringParam("direction"), result); break;
-                    case SCAN: explorer.scan(result); break;
+                    case Action.ECHO: explorer.echo(action.getStringParam("direction"), result); break;
+                    case Action.SCAN: explorer.scan(result); break;
                 }
             }
 
             else {
                 switch (action.getAction()) {
-                    case LAND: explorer.land(action.getStringParam("creek"), action.getIntParam("people")); break;
-                    case MOVE_TO: explorer.move(action.getStringParam("direction")); break;
-                    case EXPLORE: explorer.explore(result.getJSONObject("extras").getJSONArray("resources")); break;
-                    case EXPLOIT: explorer.exploit(ResourceEnum.valueOf(action.getStringParam("resource")),
+                    case Action.LAND: explorer.land(action.getStringParam("creek"), action.getIntParam("people")); break;
+                    case Action.MOVE_TO: explorer.move(action.getStringParam("direction")); break;
+                    case Action.EXPLORE: explorer.explore(result.getJSONObject("extras").getJSONArray("resources")); break;
+                    case Action.EXPLOIT: explorer.exploit(Resource.valueOf(action.getStringParam("resource")),
                             result.getJSONObject("extras").getInt("amount"));
                 }
             }

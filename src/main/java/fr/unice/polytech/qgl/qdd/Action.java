@@ -1,21 +1,28 @@
 package fr.unice.polytech.qgl.qdd;
 
-import fr.unice.polytech.qgl.qdd.enums.ActionEnum;
 import org.json.JSONObject;
 
 /**
  * Created by danial on 11/12/15.
  */
 public class Action {
-    private ActionEnum action;
+    public static final String
+            //Phase 1
+            HEADING = "heading", FLY = "fly", ECHO = "echo", SCAN = "scan",
+            //Phase 1 & 2
+            STOP = "stop", LAND = "land",
+            //Phase 2
+            MOVE_TO = "move_to", SCOUT = "scout", GLIMPSE = "glimpse", EXPLORE = "explore", EXPLOIT = "exploit", TRANSFORM = "transform";
+
+    private String action;
     private JSONObject parameters;
 
-    public Action(ActionEnum action) {
+    public Action(String action) {
         this.action = action;
         parameters = new JSONObject();
     }
 
-    public ActionEnum getAction() {
+    public String getAction() {
         return action;
     }
 
@@ -34,7 +41,7 @@ public class Action {
 
     public String toJSON() {
         JSONObject action = new JSONObject();
-        action.put("action", this.action.getAction());
+        action.put("action", this.action);
         if(parameters.length() != 0) {
             action.put("parameters", this.parameters);
         }

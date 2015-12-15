@@ -2,7 +2,7 @@ package fr.unice.polytech.qgl.qdd.enums;
 
 import java.util.ArrayList;
 
-public enum ResourceEnum {
+public enum Resource {
 
 	WOOD("MANGROVE","TEMPERATE_RAIN_FOREST","TEMPERATE_DECIDUOUS_FOREST","TROPICAL_RAIN_FOREST","TROPICAL_SEASONAL_FOREST"),
 	FISH("OCEAN","LAKE"),
@@ -15,7 +15,7 @@ public enum ResourceEnum {
 
 	private ArrayList<String> biomes = new ArrayList<>();
 
-	ResourceEnum(String... args){
+	Resource(String... args){
 		for( String arg : args )
 			biomes.add( arg );
 	}

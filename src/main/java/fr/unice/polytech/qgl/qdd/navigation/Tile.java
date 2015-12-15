@@ -1,9 +1,8 @@
 package fr.unice.polytech.qgl.qdd.navigation;
 
 
-import fr.unice.polytech.qgl.qdd.enums.BiomeEnum;
-import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
-import fr.unice.polytech.qgl.qdd.enums.TileTypeEnum;
+import fr.unice.polytech.qgl.qdd.enums.Biome;
+import fr.unice.polytech.qgl.qdd.enums.Resource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,37 +13,40 @@ import java.util.Map;
  * Created by danial on 10/12/15.
  */
 public class Tile {
-    private TileTypeEnum type;
-    private List<BiomeEnum> biomes;
-    private Map<ResourceEnum, String> resources;
-    private boolean exploited;
-
-    private List<String> creeks;
+    static final String UNKNOWN = "UNKNOWN", GROUND = "GROUND", SEA = "SEA";
+    private String type = Tile.UNKNOWN;
+    private boolean exploited = false;
+    private List<Biome> biomes = new ArrayList<>();
+    private Map<Resource, String> resources = new HashMap<>();
+    private List<String> creeks = new ArrayList<>();
     private String condition;
     private TileListener listener;
-    private int xAxis;
-    private int yAxis;
+    //TODO: remove x and y
+    private int x;
+    private int y;
 
-    public Tile(int xAxis, int yAxis, TileListener listener) {
-        this.xAxis = xAxis;
-        this.yAxis = yAxis;
+    public Tile(TileListener listener) {
         this.listener = listener;
-        setType(TileTypeEnum.UNKNOWN);
-        biomes = new ArrayList<>();
-        creeks = new ArrayList<>();
-        resources = new HashMap<>();
-        exploited = false;
+        setType(Tile.UNKNOWN);
+    }
+
+    //TODO: remove this constructor
+    public Tile(int x, int y, TileListener listener) {
+        this.x = x;
+        this.y = y;
+        this.listener = listener;
+        setType(Tile.UNKNOWN);
     }
 
     public boolean isUnknown() {
-        return type.equals(TileTypeEnum.UNKNOWN);
+        return type.equals(Tile.UNKNOWN);
     }
 
     public boolean isGround() {
-        return type.equals(TileTypeEnum.GROUND);
+        return type.equals(Tile.GROUND);
     }
 
-    public boolean isSea() { return type.equals(TileTypeEnum.SEA); }
+    public boolean isSea() { return type.equals(Tile.SEA); }
 
     public boolean isUnscanned() {
         return biomes.isEmpty();
@@ -57,7 +59,7 @@ public class Tile {
             return true;
         }
         else {
-            for(ResourceEnum r: resources.keySet()) {
+            for(Resource r: resources.keySet()) {
                 if (resources.get(r).length() > 0) { return false; }
             }
         }
@@ -68,9 +70,9 @@ public class Tile {
         return creeks.size() > 0;
     }
 
-    public boolean hasOnlyOceanBiomes(List<BiomeEnum> biomes){
+    public boolean hasOnlyOceanBiomes(List<Biome> biomes){
         for (int i = 0; i<biomes.size(); i++) {
-            if (!biomes.get(i).equals(BiomeEnum.OCEAN)) {
+            if (!biomes.get(i).equals(Biome.OCEAN)) {
                 return false;
             }
         }
@@ -81,13 +83,13 @@ public class Tile {
         return !resources.isEmpty();
     }
 
-    public boolean hasResource(ResourceEnum resource) {
+    public boolean hasResource(Resource resource) {
         return resources.containsKey(resource);
     }
 
 
-    public void addResources(Map<ResourceEnum, String> resources) {
-        for(ResourceEnum  resource: resources.keySet() ){
+    public void addResources(Map<Resource, String> resources) {
+        for(Resource resource: resources.keySet() ){
             if(this.resources.containsKey(resource)) {
                 this.resources.put(resource, this.resources.get(resource) + resources.get(resource));
             }
@@ -97,7 +99,7 @@ public class Tile {
         }
     }
 
-/*    public boolean potentiallyHasResource(ResourceEnum resource) {
+/*    public boolean potentiallyHasResource(Resource resource) {
 
     }*/
 
@@ -106,34 +108,34 @@ public class Tile {
         Relative positions to other tiles
      */
     public boolean strictlyVAlignedWith(Tile tile) {
-        return (xAxis == tile.xAxis);
+        return (x == tile.x);
     }
 
     public boolean strictlyHAlignedWith(Tile tile) {
-        return (yAxis == tile.yAxis);
+        return (y == tile.y);
     }
 
     public boolean vAlignedWith(Tile tile) {
-            return (tile.xAxis >= xAxis - 1 && tile.xAxis <= xAxis + 1);
+            return (tile.x >= x - 1 && tile.x <= x + 1);
     }
 
     public boolean hAlignedWith(Tile tile) {
-        return (tile.yAxis >= yAxis - 1 && tile.yAxis <= yAxis + 1);
+        return (tile.y >= y - 1 && tile.y <= y + 1);
 
     }
 
     /*
         Getters and Setters
      */
-    public int getxAxis(){
-        return xAxis;
+    public int getX(){
+        return x;
     }
 
-    public int getyAxis(){
-        return yAxis;
+    public int getY(){
+        return y;
     }
 
-    public TileTypeEnum getType() {
+    public String getType() {
         return type;
     }
 
@@ -146,31 +148,31 @@ public class Tile {
         listener.creekDiscovered(this);
     }
 
-    public Map<ResourceEnum, String> getResources() {
+    public Map<Resource, String> getResources() {
         return resources;
     }
 
-    public void removeResource(ResourceEnum resource) {
+    public void removeResource(Resource resource) {
         resources.remove(resource);
     }
 
-    public List<BiomeEnum> getBiomes() {
+    public List<Biome> getBiomes() {
         return biomes;
     }
 
-    public void addBiomes(List<BiomeEnum> biomes) {
+    public void addBiomes(List<Biome> biomes) {
         this.biomes.addAll(biomes);
         if (this.isUnknown() && !this.hasOnlyOceanBiomes(biomes)){
-            this.setType(TileTypeEnum.GROUND);
+            this.setType(Tile.GROUND);
         }
         else if (this.hasOnlyOceanBiomes(biomes) && this.isUnknown()) {
-            this.setType(TileTypeEnum.SEA);
+            this.setType(Tile.SEA);
         }
         listener.biomeDiscovered(this);
     }
 
-    public void setType(TileTypeEnum type) {
-        TileTypeEnum previousType = this.type;
+    public void setType(String type) {
+        String previousType = this.type;
         this.type = type;
         listener.typeDiscovered(this, previousType, type);
     }

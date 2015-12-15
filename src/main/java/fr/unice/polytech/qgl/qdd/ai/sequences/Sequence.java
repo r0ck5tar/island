@@ -2,8 +2,7 @@ package fr.unice.polytech.qgl.qdd.ai.sequences;
 
 import fr.unice.polytech.qgl.qdd.Action;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
-import fr.unice.polytech.qgl.qdd.enums.ActionEnum;
-import fr.unice.polytech.qgl.qdd.enums.ResourceEnum;
+import fr.unice.polytech.qgl.qdd.enums.Resource;
 import fr.unice.polytech.qgl.qdd.navigation.Direction;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
@@ -31,21 +30,21 @@ public abstract class Sequence {
      */
 
     protected Action echo(String direction){
-        return new Action(ActionEnum.ECHO).addParameter("direction", direction);
+        return new Action(Action.ECHO).addParameter("direction", direction);
     }
 
-    protected Action scan() { return new Action(ActionEnum.SCAN); }
+    protected Action scan() { return new Action(Action.SCAN); }
 
     protected Action fly() {
-        return checkList.isCloseToBoundary()?  chooseTurningDirection(): new Action(ActionEnum.FLY);
+        return checkList.isCloseToBoundary()?  chooseTurningDirection(): new Action(Action.FLY);
     }
 
     protected Action heading(String direction){
-        return new Action(ActionEnum.HEADING).addParameter("direction", direction);
+        return new Action(Action.HEADING).addParameter("direction", direction);
     }
 
     protected Action stop(){
-        return new Action(ActionEnum.STOP);
+        return new Action(Action.STOP);
     }
 
     protected Action chooseTurningDirection() {
@@ -64,20 +63,20 @@ public abstract class Sequence {
     }
 
     protected Action move(String direction) {
-        return new Action(ActionEnum.MOVE_TO).addParameter("direction", direction);
+        return new Action(Action.MOVE_TO).addParameter("direction", direction);
     }
 
     protected Action scout(String direction) {
-        return new Action(ActionEnum.SCOUT).addParameter("direction", direction);
+        return new Action(Action.SCOUT).addParameter("direction", direction);
     }
 
     protected Action explore() {
-        return new Action(ActionEnum.EXPLORE);
+        return new Action(Action.EXPLORE);
     }
 
-    protected Action exploit(List<ResourceEnum> resources)  {
-        Action action = new Action(ActionEnum.EXPLOIT);
-        for(ResourceEnum r: resources) {
+    protected Action exploit(List<Resource> resources)  {
+        Action action = new Action(Action.EXPLOIT);
+        for(Resource r: resources) {
             action.addParameter("resource", r.toString());
         }
         return action;
