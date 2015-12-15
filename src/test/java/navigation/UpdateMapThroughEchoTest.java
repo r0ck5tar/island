@@ -96,4 +96,28 @@ public class UpdateMapThroughEchoTest extends IslandMapTest {
             Assert.assertTrue("all 3x3 tiles east of current position should be sea", t.isSea());
         }
     }
+
+    @Test
+    public void testEchoGroundNorth() {
+        createXByYMap(WIDTH, HEIGHT);
+        setCurrentPositionMethod(WEST_BORDER, SOUTH_BORDER);
+
+        map.updateMapThroughEcho(true, 4, Compass.NORTH);
+
+        Assert.assertTrue(getTileMethod(0, 15).isGround());
+        Assert.assertTrue(getTileMethod(1, 15).isGround());
+        Assert.assertTrue(getTileMethod(2, 15).isGround());
+    }
+
+    @Test
+    public void testEchoGroundWest() {
+        createXByYMap(WIDTH, HEIGHT);
+        setCurrentPositionMethod(EAST_BORDER, SOUTH_BORDER);
+
+        map.updateMapThroughEcho(true, 4, Compass.WEST);
+
+        Assert.assertTrue(getTileMethod(14, 0).isGround());
+        Assert.assertTrue(getTileMethod(14, 1).isGround());
+        Assert.assertTrue(getTileMethod(14, 2).isGround());
+    }
 }

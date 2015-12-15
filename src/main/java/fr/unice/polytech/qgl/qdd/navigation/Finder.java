@@ -46,11 +46,11 @@ public class Finder {
     }
 
     public Tile getRandomNearbyTile(){
-        int range = 3;
+        int range = 8;
         int minX = map.getX() - range < 0 ? 0 : (map.getX() - range);
-        int maxX = (map.getX() + range) > map.getWidth() ? map.getHeight() : (map.getX() + range);
+        int maxX = (map.getX() + range) >= map.getWidth() ? map.getHeight()-1 : (map.getX() + range);
         int minY = map.getY() - range < 0 ? 0 : (map.getY() - range);
-        int maxY = (map.getY() + range) > map.getHeight() ? map.getHeight() : (map.getY() + range);
+        int maxY = (map.getY() + range) >= map.getHeight() ? map.getHeight()-1 : (map.getY() + range);
         int randomX = 0, randomY = 0;
 
         do{

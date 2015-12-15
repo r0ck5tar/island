@@ -87,11 +87,11 @@ public class IslandMap2 implements TileListener{
         //update map with ground detected by echo
         else{
             //tiles up to range-1 are sea
-            updateMapThroughEcho(false, range-1, direction);
-            int groundDistance = distance-2;
+            updateMapThroughEcho(false, range, direction);
+            int groundDistance = distance + 2;
             switch (direction) {
                 case NORTH:
-                    tiles.add(getTile(getX()+1, getY()+groundDistance));
+                    tiles.add(getTile(getX()-1, getY()+groundDistance));
                     tiles.add(getTile(getX(), getY()+groundDistance));
                     tiles.add(getTile(getX()+1, getY()+groundDistance));
                     break;
