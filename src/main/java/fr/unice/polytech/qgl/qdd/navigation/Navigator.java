@@ -215,6 +215,8 @@ public class Navigator {
     }
 
     public Tile getRandomNearbyTile(){
+        //nextInt(max - min + 1) + min;
+
         int randomX =0;
         int randomY =0;
 

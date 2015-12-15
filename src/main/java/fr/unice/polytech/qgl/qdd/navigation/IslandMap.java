@@ -11,8 +11,8 @@ import java.util.Map;
  * The map consists of a list of lists which form a grid of tiles.
  * The elements of the outer list represent the x axis, or the width of the map.
  * The elements of each list contained in the outer list represent the y axis, or the length of the map.
- * To get the tile at coordinate (x,y), do the following:
- * map.get(x).get(y)
+ * To instance the tile at coordinate (x,y), do the following:
+ * map.instance(x).instance(y)
  * Created by danial on 10/12/15.
  */
 public class IslandMap implements TileListener{

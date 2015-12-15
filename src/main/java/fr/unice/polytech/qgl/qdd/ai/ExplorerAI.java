@@ -35,13 +35,12 @@ public class ExplorerAI {
 
     public Action computeAerialStrategy() {
         activeSequence = chooseSequenceAerial();
-
         return activeSequence.execute();
     }
 
     private Sequence chooseSequenceAerial() {
         if(checkList.needToAbort()) { return new StopSequence(nav, checkList); }
-        if(activeSequence == null) { return InitialDiscoverySequence.get(nav, checkList); }
+        if(activeSequence == null) { return InitialDiscoverySequence.instance(nav, checkList); }
         else if(!activeSequence.completed()) {
             return activeSequence;
         }

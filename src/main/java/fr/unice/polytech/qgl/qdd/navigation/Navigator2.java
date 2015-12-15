@@ -11,10 +11,15 @@ public class Navigator2 {
         this.facing = facing;
         map = new IslandMap2();
         Move.init(map, this);
+        Finder.init(map, this);
     }
 
     public Move move() {
         return Move.facing(facing);
+    }
+
+    public Finder finder() {
+        return Finder.getInstance();
     }
 
     public Compass front() {
@@ -37,6 +42,36 @@ public class Navigator2 {
         this.facing = facing;
     }
 
+    Compass absoluteDirection(Direction relativeDirection) {
+        return RelativeDirection.valueOf("FACING_".concat(facing.toString())).getDirection(relativeDirection);
+    }
+
+    Direction relativeDirection(Compass absoluteDirection) {
+        switch (absoluteDirection.name().concat("_FROM_").concat(facing.name())) {
+            case "NORTH_FROM_NORTH" : //fallthrough
+            case "EAST_FROM_EAST"   : //fallthrough
+            case "SOUTH_FROM_SOUTH" : //fallthrough
+            case "WEST_FROM_WEST"   : return Direction.FRONT;
+
+            case "EAST_FROM_NORTH" : //fallthrough
+            case "SOUTH_FROM_EAST" : //fallthrough
+            case "WEST_FROM_SOUTH" : //fallthrough
+            case "NORTH_FROM_WEST" : return Direction.RIGHT;
+
+            case "NORTH_FROM_EAST" : //fallthrough
+            case "EAST_FROM_SOUTH" : //fallthrough
+            case "SOUTH_FROM_WEST" : //fallthrough
+            case "WEST_FROM_NORTH" : return Direction.LEFT;
+
+            case "NORTH_FROM_SOUTH" : //fallthrough
+            case "SOUTH_FROM_NORTH" : //fallthrough
+            case "EAST_FROM_WEST"   : //fallthrough
+            case "WEST_FROM_EAST"   : return Direction.BACK;
+
+            default : return null;
+        }
+    }
+
     private enum RelativeDirection {
         FACING_NORTH(Compass.NORTH, Compass.EAST, Compass.SOUTH, Compass.WEST),
         FACING_EAST(Compass.EAST, Compass.SOUTH, Compass.WEST, Compass.NORTH),
@@ -49,6 +84,16 @@ public class Navigator2 {
             this.right = right;
             this.back = back;
             this.left = left;
+        }
+
+        Compass getDirection(Direction direction) {
+            switch (direction) {
+                case FRONT: return front;
+                case RIGHT: return right;
+                case LEFT: return left;
+                case BACK: return back;
+                default: return null;
+            }
         }
     }
 }

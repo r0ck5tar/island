@@ -1,5 +1,8 @@
 package fr.unice.polytech.qgl.qdd.navigation;
 
+import fr.unice.polytech.qgl.qdd.enums.Biome;
+import fr.unice.polytech.qgl.qdd.enums.Resource;
+
 import java.util.*;
 
 /**
@@ -20,7 +23,7 @@ public class IslandMap2 implements TileListener{
     private Set<Tile> exploitableTiles = new HashSet<>();
     private Set<String> creeks = new HashSet<>();
 
-    /*============================================
+    /*=============================================
     Public methods used in InitialDiscoverySequence
     =============================================*/
 
@@ -59,24 +62,24 @@ public class IslandMap2 implements TileListener{
         if(!isGround) {
             switch(direction) {
                 case NORTH:
-                    tiles.addAll(getTiles(point(getX()-1, getY()+1), direction, distance));
-                    tiles.addAll(getTiles(point(getX(), getY()+1), direction, distance));
-                    tiles.addAll(getTiles(point(getX()+1, getY()+1), direction, distance));
+                    tiles.addAll(getTiles(getX()-1, getY()+1, direction, distance));
+                    tiles.addAll(getTiles(getX(), getY()+1, direction, distance));
+                    tiles.addAll(getTiles(getX()+1, getY()+1, direction, distance));
                     break;
                 case EAST:
-                    tiles.addAll(getTiles(point(getX()+1, getY()-1), direction, distance));
-                    tiles.addAll(getTiles(point(getX()+1, getY()), direction, distance));
-                    tiles.addAll(getTiles(point(getX()+1, getY()+1), direction, distance));
+                    tiles.addAll(getTiles(getX()+1, getY()-1, direction, distance));
+                    tiles.addAll(getTiles(getX()+1, getY(), direction, distance));
+                    tiles.addAll(getTiles(getX()+1, getY()+1, direction, distance));
                     break;
                 case SOUTH:
-                    tiles.addAll(getTiles(point(getX()-1, getY()-1), direction, distance));
-                    tiles.addAll(getTiles(point(getX(), getY()-1), direction, distance));
-                    tiles.addAll(getTiles(point(getX()+1, getY()-1), direction, distance));
+                    tiles.addAll(getTiles(getX()-1, getY()-1, direction, distance));
+                    tiles.addAll(getTiles(getX(), getY()-1, direction, distance));
+                    tiles.addAll(getTiles(getX()+1, getY()-1, direction, distance));
                     break;
                 case WEST:
-                    tiles.addAll(getTiles(point(getX()-1, getY()-1), direction, distance));
-                    tiles.addAll(getTiles(point(getX()-1, getY()), direction, distance));
-                    tiles.addAll(getTiles(point(getX()-1, getY()+1), direction, distance));
+                    tiles.addAll(getTiles(getX()-1, getY()-1, direction, distance));
+                    tiles.addAll(getTiles(getX()-1, getY(), direction, distance));
+                    tiles.addAll(getTiles(getX()-1, getY()+1, direction, distance));
                     break;
             }
             for(Tile t: tiles) { t.setSea(); }
@@ -112,6 +115,22 @@ public class IslandMap2 implements TileListener{
         }
     }
 
+    public void updateMapThroughScan(List<Biome> biomes) {
+        currentTile().addBiomes(biomes);
+    }
+
+    public void updateMapWithCreeks(List<String> creeks) {
+        currentTile().addCreeks(creeks);
+    }
+
+    public void updateMapWithResources(Map<Resource, String> resources) {
+        currentTile().addResources(resources);
+    }
+
+    public void UpdateMapAfterExploit(Resource resource) {
+        currentTile().removeResource(resource);
+    }
+
     /*================================
      Public methods used by Checklist.
      ===============================*/
@@ -132,17 +151,9 @@ public class IslandMap2 implements TileListener{
         return creeks;
     }
 
-    /*=============================================================
-    Package-private methods: only usable in IslandMap and Navigator
-    =============================================================*/
-
-    int getX(Tile tile) {
-        return tilesToPoints.get(tile).x;
-    }
-
-    int getY(Tile tile) {
-        return tilesToPoints.get(tile).y;
-    }
+    /*============================================================
+    Package-private methods: only usable in the navigation package
+    ============================================================*/
 
     Tile currentTile() {
         return pointsToTiles.get(currentPosition);
@@ -152,7 +163,8 @@ public class IslandMap2 implements TileListener{
         return pointsToTiles.get(new Point(x, y));
     }
 
-    Tile getTile(Point reference, Compass direction, int range) {
+    Tile getTile(Tile referenceTile, Compass direction, int range) {
+        Point reference = tilesToPoints.get(referenceTile);
         switch(direction){
             case NORTH: return getTile(reference.x, reference.y + range);
             case EAST: return getTile(reference.x + range, reference.y);
@@ -162,7 +174,51 @@ public class IslandMap2 implements TileListener{
         return null;
     }
 
-    Set<Tile> getTiles(Point reference, Compass direction, int range) {
+    /**
+     * @param direction The absolute direction in which to get the tiles.
+     * @return A set of all the tiles in the given direction between the current tile to the edge of the map.
+     */
+    Set<Tile> getTiles(Compass direction) {
+        return getTiles(getX(), getY(), direction);
+    }
+
+    /**
+     * @param refX The x coordinate of the reference tile.
+     * @param refY The y coordinate of the reference tile.
+     * @param direction The absolute direction in which to get the tiles.
+     * @return A set of all the tiles in the given direction between the tile at coordinates (refX, refY) to the edge of the map.
+     */
+    Set<Tile> getTiles(int refX, int refY, Compass direction) {
+        int range = 0;
+        switch (direction) {
+            case NORTH: range = height - getY() - 1; break;
+            case EAST: range = width - getY() - 1; break;
+            case SOUTH: range = getY(); break;
+            case WEST: range = getX(); break;
+        }
+        return getTiles(refX, refY, direction, range);
+    }
+
+    /**
+     * @param direction The absolute direction in which to get the tiles.
+     * @param range The distance of tiles to return. Since each tile has a distance of 1, the number of tiles returned
+     *              is equal to the range.
+     * @return A set of all the tiles in the given direction from the current tile up to the given range.
+     */
+    Set<Tile> getTiles(Compass direction, int range){
+        return getTiles(getX(), getY(), direction, range);
+    }
+
+    /**
+     * @param refX The x coordinate of the reference tile.
+     * @param refY The y coordinate of the reference tile.
+     * @param direction The absolute direction in which to get the tiles.
+     * @param range The distance of tiles to return. Since each tile has a distance of 1, the number of tiles returned
+     *              is equal to the range.
+     * @return A set of all the tiles in the given direction from the reference tile up to the given range.
+     */
+    Set<Tile> getTiles(int refX, int refY, Compass direction, int range) {
+        Point reference = point(refX, refY);
         Set<Tile> tiles = new HashSet<>();
         if(range > 0) {
             switch (direction) {
@@ -175,6 +231,10 @@ public class IslandMap2 implements TileListener{
         return tiles;
     }
 
+    /**
+     * @param reference The tile whose surrounding adjacent tiles will be returned.
+     * @return The set of tiles surrounding the reference tile (does not include the reference tile)
+     */
     Set<Tile> getSurroundingTiles(Tile reference) {
         Point coordinates = tilesToPoints.get(reference);
         return getSurroundingTiles(coordinates.x, coordinates.y);
@@ -196,6 +256,14 @@ public class IslandMap2 implements TileListener{
         return currentPosition.y;
     }
 
+    int getX(Tile tile) {
+        return tilesToPoints.get(tile).x;
+    }
+
+    int getY(Tile tile) {
+        return tilesToPoints.get(tile).y;
+    }
+
     int getHeight() {
         return height;
     }
@@ -204,6 +272,29 @@ public class IslandMap2 implements TileListener{
         return width;
     }
 
+    Set<Tile> getGroundTiles() {
+        return groundTiles;
+    }
+
+    Compass direction(Tile reference, Tile destination) {
+        int xDiff = tilesToPoints.get(destination).x - tilesToPoints.get(reference).x;
+        int yDiff = tilesToPoints.get(destination).y - tilesToPoints.get(reference).x;
+
+        if(Math.abs(yDiff) > Math.abs(xDiff)) {
+            if(xDiff < 0) {
+                return Compass.WEST;
+            }
+            else {
+                return Compass.EAST;
+            }
+        }
+        else if (yDiff < 0){
+            return Compass.SOUTH;
+        }
+        else{
+            return Compass.NORTH;
+        }
+    }
 
     /*==================
     TileListener methods

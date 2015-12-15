@@ -16,12 +16,7 @@ public class Move {
     ======================================*/
 
     public void fly() {
-        switch (facing) {
-            case NORTH: setY(y() + AIR_DISTANCE); break;
-            case EAST: setX(x() + AIR_DISTANCE); break;
-            case SOUTH: setY(y() - AIR_DISTANCE); break;
-            case WEST: setX(x() - AIR_DISTANCE); break;
-        }
+        travel(AIR_DISTANCE);
     }
 
     public void turn(Compass direction) {
@@ -46,7 +41,16 @@ public class Move {
     =======================*/
 
     public void walk() {
+        travel(LAND_DISTANCE);
+    }
 
+    private void travel(int distance) {
+        switch (facing) {
+            case NORTH: setY(y() + distance); break;
+            case EAST: setX(x() + distance); break;
+            case SOUTH: setY(y() - distance); break;
+            case WEST: setX(x() - distance); break;
+        }
     }
 
 

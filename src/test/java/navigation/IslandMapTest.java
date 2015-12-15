@@ -3,10 +3,8 @@ package navigation;
 import fr.unice.polytech.qgl.qdd.navigation.Compass;
 import fr.unice.polytech.qgl.qdd.navigation.IslandMap2;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
-import org.hamcrest.core.Is;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
+
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -69,7 +67,7 @@ public class IslandMapTest {
             getTileMethod = IslandMap2.class.getDeclaredMethod("getTile", int.class, int.class);
             getTileMethod.setAccessible(true);
 
-            getRangedTileMethod = IslandMap2.class.getDeclaredMethod("getTile", pointClass, Compass.class, int.class);
+            getRangedTileMethod = IslandMap2.class.getDeclaredMethod("getTile", Tile.class, Compass.class, int.class);
             getRangedTileMethod.setAccessible(true);
 
             getTilesNorthMethod = IslandMap2.class.getDeclaredMethod("getTilesNorth", pointClass, int.class);
@@ -148,10 +146,10 @@ public class IslandMapTest {
         return tiles;
     }
 
-    protected Tile getRangedTileMethod(int refX, int refY, Compass direction, int range) {
+    protected Tile getRangedTileMethod(Tile referenceTile, Compass direction, int range) {
         Tile tile = null;
         try {
-            tile =  (Tile)getRangedTileMethod.invoke(map, point(refX, refY), direction, range);
+            tile =  (Tile)getRangedTileMethod.invoke(map, referenceTile, direction, range);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

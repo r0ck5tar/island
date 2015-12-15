@@ -32,7 +32,7 @@ public class InitialDiscoverySequence extends Sequence {
         return nav.mapInitialized();
     }
 
-    public static InitialDiscoverySequence get(Navigator nav, CheckList checkList) {
+    public static InitialDiscoverySequence instance(Navigator nav, CheckList checkList) {
         if(instance == null) {
             instance = new InitialDiscoverySequence(nav, checkList);
         }

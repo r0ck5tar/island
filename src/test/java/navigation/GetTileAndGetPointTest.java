@@ -49,7 +49,7 @@ public class GetTileAndGetPointTest extends IslandMapTest {
         //Set current position to (5,5)
         setCurrentPositionMethod(5, 5);
 
-        //get current position and verify that the returned tile is ground (all other tiles are unknown by default)
+        //instance current position and verify that the returned tile is ground (all other tiles are unknown by default)
         Assert.assertEquals(GROUND, currentTileMethod().getType());
     }
 
@@ -60,8 +60,9 @@ public class GetTileAndGetPointTest extends IslandMapTest {
         //Set tile (9,9) as ground
         getTileMethod(9, 9).setGround();
 
-        //Get the tile which is 9 tiles north og (9,0)
-        Tile tileAtRange9ToNorthOfx9y0 = getRangedTileMethod(9, 0, Compass.NORTH, 9);
+        //Get the tile which is 9 tiles north of (9,0)
+        Tile tilex9y0 = getTileMethod(9, 0);
+        Tile tileAtRange9ToNorthOfx9y0 = getRangedTileMethod(tilex9y0, Compass.NORTH, 9);
 
         //Verify that tileAtRange9ToNorthOfx9y0 is ground
         Assert.assertEquals(GROUND, tileAtRange9ToNorthOfx9y0.getType());
