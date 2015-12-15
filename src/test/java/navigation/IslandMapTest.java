@@ -23,24 +23,25 @@ public class IslandMapTest {
     /*
     IslandMap private methods and fields
      */
-    protected Method createTileMethod;
-    protected Method getTileMethod;
-    protected Method getRangedTileMethod;
-    protected Method getSurroundingTilesMethod;
-    protected Method getTilesNorthMethod;
-    protected Method getTilesEastMethod;
-    protected Method getTilesSouthMethod;
-    protected Method getTilesWestMethod;
-    protected Method currentTileMethod;
-    protected Method setCurrentPositionMethod;
-    protected Field heightField;
-    protected Field widthField;
+    private Method createTileMethod;
+    private Method getTileMethod;
+    private Method getRangedTileMethod;
+    private Method getSurroundingTilesMethod;
+    private Method getTilesNorthMethod;
+    private Method getTilesEastMethod;
+    private Method getTilesSouthMethod;
+    private Method getTilesWestMethod;
+    private Method currentTileMethod;
+    private Method setCurrentPositionMethod;
+    private Method updateMapThroughEchoMethod;
+    private Field heightField;
+    private Field widthField;
 
     /*
     Point private class
      */
-    protected Class pointClass;
-    protected Constructor pointConstructor;
+    private Class pointClass;
+    private Constructor pointConstructor;
 
     /*
     constants
@@ -111,6 +112,7 @@ public class IslandMapTest {
                     createTileMethod.invoke(map, i, j);
                 }
             }
+            setHeightAndWidth(x, y);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -129,6 +131,18 @@ public class IslandMapTest {
         }
 
         return tile;
+    }
+
+    protected Set<Tile> getSurroundingTilesMethod (int x, int y) {
+        Set<Tile> tiles = null;
+        try {
+            tiles = (Set<Tile>) getSurroundingTilesMethod.invoke(map, x, y);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return tiles;
     }
 
     protected Tile getRangedTileMethod(int refX, int refY, Compass direction, int range) {
@@ -198,8 +212,7 @@ public class IslandMapTest {
         return tiles;
     }
 
-
-    protected void setHeightAndWidth(int h, int w) {
+    private void setHeightAndWidth(int h, int w) {
         try {
             heightField.set(map, h);
             widthField.set(map, w);

@@ -42,7 +42,7 @@ public class IslandMap implements TileListener{
             }
         }
 
-        map[posX][posY].setType(Tile.SEA);
+        map[posX][posY].setSea();
 
         if(posX == 0 && posY == 0) {
             updateMapThroughEcho(false, length -1, "N");
@@ -67,10 +67,10 @@ public class IslandMap implements TileListener{
         //update map with sea detected by echo
         if(!isGround) {
             switch(direction) {
-                case "N": for(Tile t: getTilesNorthByRange(range)) {t.setType(Tile.SEA);} break;
-                case "E": for(Tile t: getTilesEastByRange(range)) {t.setType(Tile.SEA);} break;
-                case "S": for(Tile t: getTilesSouthByRange(range)) {t.setType(Tile.SEA);} break;
-                case "W": for(Tile t: getTilesWestByRange(range)) {t.setType(Tile.SEA);} break;
+                case "N": for(Tile t: getTilesNorthByRange(range)) {t.setSea();} break;
+                case "E": for(Tile t: getTilesEastByRange(range)) {t.setSea();} break;
+                case "S": for(Tile t: getTilesSouthByRange(range)) {t.setSea();} break;
+                case "W": for(Tile t: getTilesWestByRange(range)) {t.setSea();} break;
             }
         }
         //update map with ground detected by echo
@@ -78,10 +78,10 @@ public class IslandMap implements TileListener{
             // Ground detected is at range +/- 1
             updateMapThroughEcho(false, range, direction);
             switch(direction) {
-                case "N": map[posX][posY + range + 1].setType(Tile.GROUND); break;
-                case "E": map[posX + range + 1][posY].setType(Tile.GROUND); break;
-                case "S": map[posX][posY - range - 1].setType(Tile.GROUND); break;
-                case "W": map[posX - range - 1][posY].setType(Tile.GROUND); break;
+                case "N": map[posX][posY + range + 1].setGround(); break;
+                case "E": map[posX + range + 1][posY].setGround(); break;
+                case "S": map[posX][posY - range - 1].setGround(); break;
+                case "W": map[posX - range - 1][posY].setGround(); break;
             }
         }
     }

@@ -171,10 +171,18 @@ public class Tile {
         listener.biomeDiscovered(this);
     }
 
-    public void setType(String type) {
+    private void setType(String type) {
         String previousType = this.type;
         this.type = type;
         listener.typeDiscovered(this, previousType, type);
+    }
+
+    public void setSea() {
+        setType(SEA);
+    }
+
+    public void setGround() {
+        setType(GROUND);
     }
 
     public boolean isExploited() {

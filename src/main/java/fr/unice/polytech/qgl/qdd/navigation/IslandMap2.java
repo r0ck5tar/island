@@ -47,47 +47,7 @@ public class IslandMap2 implements TileListener{
         }
     }
 
-    private void initializeMap() {
-        //create all the tiles for the map of size width * height
-        for(int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                createTile(x, y);
-            }
-        }
-
-        //set the tiles at the current position and surrounding the current position as sea tiles
-        currentTile().setType(Tile.SEA);
-        for(Tile t: getSurroundingTiles(currentTile())) {
-            t.setType(Tile.SEA);
-        }
-
-        //set the previously echoed borders as sea tiles.
-        int vRangeToBorder = (height - INITIAL_DIMENSIONS)/3;
-        int hRangeToBorder = (width - INITIAL_DIMENSIONS)/3;
-
-        if (getY() == 1) {
-            updateMapThroughEcho(false, vRangeToBorder, currentPosition, Compass.NORTH);
-        }
-        else{
-            updateMapThroughEcho(false, vRangeToBorder, currentPosition, Compass.SOUTH);
-        }
-
-        if (getX() == 1) {
-            updateMapThroughEcho(false, vRangeToBorder, currentPosition, Compass.EAST);
-        }
-        else{
-            updateMapThroughEcho(false, vRangeToBorder, currentPosition, Compass.WEST);
-        }
-    }
-
-    public void createTile(int x, int y){
-        Point coordinates = new Point(x, y);
-        Tile tile = new Tile(this);
-        pointsToTiles.put(coordinates, tile);
-        tilesToPoints.put(tile, coordinates);
-    }
-
-    public void updateMapThroughEcho(boolean isGround, int range, Point position, Compass direction) {
+    public void updateMapThroughEcho(boolean isGround, int range, Compass direction) {
         int distance = range*3;
         Set<Tile> tiles = new HashSet<>();
         //update map with sea detected by echo
@@ -114,51 +74,38 @@ public class IslandMap2 implements TileListener{
                     tiles.addAll(getTiles(point(getX()-1, getY()+1), direction, distance));
                     break;
             }
-            for(Tile t: tiles) { t.setType(Tile.SEA); }
+            for(Tile t: tiles) { t.setSea(); }
         }
         //update map with ground detected by echo
         else{
             //tiles up to range-1 are sea
-            updateMapThroughEcho(false, range-1, position, direction);
+            updateMapThroughEcho(false, range-1, direction);
             int groundDistance = distance-2;
             switch (direction) {
                 case NORTH:
-                    tiles.add(getTile(position.x+1, position.y+groundDistance));
-                    tiles.add(getTile(position.x, position.y+groundDistance));
-                    tiles.add(getTile(position.x+1, position.y+groundDistance));
+                    tiles.add(getTile(getX()+1, getY()+groundDistance));
+                    tiles.add(getTile(getX(), getY()+groundDistance));
+                    tiles.add(getTile(getX()+1, getY()+groundDistance));
                     break;
                 case EAST:
-                    tiles.add(getTile(position.x+groundDistance, position.y-1));
-                    tiles.add(getTile(position.x+groundDistance, position.y));
-                    tiles.add(getTile(position.x+groundDistance, position.y+1));
+                    tiles.add(getTile(getX()+groundDistance, getY()-1));
+                    tiles.add(getTile(getX()+groundDistance, getY()));
+                    tiles.add(getTile(getX()+groundDistance, getY()+1));
                     break;
                 case SOUTH:
-                    tiles.add(getTile(position.x-1, position.y-groundDistance));
-                    tiles.add(getTile(position.x, position.y-groundDistance));
-                    tiles.add(getTile(position.x+1, position.y-groundDistance));
+                    tiles.add(getTile(getX()-1, getY()-groundDistance));
+                    tiles.add(getTile(getX(), getY()-groundDistance));
+                    tiles.add(getTile(getX()+1, getY()-groundDistance));
                     break;
                 case WEST:
-                    tiles.add(getTile(position.x-groundDistance, position.y-1));
-                    tiles.add(getTile(position.x-groundDistance, position.y));
-                    tiles.add(getTile(position.x-groundDistance, position.y+1));
+                    tiles.add(getTile(getX()-groundDistance, getY()-1));
+                    tiles.add(getTile(getX()-groundDistance, getY()));
+                    tiles.add(getTile(getX()-groundDistance, getY()+1));
                     break;
             }
-            for (Tile t: tiles) { t.setType(Tile.GROUND); }
+            for (Tile t: tiles) { t.setGround(); }
         }
     }
-
-    /*************
-    Public getters
-    *************/
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
 
     /**************************************************************
     Package-private methods: only usable in IslandMap and Navigator
@@ -218,6 +165,14 @@ public class IslandMap2 implements TileListener{
 
     int getY() {
         return currentPosition.y;
+    }
+
+    int getHeight() {
+        return height;
+    }
+
+    int getWidth() {
+        return width;
     }
 
 
@@ -330,5 +285,49 @@ public class IslandMap2 implements TileListener{
             }
         }
         return tiles;
+    }
+
+    /*************************************
+     Private  methods for initializing map
+     ************************************/
+
+    private void initializeMap() {
+        //create all the tiles for the map of size width * height
+        for(int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                createTile(x, y);
+            }
+        }
+
+        //set the tiles at the current position and surrounding the current position as sea tiles
+        currentTile().setSea();
+        for(Tile t: getSurroundingTiles(currentTile())) {
+            t.setSea();
+        }
+
+        //set the previously echoed borders as sea tiles.
+        int vRangeToBorder = (height - INITIAL_DIMENSIONS)/3;
+        int hRangeToBorder = (width - INITIAL_DIMENSIONS)/3;
+
+        if (getY() == 1) {
+            updateMapThroughEcho(false, vRangeToBorder, Compass.NORTH);
+        }
+        else{
+            updateMapThroughEcho(false, vRangeToBorder, Compass.SOUTH);
+        }
+
+        if (getX() == 1) {
+            updateMapThroughEcho(false, vRangeToBorder, Compass.EAST);
+        }
+        else{
+            updateMapThroughEcho(false, vRangeToBorder, Compass.WEST);
+        }
+    }
+
+    private void createTile(int x, int y){
+        Point coordinates = new Point(x, y);
+        Tile tile = new Tile(this);
+        pointsToTiles.put(coordinates, tile);
+        tilesToPoints.put(tile, coordinates);
     }
 }
