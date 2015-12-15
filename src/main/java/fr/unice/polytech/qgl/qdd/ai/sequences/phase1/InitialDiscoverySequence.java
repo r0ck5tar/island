@@ -20,9 +20,9 @@ public class InitialDiscoverySequence extends Sequence {
     @Override
     public Action execute() {
         switch(counter) {
-            case 1: return echo(nav.front()); //First echo; echo front
-            case 2: return echo(nav.right()); //Second echo; echo right
-            case 3: if(!nav.mapInitialized()) { return echo(nav.left()); }
+            case 1: counter++; return echo(nav.front()); //First echo; echo front
+            case 2: counter++; return echo(nav.right()); //Second echo; echo right
+            case 3: counter++; if(!nav.mapInitialized()) { return echo(nav.left()); }
         }
         return fly();
     }
