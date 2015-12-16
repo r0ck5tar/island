@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Tile {
     static final String UNKNOWN = "UNKNOWN", GROUND = "GROUND", SEA = "SEA";
-    private String type = Tile.UNKNOWN;
+    private String type = null;
     private boolean exploited = false;
     private List<Biome> biomes = new ArrayList<>();
     private Map<Resource, String> resources = new HashMap<>();
@@ -26,14 +26,6 @@ public class Tile {
     private int y;
 
     public Tile(TileListener listener) {
-        this.listener = listener;
-        setType(Tile.UNKNOWN);
-    }
-
-    //TODO: remove this constructor
-    public Tile(int x, int y, TileListener listener) {
-        this.x = x;
-        this.y = y;
         this.listener = listener;
         setType(Tile.UNKNOWN);
     }
@@ -195,9 +187,9 @@ public class Tile {
 
     public String toString() {
         switch (type) {
-            case UNKNOWN: return " · ";
-            case SEA: return " ~ ";
-            case GROUND: return " G ";
+            case UNKNOWN: return "·";
+            case SEA: return "~";
+            case GROUND: return "G";
             //ᚙ✰
         }
         return type.toString();

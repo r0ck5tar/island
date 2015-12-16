@@ -2,7 +2,7 @@ package navigation;
 
 import fr.unice.polytech.qgl.qdd.navigation.Compass;
 import fr.unice.polytech.qgl.qdd.navigation.Direction;
-import fr.unice.polytech.qgl.qdd.navigation.Navigator2;
+import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,23 +14,23 @@ import java.lang.reflect.Method;
  * Created by hbinluqman on 14/12/2015.
  */
 public class NavigatorRelativeDirectionTest {
-    private Navigator2 nav;
+    private Navigator nav;
     private Method setFacingDirectionMethod;
     private Method absoluteDirectionMethod;
     private Method relativeDirectionMethod;
 
     @Before
     public void Setup() {
-        nav = new Navigator2(Compass.NORTH);
+        nav = new Navigator(Compass.NORTH);
 
         try {
-            setFacingDirectionMethod = Navigator2.class.getDeclaredMethod("setFacingDirection", Compass.class);
+            setFacingDirectionMethod = Navigator.class.getDeclaredMethod("setFacingDirection", Compass.class);
             setFacingDirectionMethod.setAccessible(true);
 
-            absoluteDirectionMethod = Navigator2.class.getDeclaredMethod("absoluteDirection", Direction.class);
+            absoluteDirectionMethod = Navigator.class.getDeclaredMethod("absoluteDirection", Direction.class);
             absoluteDirectionMethod.setAccessible(true);
 
-            relativeDirectionMethod = Navigator2.class.getDeclaredMethod("relativeDirection", Compass.class);
+            relativeDirectionMethod = Navigator.class.getDeclaredMethod("relativeDirection", Compass.class);
             relativeDirectionMethod.setAccessible(true);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();

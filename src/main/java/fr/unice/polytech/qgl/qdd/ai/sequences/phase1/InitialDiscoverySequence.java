@@ -1,6 +1,5 @@
 package fr.unice.polytech.qgl.qdd.ai.sequences.phase1;
 
-import com.sun.org.apache.xml.internal.security.Init;
 import fr.unice.polytech.qgl.qdd.Action;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
 import fr.unice.polytech.qgl.qdd.ai.sequences.Sequence;
@@ -22,14 +21,14 @@ public class InitialDiscoverySequence extends Sequence {
         switch(counter) {
             case 1: counter++; return echo(nav.front()); //First echo; echo front
             case 2: counter++; return echo(nav.right()); //Second echo; echo right
-            case 3: counter++; if(!nav.mapInitialized()) { return echo(nav.left()); }
+            case 3: counter++; if(!nav.map().isInitialized()) { return echo(nav.left()); }
         }
         return fly();
     }
 
     @Override
     public boolean completed() {
-        return nav.mapInitialized();
+        return nav.map().isInitialized();
     }
 
     public static InitialDiscoverySequence instance(Navigator nav, CheckList checkList) {

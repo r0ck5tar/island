@@ -20,13 +20,13 @@ public class ExploreSequence extends MoveSequence {
     @Override
     public Action execute() {
         counter++;
-        Tile currentTile = nav.getCurrentTile();
-        if(isExplorable(nav.getCurrentTile())) {
+        Tile currentTile = nav.map().currentTile();
+        if(isExplorable(nav.map().currentTile())) {
             destinationTile = null;
             return explore(); }
 
         if(destinationTile == null) {
-            for(Tile t: nav.getNeighbouringTiles(nav.getCurrentTile())) {
+            for(Tile t: nav.finder().neighbouringTiles()) {
                 if(isExplorable(t)) { destinationTile = t; }
             }
         }

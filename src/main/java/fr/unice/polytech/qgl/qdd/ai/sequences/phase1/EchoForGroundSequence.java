@@ -21,7 +21,7 @@ public class EchoForGroundSequence extends Sequence {
     public Action execute() {
         Action action = null;
         if (!checkList.isTilesAtLeftDiscovered()){
-            action = echo( nav.left());
+            action = echo(nav.left());
         }
         else if (!checkList.isTilesAtRightDiscovered()){
             action = echo( nav.right());

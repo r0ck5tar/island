@@ -2,7 +2,6 @@ package navigation;
 
 import fr.unice.polytech.qgl.qdd.navigation.Compass;
 import fr.unice.polytech.qgl.qdd.navigation.IslandMap;
-import fr.unice.polytech.qgl.qdd.navigation.IslandMap2;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,26 +13,26 @@ import java.lang.reflect.Method;
  * Created by hbinluqman on 15/12/2015.
  */
 public class InitializeMapThroughEchoTest {
-    private IslandMap2 map;
+    private IslandMap map;
     private static final int INITIAL_WIDTH = 3, INITIAL_HEIGHT = 3;
     private static final int WIDTH = 30, HEIGHT = 30, RANGE = 9, OUT_OF_BOUND_RANGE_ZERO = 0;
     private static final int SOUTH_BORDER = 1, WEST_BORDER = 1, NORTH_BORDER = 28, EAST_BORDER = 28;
 
     @Before
     public void setup(){
-        map = new IslandMap2();
+        map = new IslandMap();
 
         try {
-            getHeightMethod = IslandMap2.class.getDeclaredMethod("getHeight");
+            getHeightMethod = IslandMap.class.getDeclaredMethod("getHeight");
             getHeightMethod.setAccessible(true);
 
-            getWidthMethod = IslandMap2.class.getDeclaredMethod("getWidth");
+            getWidthMethod = IslandMap.class.getDeclaredMethod("getWidth");
             getWidthMethod.setAccessible(true);
 
-            getXMethod = IslandMap2.class.getDeclaredMethod("getX");
+            getXMethod = IslandMap.class.getDeclaredMethod("x");
             getXMethod.setAccessible(true);
 
-            getYMethod = IslandMap2.class.getDeclaredMethod("getY");
+            getYMethod = IslandMap.class.getDeclaredMethod("y");
             getYMethod.setAccessible(true);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -174,7 +173,7 @@ public class InitializeMapThroughEchoTest {
 
 
     /*========================================
-    getHeight, getWidth, getX and getY methods
+    getHeight, getWidth, x and y methods
     ==========================================*/
     private Method getHeightMethod;
     private Method getWidthMethod;

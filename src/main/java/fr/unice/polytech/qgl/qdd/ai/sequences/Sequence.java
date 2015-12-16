@@ -3,6 +3,7 @@ package fr.unice.polytech.qgl.qdd.ai.sequences;
 import fr.unice.polytech.qgl.qdd.Action;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
 import fr.unice.polytech.qgl.qdd.enums.Resource;
+import fr.unice.polytech.qgl.qdd.navigation.Compass;
 import fr.unice.polytech.qgl.qdd.navigation.Direction;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
@@ -29,8 +30,8 @@ public abstract class Sequence {
         Action-building helper methods
      */
 
-    protected Action echo(String direction){
-        return new Action(Action.ECHO).addParameter("direction", direction);
+    protected Action echo(Compass direction){
+        return new Action(Action.ECHO).addParameter("direction", direction.toString());
     }
 
     protected Action scan() { return new Action(Action.SCAN); }
@@ -39,22 +40,23 @@ public abstract class Sequence {
         return checkList.isCloseToBoundary()?  chooseTurningDirection(): new Action(Action.FLY);
     }
 
-    protected Action heading(String direction){
-        return new Action(Action.HEADING).addParameter("direction", direction);
+    protected Action heading(Compass direction){
+        return new Action(Action.HEADING).addParameter("direction", direction.toString());
     }
 
     protected Action stop(){
         return new Action(Action.STOP);
     }
 
+    //TODO: rewrite this so that it takes the detected shoreline into considering.
     protected Action chooseTurningDirection() {
         int unknownTilesOnRight = 0, unknownTilesOnLeft = 0;
 
-        for (Tile t: nav.getTilesOnSide(Direction.RIGHT)){
+        for (Tile t: nav.finder().getTilesOnSide(Direction.RIGHT)){
             if(t.isUnknown()) { unknownTilesOnRight++; }
         }
 
-        for (Tile t: nav.getTilesOnSide(Direction.LEFT)){
+        for (Tile t: nav.finder().getTilesOnSide(Direction.LEFT)){
             if(t.isUnknown()) { unknownTilesOnLeft++; }
         }
 
@@ -62,8 +64,8 @@ public abstract class Sequence {
         else { return heading(nav.right()); }
     }
 
-    protected Action move(String direction) {
-        return new Action(Action.MOVE_TO).addParameter("direction", direction);
+    protected Action move(Compass direction) {
+        return new Action(Action.MOVE_TO).addParameter("direction", direction.toString());
     }
 
     protected Action scout(String direction) {

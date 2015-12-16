@@ -19,7 +19,7 @@ public class MoveSequence extends Sequence {
 
     @Override
     public Action execute() {
-        switch(nav.getRelativeDirectionOfTile(destinationTile)) {
+        switch(nav.finder().relativeDirectionOfTile(destinationTile)) {
             case FRONT: return move(nav.front());
             case RIGHT: return move(nav.right());
             case LEFT: return move(nav.left());
@@ -36,7 +36,7 @@ public class MoveSequence extends Sequence {
     }
 
     private boolean destinationReached(){
-        if (destinationTile.equals(nav.getCurrentTile())){
+        if (destinationTile.equals(nav.map().currentTile())){
             destinationTile = null;
             return true;
         }

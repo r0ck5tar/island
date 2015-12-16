@@ -1,297 +1,103 @@
 package fr.unice.polytech.qgl.qdd.navigation;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 /**
- * Created by danial on 20/11/15.
+ * Created by hbinluqman on 14/12/2015.
  */
 public class Navigator {
-
-    private String front;
     private IslandMap map;
-    private Random random;
+    private Compass facing;
 
-    public Navigator(String facing){
-        front = facing;
+    public Navigator(Compass facing) {
+        this.facing = facing;
         map = new IslandMap();
-        random = new Random();
-    }
-    /*=========
-    Map methods
-    =========*/
-    public boolean mapInitialized(){
-        return map.isInitialized();
+        Move.init(map, this);
+        Finder.init(map, this);
     }
 
-    public void initializeMap() { map.initializeMap(); }
-
-    public IslandMap getMap() { return map; }
-
-    public List<Tile> getNeighbouringTiles(Tile tile) {return map.getNeighbouringTiles(tile);}
-
-    public Tile getCurrentTile() {return map.getCurrentTile(); }
-
-    public Tile getTile(int x, int y) { return  map.getTile(x, y); }
-
-    public int getPosX() { return map.getPosX(); }
-
-    public int getPosY() { return map.getPosY(); }
-
-    public List<Tile> getAllTilesInDirection(Direction direction) {
-        List<Tile> tiles = null;
-        switch (direction) {
-            case FRONT: tiles = getAllTilesInAbsoluteDirection(front()); break;
-            case RIGHT: tiles = getAllTilesInAbsoluteDirection(right()); break;
-            case LEFT: tiles = getAllTilesInAbsoluteDirection(left()); break;
-            case BACK: tiles = getAllTilesInAbsoluteDirection(back()); break;
-        }
-        return tiles;
+    public Move move() {
+        return Move.facing(facing);
     }
 
-    private List<Tile> getAllTilesInAbsoluteDirection(String direction) {
-        List<Tile> tiles = null;
-        switch (direction){
-            case "N": tiles = map.getTilesNorth(); break;
-            case "E": tiles = map.getTilesEast(); break;
-            case "S": tiles = map.getTilesSouth(); break;
-            case "W": tiles = map.getTilesWest(); break;
-        }
-        return tiles;
+    public Finder finder() {
+        return Finder.getInstance();
     }
 
-    public Direction getRelativeDirectionOfTile(Tile tile){
-        boolean strictlyVAligned = getCurrentTile().strictlyVAlignedWith(tile);
-        boolean strictlyHAligned = getCurrentTile().strictlyHAlignedWith(tile);
-        boolean vAligned = getCurrentTile().vAlignedWith(tile);
-        boolean hAligned = getCurrentTile().hAlignedWith(tile);
-
-        switch (front()) {
-            case "N":
-                if(hAligned && !strictlyVAligned) {
-                    if(tile.getX() < getPosX()) { return Direction.LEFT; }
-                    else if(tile.getX() > getPosX()) { return Direction.RIGHT;  }
-                }
-                else{
-                    if(tile.getY() < getPosY()) { return Direction.BACK; }
-                    else if (tile.getY() > getPosY()) { return Direction.FRONT; }
-                }
-                break;
-
-            case "E":
-                if(vAligned && !strictlyHAligned) {
-                    if(tile.getY() > getPosY()) { return Direction.LEFT; }
-                    else if(tile.getY() < getPosY()) { return Direction.RIGHT;  }
-                }
-                else{
-                    if(tile.getX() < getPosX()) { return Direction.BACK; }
-                    else if (tile.getX() > getPosX()) { return Direction.FRONT; }
-                }
-                break;
-
-            case "S":
-                if(hAligned && !strictlyVAligned) {
-                    if(tile.getX() > getPosX()) { return Direction.LEFT; }
-                    else if(tile.getX() < getPosX()) { return Direction.RIGHT;  }
-                }
-                else{
-                    if(tile.getY() > getPosY()) { return Direction.BACK; }
-                    else if (tile.getY() < getPosY()) { return Direction.FRONT; }
-                }
-                break;
-
-            case "W":
-                if(vAligned && !strictlyHAligned) {
-                    if(tile.getY() < getPosY()) { return Direction.LEFT; }
-                    else if(tile.getY() > getPosY()) { return Direction.RIGHT;  }
-                }
-                else{
-                    if(tile.getX() > getPosX()) { return Direction.BACK; }
-                    else if (tile.getX() < getPosX()) { return Direction.FRONT; }
-                }
-                break;
-        }
-
-        return Direction.FRONT;
+    public IslandMap map() {
+        return map;
     }
 
-    public Tile getTileInDirection(Direction direction) {
-        switch (direction){
-            case FRONT: return getTileInAbsoluteDirection(front());
-            case RIGHT: return getTileInAbsoluteDirection(right());
-            case LEFT: return getTileInAbsoluteDirection(left());
-            case BACK: return getTileInAbsoluteDirection(back());
-            case FRONT_RIGHT: return getTileInFrontRight();
-            case FRONT_LEFT: return getTileInFrontLeft();
-        }
-        return null;
+    public Compass front() {
+        return facing;
     }
 
-    public Tile getTileInAbsoluteDirection(String direction) {
-        switch(direction){
-            case "N": return map.getTilesNorthByRange(1).get(0);
-            case "E": return map.getTilesEastByRange(1).get(0);
-            case "S": return map.getTilesSouthByRange(1).get(0);
-            case "W": return map.getTilesWestByRange(1).get(0);
-        }
-        return null;
+    public Compass back() {
+        return RelativeDirection.valueOf("FACING_".concat(facing.name())).back;
     }
 
-    private Tile getTileInFrontRight(){
-        switch (front){
-            case "N": return map.getTile(getPosX()+1, getPosY()+1);
-            case "S": return map.getTile(getPosX()-1, getPosY()-1);
-            case "E": return map.getTile(getPosX()+1, getPosY()-1);
-            case "W": return map.getTile(getPosX()-1, getPosY()+1);
-        }
-        return null;
+    public Compass right() {
+        return RelativeDirection.valueOf("FACING_".concat(facing.name())).right;
     }
 
-    private Tile getTileInFrontLeft(){
-        switch (front){
-            case "N": return map.getTile(getPosX()-1, getPosY()+1);
-            case "S": return map.getTile(getPosX()+1, getPosY()-1);
-            case "E": return map.getTile(getPosX()+1, getPosY()+1);
-            case "W": return map.getTile(getPosX()-1, getPosY()-1);
-        }
-        return null;
+    public Compass left() {
+        return RelativeDirection.valueOf("FACING_".concat(facing.name())).left;
     }
 
-    public Tile findAdjacentTileWithUnscannedGround(){
-        List<Tile> tiles = getAllTilesInDirection(Direction.LEFT);
-        tiles.addAll(getAllTilesInDirection(Direction.RIGHT));
-        tiles.addAll(getAllTilesInDirection(Direction.FRONT));
-
-        for (int i = 0 ; i < tiles.size(); i++) {
-            if (tiles.get(i).isGround() && tiles.get(i).isUnscanned()) {
-                return tiles.get(i);
-            }
-        }
-        return null;
+    void setFacingDirection(Compass facing) {
+        this.facing = facing;
     }
 
-    public List<Tile> getTilesOnSide(Direction direction){
-        switch (direction){
-            case LEFT: return getTilesOnAbsoluteSide(left());
-            case RIGHT: return getTilesOnAbsoluteSide(right());
-        }
-        return null;
+    Compass absoluteDirection(Direction relativeDirection) {
+        return RelativeDirection.valueOf("FACING_".concat(facing.name())).getDirection(relativeDirection);
     }
 
-    private List<Tile> getTilesOnAbsoluteSide(String direction) {
-        List<Tile> tiles = new ArrayList<>();
-        switch (direction){
-            case "N":
-                for (int l = getPosY() + 1; l < map.getLength(); l++ ) {
-                    for (int w = 0; w < map.getWidth(); w++ ){
-                        tiles.add(map.getTile(w,l));
-                    }
-                }
-                break;
-            case "E":
-                for (int l = 0; l < map.getLength(); l++) {
-                    for (int w = getPosX() + 1; w < map.getWidth(); w++ ) {
-                        tiles.add(map.getTile(w,l));
-                    }
-                }
-                break;
-            case "S":
-                for (int l = 0; l < map.getPosY(); l++ ) {
-                    for (int w = 0; w < map.getWidth(); w++ ){
-                        tiles.add(map.getTile(w,l));
-                    }
-                }
-                break;
-            case "W":
-                for (int l = 0; l < map.getLength(); l++) {
-                    for (int w = 0; w < map.getPosX(); w++ ) {
-                        tiles.add(map.getTile(w,l));
-                    }
-                }
-                break;
-        }
-        return tiles;
-    }
+    Direction relativeDirection(Compass absoluteDirection) {
+        switch (absoluteDirection.name().concat("_FROM_").concat(facing.name())) {
+            case "NORTH_FROM_NORTH" : //fallthrough
+            case "EAST_FROM_EAST"   : //fallthrough
+            case "SOUTH_FROM_SOUTH" : //fallthrough
+            case "WEST_FROM_WEST"   : return Direction.FRONT;
 
-    public Tile getRandomNearbyTile(){
-        //nextInt(max - min + 1) + min;
+            case "EAST_FROM_NORTH" : //fallthrough
+            case "SOUTH_FROM_EAST" : //fallthrough
+            case "WEST_FROM_SOUTH" : //fallthrough
+            case "NORTH_FROM_WEST" : return Direction.RIGHT;
 
-        int randomX =0;
-        int randomY =0;
+            case "NORTH_FROM_EAST" : //fallthrough
+            case "EAST_FROM_SOUTH" : //fallthrough
+            case "SOUTH_FROM_WEST" : //fallthrough
+            case "WEST_FROM_NORTH" : return Direction.LEFT;
 
-        do{
-            randomX = getPosX()-3 + random.nextInt(7);
-            randomY = getPosY()-3 + random.nextInt(7);
-        }
-        while(randomX > map.getWidth()-1 || randomX <0 || randomY > map.getLength()-1 || randomY < 0);
+            case "NORTH_FROM_SOUTH" : //fallthrough
+            case "SOUTH_FROM_NORTH" : //fallthrough
+            case "EAST_FROM_WEST"   : //fallthrough
+            case "WEST_FROM_EAST"   : return Direction.BACK;
 
-        return getTile(randomX, randomY);
-
-    }
-
-    public Tile getRandomUnscannedGroundTile() {
-        List<Tile> unscanned = new ArrayList<>();
-        for(Tile t: map.getGroundTiles()){
-            if(t.isUnscanned()) {
-                unscanned.add(t);
-
-            }
-        }
-
-        if(unscanned.size() >0) {
-            return unscanned.get(random.nextInt(unscanned.size()));
-        }
-
-        else{
-            return null;
+            default : return null;
         }
     }
 
-    public void setPosition(Tile tile, String facing) {
-        map.setPosX(tile.getX());
-        map.setPosY(tile.getY());
-        setFront(facing);
-    }
+    private enum RelativeDirection {
+        FACING_NORTH(Compass.NORTH, Compass.EAST, Compass.SOUTH, Compass.WEST),
+        FACING_EAST(Compass.EAST, Compass.SOUTH, Compass.WEST, Compass.NORTH),
+        FACING_SOUTH(Compass.SOUTH, Compass.WEST, Compass.NORTH, Compass.EAST),
+        FACING_WEST(Compass.WEST, Compass.NORTH, Compass.EAST, Compass.SOUTH);
+        public Compass front, right, back, left;
 
-    /*========
-    Directions
-    ========*/
-    public String front(){
-        return front;
-    }
-
-    public String back(){
-        return Compass.valueOf(front).back;
-    }
-
-    public String right(){
-        return Compass.valueOf(front).right;
-    }
-
-    public String left(){
-        return Compass.valueOf(front).left;
-    }
-
-    public void setFront(String front)
-    {
-        this.front = front;
-    }
-
-    private enum Compass {
-        N("S","W","E"),
-        S("N","E","W"),
-        W("E","S","N"),
-        E("W","N","S"),;
-        public String back;
-        public String left;
-        public String right;
-
-        Compass(String back, String left, String right){
+        RelativeDirection(Compass front, Compass right, Compass back, Compass left){
+            this.front = front;
+            this.right = right;
             this.back = back;
             this.left = left;
-            this.right = right;
+        }
+
+        Compass getDirection(Direction direction) {
+            switch (direction) {
+                case FRONT: return front;
+                case RIGHT: return right;
+                case LEFT: return left;
+                case BACK: return back;
+                default: return null;
+            }
         }
     }
 }
-

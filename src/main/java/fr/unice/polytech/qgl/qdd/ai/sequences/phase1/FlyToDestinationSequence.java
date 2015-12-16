@@ -19,7 +19,7 @@ public class FlyToDestinationSequence extends Sequence {
 
     @Override
     public Action execute() {
-        switch (nav.getRelativeDirectionOfTile(destinationTile)) {
+        switch (nav.finder().relativeDirectionOfTile(destinationTile)) {
             case FRONT: return fly();
             case RIGHT: return heading(nav.right());
             case LEFT: return heading(nav.left());
@@ -34,7 +34,7 @@ public class FlyToDestinationSequence extends Sequence {
     }
 
     private boolean destinationReached(){
-        if (destinationTile.equals(nav.getCurrentTile())
+        if (destinationTile.equals(nav.map().currentTile())
                 || (neighbouringDestinationReached() && destinationOutOfReach()) ){
             destinationTile = null;
             return true;
@@ -43,7 +43,7 @@ public class FlyToDestinationSequence extends Sequence {
     }
 
     private boolean neighbouringDestinationReached() {
-        return nav.getNeighbouringTiles(destinationTile).contains(nav.getCurrentTile());
+        return nav.finder().getSurroundingTiles(destinationTile).contains(nav.map().currentTile());
     }
 
     private boolean destinationOutOfReach(){

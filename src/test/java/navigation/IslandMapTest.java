@@ -1,7 +1,7 @@
 package navigation;
 
 import fr.unice.polytech.qgl.qdd.navigation.Compass;
-import fr.unice.polytech.qgl.qdd.navigation.IslandMap2;
+import fr.unice.polytech.qgl.qdd.navigation.IslandMap;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
 import org.junit.Before;
 
@@ -16,7 +16,7 @@ import java.util.Set;
  * Created by hbinluqman on 14/12/2015.
  */
 public class IslandMapTest {
-    protected IslandMap2 map;
+    protected IslandMap map;
 
     /*
     IslandMap private methods and fields
@@ -50,51 +50,51 @@ public class IslandMapTest {
 
     @Before
     public void setup() {
-        map = new IslandMap2();
+        map = new IslandMap();
 
-        for(Class c : IslandMap2.class.getDeclaredClasses()) {
+        for(Class c : IslandMap.class.getDeclaredClasses()) {
             if (c.getSimpleName().equals("Point")) {
                 pointClass = c;
             }
         }
         try {
-            createTileMethod = IslandMap2.class.getDeclaredMethod("createTile", int.class, int.class);
+            createTileMethod = IslandMap.class.getDeclaredMethod("createTile", int.class, int.class);
             createTileMethod.setAccessible(true);
 
-            getSurroundingTilesMethod = IslandMap2.class.getDeclaredMethod("getSurroundingTiles", int.class, int.class);
+            getSurroundingTilesMethod = IslandMap.class.getDeclaredMethod("getSurroundingTiles", int.class, int.class);
             getSurroundingTilesMethod.setAccessible(true);
 
-            getTileMethod = IslandMap2.class.getDeclaredMethod("getTile", int.class, int.class);
+            getTileMethod = IslandMap.class.getDeclaredMethod("getTile", int.class, int.class);
             getTileMethod.setAccessible(true);
 
-            getRangedTileMethod = IslandMap2.class.getDeclaredMethod("getTile", Tile.class, Compass.class, int.class);
+            getRangedTileMethod = IslandMap.class.getDeclaredMethod("getTile", Tile.class, Compass.class, int.class);
             getRangedTileMethod.setAccessible(true);
 
-            getTilesNorthMethod = IslandMap2.class.getDeclaredMethod("getTilesNorth", pointClass, int.class);
+            getTilesNorthMethod = IslandMap.class.getDeclaredMethod("getTilesNorth", pointClass, int.class);
             getTilesNorthMethod.setAccessible(true);
 
-            getTilesEastMethod = IslandMap2.class.getDeclaredMethod("getTilesEast", pointClass, int.class);
+            getTilesEastMethod = IslandMap.class.getDeclaredMethod("getTilesEast", pointClass, int.class);
             getTilesEastMethod.setAccessible(true);
 
-            getTilesSouthMethod = IslandMap2.class.getDeclaredMethod("getTilesSouth", pointClass, int.class);
+            getTilesSouthMethod = IslandMap.class.getDeclaredMethod("getTilesSouth", pointClass, int.class);
             getTilesSouthMethod.setAccessible(true);
 
-            getTilesWestMethod = IslandMap2.class.getDeclaredMethod("getTilesWest", pointClass, int.class);
+            getTilesWestMethod = IslandMap.class.getDeclaredMethod("getTilesWest", pointClass, int.class);
             getTilesWestMethod.setAccessible(true);
 
-            setXMethod = IslandMap2.class.getDeclaredMethod("setX", int.class);
+            setXMethod = IslandMap.class.getDeclaredMethod("setX", int.class);
             setXMethod.setAccessible(true);
 
-            setYMethod = IslandMap2.class.getDeclaredMethod("setY", int.class);
+            setYMethod = IslandMap.class.getDeclaredMethod("setY", int.class);
             setYMethod.setAccessible(true);
 
-            currentTileMethod = IslandMap2.class.getDeclaredMethod("currentTile");
+            currentTileMethod = IslandMap.class.getDeclaredMethod("currentTile");
             currentTileMethod.setAccessible(true);
 
-            heightField = IslandMap2.class.getDeclaredField("height");
+            heightField = IslandMap.class.getDeclaredField("height");
             heightField.setAccessible(true);
 
-            widthField = IslandMap2.class.getDeclaredField("width");
+            widthField = IslandMap.class.getDeclaredField("width");
             widthField.setAccessible(true);
 
             pointConstructor = pointClass.getDeclaredConstructor(int.class, int.class);

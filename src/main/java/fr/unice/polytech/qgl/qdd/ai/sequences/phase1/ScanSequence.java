@@ -21,16 +21,17 @@ public class ScanSequence extends Sequence {
     @Override
     public Action execute() {
         counter++;
-        if(isUnscannedGround(nav.getCurrentTile())) { return scan(); }
-        if(isUnscannedGround(nav.getTileInDirection(Direction.FRONT))) { return fly(); }
-        if(isUnscannedGround(nav.getTileInDirection(Direction.FRONT_RIGHT))) { return heading(nav.right()); }
-        if(isUnscannedGround(nav.getTileInDirection(Direction.FRONT_LEFT))) { return  heading(nav.left()); }
+        //TODO don't call adjacentTile, instead call adjacentTileByAir.
+        if(isUnscannedGround(nav.map().currentTile())) { return scan(); }
+        if(isUnscannedGround(nav.finder().adjacentTile(Direction.FRONT))) { return fly(); }
+        if(isUnscannedGround(nav.finder().adjacentTile(Direction.RIGHT))) { return heading(nav.right()); }
+        if(isUnscannedGround(nav.finder().adjacentTile(Direction.LEFT))) { return  heading(nav.left()); }
         else{ return scanNearbyUnscannedGround(); }
     }
 
     @Override
     public boolean completed() {
-        return !nav.getCurrentTile().isUnscanned() || counter > 20;
+        return !nav.map().currentTile().isUnscanned() || counter > 20;
     }
 
     private boolean isUnscannedGround(Tile tile) {
@@ -38,7 +39,7 @@ public class ScanSequence extends Sequence {
     }
 
     private Action scanNearbyUnscannedGround() {
-        for(Tile t: nav.getNeighbouringTiles(nav.getCurrentTile())) {
+        for(Tile t: nav.finder().neighbouringTiles()) {
             if(isUnscannedGround(t)) { return new FlyToDestinationSequence(nav, checkList, t).execute(); }
         }
 

@@ -7,6 +7,7 @@ import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by danial on 12/12/2015.
@@ -25,20 +26,20 @@ public class CheckList {
     }
 
     public boolean isAboveGround(){
-        return nav.getCurrentTile().isGround();
+        return nav.map().currentTile().isGround();
     }
 
     public boolean isCloseToBoundary(){
-        switch (explorer.front()){
-            case "N": return nav.getPosY() > nav.getMap().getLength() - 3;
-            case "E": return nav.getPosX() > nav.getMap().getWidth() - 3;
-            case "S": return nav.getPosY() < 2;
-            case "W": return nav.getPosX() < 2;
+        switch (nav.front()){
+            case NORTH:return nav.map().y() > nav.map().height() - 3;
+            case EAST: return nav.map().x() > nav.map().width() - 3;
+            case SOUTH: return nav.map().y() < 2;
+            case WEST: return nav.map().x() < 2;
         }
         return false;
     }
 
-    public boolean foundCreek() { return !nav.getMap().getCreeks().isEmpty(); }
+    public boolean foundCreek() { return !nav.map().getCreeks().isEmpty(); }
 
     public boolean needToAbort() {
         return explorer.getBudget() < MISSION_ABORT_BUDGET_THRESHOLD;
@@ -48,23 +49,23 @@ public class CheckList {
         Checks for echo
      */
 
-    public boolean isEchoCoverageSufficient() {
-        float unknownTiles = nav.getMap().getUnknownTileCount();
-        float totalTiles = nav.getMap().getTotalTileCount();
+    public boolean  isEchoCoverageSufficient() {
+        float unknownTiles = nav.map().getUnknownTileCount();
+        float totalTiles = nav.map().getTotalTileCount();
 
         return (unknownTiles < (totalTiles*((100-ECHO_COVERAGE_QUOTA)/100)));
     }
 
     public boolean isTilesInFrontDiscovered(){
-        return checkAllTilesDiscovered(nav.getAllTilesInDirection(Direction.FRONT));
+        return checkAllTilesDiscovered(nav.finder().allTiles(Direction.FRONT));
     }
 
     public boolean isTilesAtLeftDiscovered(){
-        return checkAllTilesDiscovered(nav.getAllTilesInDirection(Direction.LEFT));
+        return checkAllTilesDiscovered(nav.finder().allTiles(Direction.LEFT));
     }
 
     public boolean isTilesAtRightDiscovered(){
-        return checkAllTilesDiscovered(nav.getAllTilesInDirection(Direction.RIGHT));
+        return checkAllTilesDiscovered(nav.finder().allTiles(Direction.RIGHT));
     }
 
     public boolean contractCompleted() {
@@ -80,25 +81,17 @@ public class CheckList {
 
     public boolean exploitableResourceFound() {
         for(Resource resource : explorer.getContract().keySet()) {
-            if (nav.getCurrentTile().hasResource(resource)) {
+            if (nav.map().currentTile().hasResource(resource)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean checkAllTilesDiscovered(List<Tile> tiles){
-        for (int i = 0; i < tiles.size(); i++) {
-            if (tiles.get(i).isGround()) {
-                return true;
-            }
-        }
+    private boolean checkAllTilesDiscovered(Set<Tile> tiles){
+        for(Tile t: tiles) { if (t.isGround()) return true; }
 
-        for (int i = 0; i < tiles.size(); i++) {
-            if (tiles.get(i).isUnknown()) {
-                return false;
-            }
-        }
+        for(Tile t: tiles) { if (t.isUnknown()) return false; }
 
         return true;
     }

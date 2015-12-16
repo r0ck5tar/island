@@ -9,6 +9,6 @@ import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 public class FlyToRandomNearbyTileSequence extends FlyToDestinationSequence {
 
     public FlyToRandomNearbyTileSequence(Navigator nav, CheckList checkList) {
-        super(nav, checkList, nav.getRandomNearbyTile());
+        super(nav, checkList, nav.finder().getRandomNearbyTile());
     }
 }

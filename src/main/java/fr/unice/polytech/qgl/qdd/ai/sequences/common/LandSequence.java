@@ -17,7 +17,7 @@ public class LandSequence extends Sequence {
 
     @Override
     public Action execute() {
-        return new Action(Action.LAND).addParameter("creek", nav.getMap().getCreeks().get(0))
+        return new Action(Action.LAND).addParameter("creek", (String) nav.map().getCreeks().toArray()[0])
                 .addParameter("people", Integer.toString(men));
     }
 

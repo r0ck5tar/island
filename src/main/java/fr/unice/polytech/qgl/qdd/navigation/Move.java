@@ -5,8 +5,8 @@ package fr.unice.polytech.qgl.qdd.navigation;
  */
 public class Move {
     private static Move instance;
-    private IslandMap2 map;
-    private Navigator2 nav;
+    private IslandMap map;
+    private Navigator nav;
     private Compass facing;
 
     private static final int AIR_DISTANCE = 3, LAND_DISTANCE = 1;
@@ -16,22 +16,27 @@ public class Move {
     ======================================*/
 
     public void fly() {
-        travel(AIR_DISTANCE);
+        switch (facing) {
+            case NORTH: setY(map.y() + AIR_DISTANCE); break;
+            case EAST: setX(map.x() + AIR_DISTANCE); break;
+            case SOUTH: setY(map.y() - AIR_DISTANCE); break;
+            case WEST: setX(map.x() - AIR_DISTANCE); break;
+        }
     }
 
     public void turn(Compass direction) {
         switch(facing.name().concat("_").concat(direction.name())) {
             case "NORTH_EAST" : //fallthrough
-            case "EAST_NORTH" : setX(x() + AIR_DISTANCE); setY(y() + AIR_DISTANCE); break;
+            case "EAST_NORTH" : setX(map.x() + AIR_DISTANCE); setY(map.y() + AIR_DISTANCE); break;
 
             case "SOUTH_WEST" : //fallthrough
-            case "WEST_SOUTH" : setX(x() - AIR_DISTANCE); setY(y() - AIR_DISTANCE); break;
+            case "WEST_SOUTH" : setX(map.x() - AIR_DISTANCE); setY(map.y() - AIR_DISTANCE); break;
 
             case "NORTH_WEST" : //fallthrough
-            case "WEST_NORTH" : setX(x() - AIR_DISTANCE); setY(y() + AIR_DISTANCE); break;
+            case "WEST_NORTH" : setX(map.x() - AIR_DISTANCE); setY(map.y() + AIR_DISTANCE); break;
 
             case "SOUTH_EAST" : //fallthrough
-            case "EAST_SOUTH" : setX(x() + AIR_DISTANCE); setY(y() - AIR_DISTANCE); break;
+            case "EAST_SOUTH" : setX(map.x() + AIR_DISTANCE); setY(map.y() - AIR_DISTANCE); break;
         }
         nav.setFacingDirection(direction);
     }
@@ -40,30 +45,26 @@ public class Move {
     Land movement in Phase 2
     =======================*/
 
-    public void walk() {
-        travel(LAND_DISTANCE);
-    }
-
-    private void travel(int distance) {
-        switch (facing) {
-            case NORTH: setY(y() + distance); break;
-            case EAST: setX(x() + distance); break;
-            case SOUTH: setY(y() - distance); break;
-            case WEST: setX(x() - distance); break;
+    public void walk(Compass direction) {
+        switch (direction) {
+            case NORTH: setY(map.y() + LAND_DISTANCE); break;
+            case EAST: setX(map.x() + LAND_DISTANCE); break;
+            case SOUTH: setY(map.y() - LAND_DISTANCE); break;
+            case WEST: setX(map.x() - LAND_DISTANCE); break;
         }
+        nav.setFacingDirection(direction);
     }
-
 
     /*=====================================================
     Private and static methods for singleton implementation
      ====================================================*/
 
-    private Move(IslandMap2 map, Navigator2 nav) {
+    private Move(IslandMap map, Navigator nav) {
         this.map = map;
         this.nav = nav;
     }
 
-    static void init(IslandMap2 map, Navigator2 nav) {
+    static void init(IslandMap map, Navigator nav) {
         instance = new Move(map, nav);
     }
 
@@ -71,14 +72,7 @@ public class Move {
         instance.facing = facing;
         return instance;
     }
-
-    private int x() {
-        return map.getX();
-    }
-
-    private int y() {
-        return map.getY();
-    }
+    
 
     private void setX(int x) {
         map.setX(x);

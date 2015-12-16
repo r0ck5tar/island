@@ -8,7 +8,7 @@ import fr.unice.polytech.qgl.qdd.navigation.Navigator;
  */
 public class FlyToUnscannedGroundSequence extends FlyToDestinationSequence {
     public FlyToUnscannedGroundSequence(Navigator nav, CheckList checkList) {
-        super(nav, checkList, nav.getRandomUnscannedGroundTile());
+        super(nav, checkList, nav.finder().getRandomUnscannedGroundTile());
     }
 
     @Override

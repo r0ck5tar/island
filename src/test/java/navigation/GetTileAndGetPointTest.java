@@ -1,15 +1,10 @@
 package navigation;
 
 import fr.unice.polytech.qgl.qdd.navigation.Compass;
-import fr.unice.polytech.qgl.qdd.navigation.IslandMap2;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**

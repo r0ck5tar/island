@@ -7,13 +7,9 @@ import java.util.*;
  */
 public class Finder {
     private static Finder instance;
-    private IslandMap2 map;
-    private Navigator2 nav;
+    private IslandMap map;
+    private Navigator nav;
     private Random random;
-
-    public Tile currentTile() {
-        return map.currentTile();
-    }
 
     public Set<Tile> neighbouringTiles() {
         return map.getSurroundingTiles(map.currentTile());
@@ -23,12 +19,31 @@ public class Finder {
         return map.getSurroundingTiles(referenceTile);
     }
 
-    public Set<Tile> adjacentTile(Direction direction) {
-        return allTiles(direction, 1);
+    public Tile getTile(int x, int y) {
+        return map.getTile(x, y);
+    }
+
+    public Tile adjacentTile(Direction direction) {
+        return (Tile) allTiles(direction, 1).toArray()[0];
+    }
+
+    //TODO finish this method, then refactor
+    public Tile adjacentTileByAir(Direction direction) {
+        switch (nav.absoluteDirection(direction)) {
+            case NORTH: break;
+            case EAST: break;
+            case SOUTH: break;
+            case WEST: break;
+        }
+        return null;
     }
 
     public Set<Tile> allTiles(Direction direction, int range) {
         return map.getTiles(nav.absoluteDirection(direction), range);
+    }
+
+    public Set<Tile> allTiles(Direction direction) {
+        return map.getTiles(nav.absoluteDirection(direction));
     }
 
     public Set<Tile> getTilesOnSide(Direction side) {
@@ -36,7 +51,7 @@ public class Finder {
         Compass absoluteSide = nav.absoluteDirection(side);
         if(absoluteSide == Compass.NORTH || absoluteSide == Compass.SOUTH) {
             for(int x = 0; x < map.getWidth(); x++) {
-                tiles.addAll(map.getTiles(x, map.getY(), absoluteSide, map.getHeight() - map.getY()));
+                tiles.addAll(map.getTiles(x, map.y(), absoluteSide, map.getHeight() - map.y()));
             }
         }
         else{
@@ -47,17 +62,17 @@ public class Finder {
 
     public Tile getRandomNearbyTile(){
         int range = 8;
-        int minX = map.getX() - range < 0 ? 0 : (map.getX() - range);
-        int maxX = (map.getX() + range) >= map.getWidth() ? map.getHeight()-1 : (map.getX() + range);
-        int minY = map.getY() - range < 0 ? 0 : (map.getY() - range);
-        int maxY = (map.getY() + range) >= map.getHeight() ? map.getHeight()-1 : (map.getY() + range);
+        int minX = map.x() - range < 0 ? 0 : (map.x() - range);
+        int maxX = (map.x() + range) >= map.getWidth() ? map.getHeight()-1 : (map.x() + range);
+        int minY = map.y() - range < 0 ? 0 : (map.y() - range);
+        int maxY = (map.y() + range) >= map.getHeight() ? map.getHeight()-1 : (map.y() + range);
         int randomX = 0, randomY = 0;
 
         do{
             randomX = minX + random.nextInt(maxX - minX);
             randomY = minY + random.nextInt(maxY - minY);
         }
-        while (randomX == map.getX() && randomY == map.getY());
+        while (randomX == map.x() && randomY == map.y());
 
         return map.getTile(randomX, randomY);
     }
@@ -73,20 +88,20 @@ public class Finder {
     }
 
     public Direction relativeDirectionOfTile(Tile tile) {
-        return nav.relativeDirection(map.direction(currentTile(), tile));
+        return nav.relativeDirection(map.direction(map.currentTile(), tile));
     }
 
     /*=====================================================
     Private and static methods for singleton implementation
      ====================================================*/
 
-    private Finder(IslandMap2 map, Navigator2 nav) {
+    private Finder(IslandMap map, Navigator nav) {
         this.map = map;
         this.nav = nav;
         random = new Random();
     }
 
-    public static void init(IslandMap2 map, Navigator2 nav) {
+    public static void init(IslandMap map, Navigator nav) {
         instance = new Finder(map, nav);
     }
 

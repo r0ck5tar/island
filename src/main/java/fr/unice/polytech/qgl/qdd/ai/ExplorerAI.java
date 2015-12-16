@@ -7,8 +7,8 @@ import fr.unice.polytech.qgl.qdd.ai.sequences.common.StopSequence;
 import fr.unice.polytech.qgl.qdd.ai.sequences.phase1.*;
 import fr.unice.polytech.qgl.qdd.ai.sequences.phase2.ExploitSequence;
 import fr.unice.polytech.qgl.qdd.ai.sequences.phase2.ExploreSequence;
-import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.QddExplorer;
+import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -116,26 +116,26 @@ public class ExplorerAI {
         sb.append(explorer.toString());
         sb.append("\n" + action.toJSON());
 
-        if(nav.mapInitialized()) {
-            sb.append("\nCurrent tile type : " + nav.getCurrentTile().toString() + "\n\n");
-            int groundTiles = nav.getMap().getGroundTileCount();
-            int seaTiles = nav.getMap().getSeaTileCount();
-            int unknownTiles = nav.getMap().getUnknownTileCount();
+        if(nav.map().isInitialized()) {
+            sb.append("\nCurrent tile type : " + nav.map().currentTile().toString() + "\n\n");
+            int groundTiles = nav.map().getGroundTileCount();
+            int seaTiles = nav.map().getSeaTileCount();
+            int unknownTiles = nav.map().getUnknownTileCount();
             int totalTiles = groundTiles + seaTiles + unknownTiles;
             sb.append("Ground tiles: " + groundTiles + "\tSea tiles: " + seaTiles );
             sb.append("\tUnknown tiles: " + unknownTiles + "\tTotal: " + totalTiles + "\n");
-            for(int y = nav.getMap().getWidth()-1; y >= 0; y--) {
-                for(int x = 0; x <nav.getMap().getLength(); x++) {
-                    if((x == nav.getPosX()) && (y == nav.getPosY())) {
+            for(int y = nav.map().width()-1; y >= 0; y--) {
+                for(int x = 0; x <nav.map().height(); x++) {
+                    if((x == nav.map().x()) && (y == nav.map().y())) {
                         switch (explorer.getNavigator().front()) {
-                            case "N": sb.append(" Λ "); break;
-                            case "E": sb.append(" > "); break;
-                            case "S": sb.append(" V "); break;
-                            case "W": sb.append(" < "); break;
+                            case NORTH: sb.append("Λ"); break;
+                            case EAST: sb.append(">"); break;
+                            case SOUTH: sb.append("V"); break;
+                            case WEST: sb.append("<"); break;
                         }
                     }
                     else{
-                        sb.append(nav.getTile(x, y).toString());
+                        sb.append(nav.finder().getTile(x, y).toString());
                     }
                 }
                 sb.append("\n");
