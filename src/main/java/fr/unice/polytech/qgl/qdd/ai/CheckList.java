@@ -6,7 +6,6 @@ import fr.unice.polytech.qgl.qdd.QddExplorer;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,8 +16,8 @@ public class CheckList {
     private QddExplorer explorer;
 
     //Must discover at least 30% of map for echo coverage to be considered sufficient.
-    private static final float  ECHO_COVERAGE_QUOTA = 30;
-    private static final int MISSION_ABORT_BUDGET_THRESHOLD = 30;
+    private static final float  ECHO_COVERAGE_QUOTA = 20;
+    private static final int MISSION_ABORT_BUDGET_THRESHOLD = 130;
 
     public CheckList(Navigator nav, QddExplorer explorer) {
         this.nav = nav;
@@ -26,15 +25,21 @@ public class CheckList {
     }
 
     public boolean isAboveGround(){
-        return nav.map().currentTile().isGround();
+        for(Tile t: nav.finder().neighbouringTiles()) {
+            if (t.isGround()){
+                return  true;
+            }
+        }
+        return false;
     }
 
     public boolean isCloseToBoundary(){
+        int buffer = 6;
         switch (nav.front()){
-            case NORTH:return nav.map().y() > nav.map().height() - 3;
-            case EAST: return nav.map().x() > nav.map().width() - 3;
-            case SOUTH: return nav.map().y() < 2;
-            case WEST: return nav.map().x() < 2;
+            case NORTH:return nav.map().y() > nav.map().height() - buffer - 1;
+            case EAST: return nav.map().x() > nav.map().width() - buffer - 1;
+            case SOUTH: return nav.map().y() < buffer;
+            case WEST: return nav.map().x() < buffer;
         }
         return false;
     }
@@ -89,6 +94,7 @@ public class CheckList {
     }
 
     private boolean checkAllTilesDiscovered(Set<Tile> tiles){
+        tiles.removeAll(nav.finder().neighbouringTiles());
         for(Tile t: tiles) { if (t.isGround()) return true; }
 
         for(Tile t: tiles) { if (t.isUnknown()) return false; }

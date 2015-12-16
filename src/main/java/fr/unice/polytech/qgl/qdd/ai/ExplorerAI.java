@@ -97,13 +97,13 @@ public class ExplorerAI {
 
     private void initializeLoggers() {
         gameLogger = Logger.getLogger("gameLogger");
+
         FileHandler gameLogFh;
         try {
             //configure the logger with handler and formatter
             gameLogFh = new FileHandler("gameLog.log");
             gameLogger.addHandler(gameLogFh);
             gameLogFh.setFormatter(new SimpleFormatter());
-
         } catch (SecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -143,6 +143,4 @@ public class ExplorerAI {
         }
         gameLogger.info(sb.toString() + "\n");
     }
-
-
 }

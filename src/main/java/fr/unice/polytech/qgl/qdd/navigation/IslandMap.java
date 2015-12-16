@@ -117,6 +117,9 @@ public class IslandMap implements TileListener{
 
     public void updateMapThroughScan(List<Biome> biomes) {
         currentTile().addBiomes(biomes);
+        for(Tile t : getSurroundingTiles(currentTile())) {
+            t.addBiomes(biomes);
+        }
     }
 
     public void updateMapWithCreeks(List<String> creeks) {

@@ -9,6 +9,7 @@ import fr.unice.polytech.qgl.qdd.navigation.Tile;
 /**
  * Created by danial on 12/13/2015.
  */
+//TODO: improve this sequence
 public class FlyToDestinationSequence extends Sequence {
     private Tile destinationTile;
 
@@ -46,7 +47,8 @@ public class FlyToDestinationSequence extends Sequence {
         return nav.finder().getSurroundingTiles(destinationTile).contains(nav.map().currentTile());
     }
 
+    //TODO: implement properly
     private boolean destinationOutOfReach(){
-        return true;
+        return false;
     }
 }

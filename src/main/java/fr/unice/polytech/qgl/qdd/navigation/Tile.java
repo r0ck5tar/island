@@ -21,9 +21,6 @@ public class Tile {
     private List<String> creeks = new ArrayList<>();
     private String condition;
     private TileListener listener;
-    //TODO: remove x and y
-    private int x;
-    private int y;
 
     public Tile(TileListener listener) {
         this.listener = listener;
@@ -62,14 +59,7 @@ public class Tile {
         return creeks.size() > 0;
     }
 
-    public boolean hasOnlyOceanBiomes(List<Biome> biomes){
-        for (int i = 0; i<biomes.size(); i++) {
-            if (!biomes.get(i).equals(Biome.OCEAN)) {
-                return false;
-            }
-        }
-        return true;
-    }
+
 
     public boolean hasResources() {
         return !resources.isEmpty();
@@ -91,41 +81,14 @@ public class Tile {
         }
     }
 
-/*    public boolean potentiallyHasResource(Resource resource) {
+    /*
+    public boolean potentiallyHasResource(Resource resource) {
 
     }*/
-
-
-    /*
-        Relative positions to other tiles
-     */
-    public boolean strictlyVAlignedWith(Tile tile) {
-        return (x == tile.x);
-    }
-
-    public boolean strictlyHAlignedWith(Tile tile) {
-        return (y == tile.y);
-    }
-
-    public boolean vAlignedWith(Tile tile) {
-            return (tile.x >= x - 1 && tile.x <= x + 1);
-    }
-
-    public boolean hAlignedWith(Tile tile) {
-        return (tile.y >= y - 1 && tile.y <= y + 1);
-
-    }
 
     /*
         Getters and Setters
      */
-    public int getX(){
-        return x;
-    }
-
-    public int getY(){
-        return y;
-    }
 
     public String getType() {
         return type;
@@ -154,13 +117,25 @@ public class Tile {
 
     public void addBiomes(List<Biome> biomes) {
         this.biomes.addAll(biomes);
-        if (this.isUnknown() && !this.hasOnlyOceanBiomes(biomes)){
+        if(this.isGround()) {
+            //do not change the type
+        }
+        else if (this.isUnknown() && !this.hasOnlyOceanBiomes(biomes)){
             this.setType(Tile.GROUND);
         }
         else if (this.hasOnlyOceanBiomes(biomes) && this.isUnknown()) {
             this.setType(Tile.SEA);
         }
         listener.biomeDiscovered(this);
+    }
+
+    public boolean hasOnlyOceanBiomes(List<Biome> biomes){
+        for (int i = 0; i<biomes.size(); i++) {
+            if (!biomes.get(i).equals(Biome.OCEAN)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void setType(String type) {

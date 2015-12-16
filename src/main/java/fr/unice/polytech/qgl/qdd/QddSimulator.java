@@ -10,17 +10,21 @@ import org.json.JSONObject;
 public class QddSimulator {
     private QddExplorer explorer;
     private ExplorerAI explorerAI;
-    private Action action;
     private int phase;
+    Action action;
+    int actionCounter;
 
     public QddSimulator(String context) {
         explorer = new QddExplorer(context);
         explorerAI = new ExplorerAI(explorer);
+        ExplorerLogger.init(explorer, this);
+        actionCounter = 0;
         action = null;
         phase = 1;
     }
 
     public String nextDecision() {
+        actionCounter++;
         if(phase == 1) {
             action = explorerAI.computeAerialStrategy();
             return action.toJSON();

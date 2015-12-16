@@ -50,17 +50,17 @@ public abstract class Sequence {
 
     //TODO: rewrite this so that it takes the detected shoreline into considering.
     protected Action chooseTurningDirection() {
-        int unknownTilesOnRight = 0, unknownTilesOnLeft = 0;
+        int groundTilesOnRight = 0, groundTilesOnLeft = 0;
 
         for (Tile t: nav.finder().getTilesOnSide(Direction.RIGHT)){
-            if(t.isUnknown()) { unknownTilesOnRight++; }
+            if(t.isGround()) { groundTilesOnRight++; }
         }
 
         for (Tile t: nav.finder().getTilesOnSide(Direction.LEFT)){
-            if(t.isUnknown()) { unknownTilesOnLeft++; }
+            if(t.isGround()) { groundTilesOnLeft++; }
         }
 
-        if (unknownTilesOnLeft > unknownTilesOnRight){ return heading(nav.left()); }
+        if (groundTilesOnLeft > groundTilesOnRight){ return heading(nav.left()); }
         else { return heading(nav.right()); }
     }
 

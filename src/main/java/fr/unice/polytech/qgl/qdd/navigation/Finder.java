@@ -27,13 +27,12 @@ public class Finder {
         return (Tile) allTiles(direction, 1).toArray()[0];
     }
 
-    //TODO finish this method, then refactor
+    //TODO test this method
     public Tile adjacentTileByAir(Direction direction) {
-        switch (nav.absoluteDirection(direction)) {
-            case NORTH: break;
-            case EAST: break;
-            case SOUTH: break;
-            case WEST: break;
+        switch (direction) {
+            case FRONT: return frontTileByAir(nav.absoluteDirection(direction));
+            case RIGHT: return rightTileByAir(nav.absoluteDirection(direction));
+            case LEFT: return leftTileByAir(nav.absoluteDirection(direction));
         }
         return null;
     }
@@ -46,22 +45,25 @@ public class Finder {
         return map.getTiles(nav.absoluteDirection(direction));
     }
 
+    //TODO: test this method
     public Set<Tile> getTilesOnSide(Direction side) {
         Set<Tile> tiles = new HashSet<>();
         Compass absoluteSide = nav.absoluteDirection(side);
         if(absoluteSide == Compass.NORTH || absoluteSide == Compass.SOUTH) {
             for(int x = 0; x < map.getWidth(); x++) {
-                tiles.addAll(map.getTiles(x, map.y(), absoluteSide, map.getHeight() - map.y()));
+                tiles.addAll(map.getTiles(x, map.y(), absoluteSide));
             }
         }
         else{
-
+            for(int y = 0; y < map.getHeight(); y++) {
+                tiles.addAll(map.getTiles(map.x(), y, absoluteSide));
+            }
         }
         return tiles;
     }
 
     public Tile getRandomNearbyTile(){
-        int range = 8;
+        int range = 3;
         int minX = map.x() - range < 0 ? 0 : (map.x() - range);
         int maxX = (map.x() + range) >= map.getWidth() ? map.getHeight()-1 : (map.x() + range);
         int minY = map.y() - range < 0 ? 0 : (map.y() - range);
@@ -77,6 +79,7 @@ public class Finder {
         return map.getTile(randomX, randomY);
     }
 
+    //Make this not random
     public Tile getRandomUnscannedGroundTile() {
         List<Tile> unscanned = new ArrayList<>();
         for(Tile t: map.getGroundTiles()) {
@@ -109,5 +112,37 @@ public class Finder {
         return instance;
     }
 
+    /*=============
+    Private methods
+    *============*/
 
+    private Tile frontTileByAir(Compass direction) {
+        switch (direction) {
+            case NORTH: return map.getTile(map.x(), map.y() + Move.AIR_DISTANCE);
+            case EAST: return map.getTile(map.x() + Move.AIR_DISTANCE, map.y());
+            case SOUTH: return map.getTile(map.x(), map.y() - Move.AIR_DISTANCE);
+            case WEST:return map.getTile(map.x() - Move.AIR_DISTANCE, map.y());
+            default: return null;
+        }
+    }
+
+    private Tile rightTileByAir(Compass direction) {
+        switch (direction) {
+            case NORTH: return map.getTile(map.x() - Move.AIR_DISTANCE, map.y() + Move.AIR_DISTANCE);
+            case EAST: return map.getTile(map.x() + Move.AIR_DISTANCE, map.y() + Move.AIR_DISTANCE);
+            case SOUTH: return map.getTile(map.x() + Move.AIR_DISTANCE, map.y() - Move.AIR_DISTANCE);
+            case WEST:return map.getTile(map.x() - Move.AIR_DISTANCE, map.y() - Move.AIR_DISTANCE);
+            default: return null;
+        }
+    }
+
+    private Tile leftTileByAir(Compass direction) {
+        switch (direction) {
+            case NORTH: return map.getTile(map.x() + Move.AIR_DISTANCE, map.y() + Move.AIR_DISTANCE);
+            case EAST: return map.getTile(map.x() + Move.AIR_DISTANCE, map.y() - Move.AIR_DISTANCE);
+            case SOUTH: return map.getTile(map.x() - Move.AIR_DISTANCE, map.y() - Move.AIR_DISTANCE);
+            case WEST:return map.getTile(map.x() - Move.AIR_DISTANCE, map.y() + Move.AIR_DISTANCE);
+            default: return null;
+        }
+    }
 }

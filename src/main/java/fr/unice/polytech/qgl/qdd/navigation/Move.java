@@ -9,7 +9,7 @@ public class Move {
     private Navigator nav;
     private Compass facing;
 
-    private static final int AIR_DISTANCE = 3, LAND_DISTANCE = 1;
+    static final int AIR_DISTANCE = 3, LAND_DISTANCE = 1;
 
     /*======================================
     Air movements using the drone in Phase 1
