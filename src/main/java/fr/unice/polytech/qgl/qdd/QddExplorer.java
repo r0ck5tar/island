@@ -90,9 +90,7 @@ public class QddExplorer {
 
     public void exploit(Resource resource, int amount) {
         getMap().updateMapAfterExploit(resource);
-        if(resources.containsKey(resource)) {
-            resources.put(resource, resources.get(resource) + amount);
-        }
+        resources.put(resource, resources.containsKey(resource)? resources.get(resource) + amount : amount);
 
         boolean fullyExploited = true;
 
@@ -148,11 +146,12 @@ public class QddExplorer {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Budget: " + budget + "\tMen: " + men );
-        sb.append("\nContract: ");
-        for(Resource s: contract.keySet()) {
-            sb.append(" " + s + " x " + contract.get(s) + "\t");
-        }
+        sb.append("\t\tContract: ");
+        contract.forEach((resource, quantity) -> sb.append(resource + ": " + quantity + "\t"));
+        sb.append("\nResources: ");
+        resources.forEach((resource, quantity) -> sb.append(resource + ": " + quantity + "\t"));
         sb.append("\nFacing " + nav.front() + "  Coordinates: (" + getMap().x() + ", " + getMap().y() + ")" );
+        sb.append(nav.map().isInitialized()? "\tCurrent tile type : " + nav.map().currentTile().getType() + "\n" : "\n");
         return sb.toString();
     }
 

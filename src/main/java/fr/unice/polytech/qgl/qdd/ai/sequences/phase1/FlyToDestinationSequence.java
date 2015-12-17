@@ -6,12 +6,14 @@ import fr.unice.polytech.qgl.qdd.ai.sequences.Sequence;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
 
+import java.util.Collections;
+
 /**
  * Created by danial on 12/13/2015.
  */
 //TODO: improve this sequence
 public class FlyToDestinationSequence extends Sequence {
-    private Tile destinationTile;
+    protected Tile destinationTile;
 
     public FlyToDestinationSequence(Navigator nav, CheckList checkList, Tile destinationTile) {
         super(nav, checkList);
@@ -24,7 +26,7 @@ public class FlyToDestinationSequence extends Sequence {
             case FRONT: return fly();
             case RIGHT: return heading(nav.right());
             case LEFT: return heading(nav.left());
-            case BACK: return chooseTurningDirection();
+            case BACK: return chooseTurningDirection(destinationTile);
         }
         return fly();
     }
@@ -44,7 +46,7 @@ public class FlyToDestinationSequence extends Sequence {
     }
 
     private boolean neighbouringDestinationReached() {
-        return nav.finder().getSurroundingTiles(destinationTile).contains(nav.map().currentTile());
+        return !Collections.disjoint(nav.finder().getSurroundingTiles(destinationTile), nav.finder().neighbouringTiles());
     }
 
     //TODO: implement properly

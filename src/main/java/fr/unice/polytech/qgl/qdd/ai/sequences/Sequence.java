@@ -1,6 +1,7 @@
 package fr.unice.polytech.qgl.qdd.ai.sequences;
 
 import fr.unice.polytech.qgl.qdd.Action;
+import fr.unice.polytech.qgl.qdd.ExplorerLogger;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
 import fr.unice.polytech.qgl.qdd.enums.Resource;
 import fr.unice.polytech.qgl.qdd.navigation.Compass;
@@ -48,7 +49,7 @@ public abstract class Sequence {
         return new Action(Action.STOP);
     }
 
-    //TODO: rewrite this so that it takes the detected shoreline into considering.
+    //TODO: Test this method.
     protected Action chooseTurningDirection() {
         int groundTilesOnRight = 0, groundTilesOnLeft = 0;
 
@@ -62,6 +63,14 @@ public abstract class Sequence {
 
         if (groundTilesOnLeft > groundTilesOnRight){ return heading(nav.left()); }
         else { return heading(nav.right()); }
+    }
+
+    /*
+    Chooses the turning direction when flying, based on the shortest distance to the destination tile
+    when the tile is at the BACK of the drone.
+    */
+    protected Action chooseTurningDirection(Tile destinationTile) {
+        return heading(nav.finder().chooseTurningDirection(destinationTile));
     }
 
     protected Action move(Compass direction) {
@@ -84,5 +93,8 @@ public abstract class Sequence {
         return action;
     }
 
-
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
+    }
 }

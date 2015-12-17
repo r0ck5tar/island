@@ -120,7 +120,7 @@ public class Tile {
         if(this.isGround()) {
             //do not change the type
         }
-        else if (this.isUnknown() && !this.hasOnlyOceanBiomes(biomes)){
+        else if (!this.isSea() && !this.hasOnlyOceanBiomes(biomes)){
             this.setType(Tile.GROUND);
         }
         else if (this.hasOnlyOceanBiomes(biomes) && this.isUnknown()) {

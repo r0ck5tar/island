@@ -25,6 +25,9 @@ public class CheckList {
     }
 
     public boolean isAboveGround(){
+        if (nav.map().currentTile().isGround()) {
+            return true;
+        }
         for(Tile t: nav.finder().neighbouringTiles()) {
             if (t.isGround()){
                 return  true;

@@ -44,12 +44,9 @@ public class ExplorerLogger {
     public void log(String info) {
         StringBuilder sb = new StringBuilder("\n");
         sb.append(explorer.toString());
-        sb.append("\nStep: " +simulator.actionCounter + "\t" + simulator.action);
-
-        if(nav.map().isInitialized()) {
-            sb.append("\nCurrent tile type : " + nav.map().currentTile().getType() + "\n\n");
-        }
-
+        sb.append("\nStep: " +simulator.actionCounter + "\t");
+        sb.append(simulator.action==null?"null":simulator.action.toJSON());
+        sb.append("\n" + simulator.result +"\n");
         sb.append(info + "\n\n");
 
         infoLogger.info(sb.toString());
@@ -57,5 +54,13 @@ public class ExplorerLogger {
 
     public static ExplorerLogger getInstance(){
         return instance;
+    }
+
+    public void shortLog(String info) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("******************************\n");
+        sb.append("Step: " + simulator.actionCounter + "\t" + info + "\n\n");
+
+        infoLogger.info(sb.toString());
     }
 }

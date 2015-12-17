@@ -1,6 +1,7 @@
 package fr.unice.polytech.qgl.qdd.ai;
 
 import fr.unice.polytech.qgl.qdd.Action;
+import fr.unice.polytech.qgl.qdd.ExplorerLogger;
 import fr.unice.polytech.qgl.qdd.ai.sequences.*;
 import fr.unice.polytech.qgl.qdd.ai.sequences.common.LandSequence;
 import fr.unice.polytech.qgl.qdd.ai.sequences.common.StopSequence;
@@ -35,6 +36,7 @@ public class ExplorerAI {
 
     public Action computeAerialStrategy() {
         activeSequence = chooseSequenceAerial();
+        ExplorerLogger.getInstance().log("Active sequence: " + activeSequence);
         return activeSequence.execute();
     }
 
@@ -67,7 +69,7 @@ public class ExplorerAI {
 
     public Action computeTerrestrialStrategy() {
         activeSequence = chooseSequenceTerrestrial();
-
+        ExplorerLogger.getInstance().log("Active sequence: " + activeSequence);
         return activeSequence.execute();
     }
 
@@ -111,10 +113,10 @@ public class ExplorerAI {
         }
     }
 
-    public void logExplorer(Action action) {
+    public void logExplorer(Action action, int step) {
         StringBuilder sb = new StringBuilder("\n");
         sb.append(explorer.toString());
-        sb.append("\n" + action.toJSON());
+        sb.append("\nStep: " + step + "\t" + action.toJSON());
 
         if(nav.map().isInitialized()) {
             sb.append("\nCurrent tile type : " + nav.map().currentTile().toString() + "\n\n");

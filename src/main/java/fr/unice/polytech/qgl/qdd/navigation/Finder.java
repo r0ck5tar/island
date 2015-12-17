@@ -79,20 +79,31 @@ public class Finder {
         return map.getTile(randomX, randomY);
     }
 
-    //Make this not random
-    public Tile getRandomUnscannedGroundTile() {
-        List<Tile> unscanned = new ArrayList<>();
-        for(Tile t: map.getGroundTiles()) {
-            if(t.isUnscanned()) {
-                unscanned.add(t);
-            }
+    /*
+    Chooses the turning direction when flying when the tile is at the BACK of the drone.
+    */
+    public Compass chooseTurningDirection(Tile destinationTile) {
+        if(nav.front() == Compass.NORTH || nav.front() == Compass.SOUTH) {
+            return nav.map().xDiff(destinationTile) < 0 ? nav.left() : nav.right();
         }
-        return unscanned.size()> 0 ? unscanned.get(random.nextInt(unscanned.size())) : null;
+        else{
+            return nav.map().yDiff(destinationTile) < 0 ? nav.left() : nav.right();
+        }
+    }
+
+    //TODO: Test this method
+
+    public Tile getNearestUnscannedGroundTile() {
+        List<Tile> unscanned = new ArrayList<>();
+        map.getGroundTiles().stream().filter(tile -> tile.isUnscanned()).forEach(tile -> unscanned.add(tile));
+
+        return unscanned.stream().min((tile1, tile2) -> Integer.compare(map.distanceToTile(tile1), map.distanceToTile(tile2))).get();
     }
 
     public Direction relativeDirectionOfTile(Tile tile) {
         return nav.relativeDirection(map.direction(map.currentTile(), tile));
     }
+
 
     /*=====================================================
     Private and static methods for singleton implementation

@@ -1,5 +1,7 @@
 package fr.unice.polytech.qgl.qdd.ai.sequences.phase1;
 
+import fr.unice.polytech.qgl.qdd.Action;
+import fr.unice.polytech.qgl.qdd.ExplorerLogger;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 
@@ -8,11 +10,16 @@ import fr.unice.polytech.qgl.qdd.navigation.Navigator;
  */
 public class FlyToUnscannedGroundSequence extends FlyToDestinationSequence {
     public FlyToUnscannedGroundSequence(Navigator nav, CheckList checkList) {
-        super(nav, checkList, nav.finder().getRandomUnscannedGroundTile());
+        super(nav, checkList, nav.finder().getNearestUnscannedGroundTile());
     }
 
     @Override
     public boolean completed() {
         return checkList.isAboveGround() || super.completed() ;
+    }
+
+    public Action execute() {
+        ExplorerLogger.getInstance().shortLog("FlyToUnscannedGroundTile");
+        return super.execute();
     }
 }

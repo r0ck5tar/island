@@ -11,8 +11,7 @@ import org.junit.Test;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by hbinluqman on 15/12/2015.
@@ -125,5 +124,27 @@ public class FinderTest {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    @Test
+    public void testLambda() {
+        List<Integer> values = new ArrayList<>();
+
+        values.add(13);
+        values.add(5);
+        values.add(7);
+        values.add(1);
+        values.add(7);
+        values.add(34);
+        values.add(8);
+        values.add(17);
+        values.add(1);
+
+        int minValue = values.get(0);
+
+        //values.re
+
+        //Assert.assertEquals(1, values.size());
+
     }
 }

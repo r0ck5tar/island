@@ -27,19 +27,19 @@ public class ScanSequence extends Sequence {
         counter++;
         //TODO don't call adjacentTile, instead call adjacentTileByAir.
         if(isUnscannedGround(nav.map().currentTile())) {
-            ExplorerLogger.getInstance().log("Scan Sequence " + counter + "-> scan current tile");
+            ExplorerLogger.getInstance().shortLog("Scan Sequence " + counter + "-> scan current tile");
             return scan();
         }
         if(isUnscannedGround(nav.finder().adjacentTileByAir(Direction.FRONT))) {
-            ExplorerLogger.getInstance().log("Scan Sequence " + counter + "-> fly");
+            ExplorerLogger.getInstance().shortLog("Scan Sequence " + counter + "-> fly");
             return fly();
         }
         if(isUnscannedGround(nav.finder().adjacentTileByAir(Direction.RIGHT))) {
-            ExplorerLogger.getInstance().log("Scan Sequence " + counter + "-> head right");
+            ExplorerLogger.getInstance().shortLog("Scan Sequence " + counter + "-> head right");
             return heading(nav.right());
         }
         if(isUnscannedGround(nav.finder().adjacentTileByAir(Direction.LEFT))) {
-            ExplorerLogger.getInstance().log("Scan Sequence " + counter + "-> head left");
+            ExplorerLogger.getInstance().shortLog("Scan Sequence " + counter + "-> head left");
             return  heading(nav.left());
         }
         else{ return scanNearbyUnscannedGround(); }
@@ -64,12 +64,12 @@ public class ScanSequence extends Sequence {
         nearbyTiles.addAll(nav.finder().allTiles(Direction.LEFT, range));
         for(Tile t: nearbyTiles) {
             if(isUnscannedGround(t)) {
-                ExplorerLogger.getInstance().log("Scan Sequence " + counter + "-> scan nearby unscanned ground");
+                ExplorerLogger.getInstance().shortLog("Scan Sequence " + counter + "-> scan nearby unscanned ground");
                 return new FlyToDestinationSequence(nav, checkList, t).execute();
             }
         }
 
-        ExplorerLogger.getInstance().log("Scan Sequence " + counter + "-> fly to random nearby tile");
+        ExplorerLogger.getInstance().shortLog("Scan Sequence " + counter + "-> fly to random nearby tile");
         return new FlyToRandomNearbyTileSequence(nav, checkList).execute();
     }
 }

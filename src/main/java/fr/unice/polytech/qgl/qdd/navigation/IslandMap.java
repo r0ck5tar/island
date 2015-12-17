@@ -264,6 +264,18 @@ public class IslandMap implements TileListener{
         return getSurroundingTiles(coordinates.x, coordinates.y);
     }
 
+    int distanceToTile(Tile destination) {
+        return Math.abs(xDiff(destination)) + Math.abs(yDiff(destination));
+    }
+
+    int yDiff(Tile tile) {
+        return getX(tile) - x();
+    }
+
+    int xDiff(Tile tile) {
+        return getY(tile) - y();
+    }
+
     void setX(int x) {
         currentPosition.x = x;
     }
@@ -294,7 +306,7 @@ public class IslandMap implements TileListener{
 
     Compass direction(Tile reference, Tile destination) {
         int xDiff = tilesToPoints.get(destination).x - tilesToPoints.get(reference).x;
-        int yDiff = tilesToPoints.get(destination).y - tilesToPoints.get(reference).x;
+        int yDiff = tilesToPoints.get(destination).y - tilesToPoints.get(reference).y;
 
         if(Math.abs(yDiff) > Math.abs(xDiff)) {
             if(xDiff < 0) {
@@ -316,6 +328,7 @@ public class IslandMap implements TileListener{
     TileListener methods
     ==================*/
 
+    //TODO: find and fix the bug here
     @Override
     public void typeDiscovered(Tile tile, String previousType, String currentType) {
         switch (currentType){

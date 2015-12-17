@@ -13,6 +13,7 @@ public class QddSimulator {
     private int phase;
     Action action;
     int actionCounter;
+    JSONObject result;
 
     public QddSimulator(String context) {
         explorer = new QddExplorer(context);
@@ -36,6 +37,7 @@ public class QddSimulator {
     }
 
     public void analyseAnswer(JSONObject result) {
+        this.result = result;
         if (result.getString("status").equals("OK"));{
             explorer.decreaseBudget(result.getInt("cost"));
 
@@ -60,7 +62,7 @@ public class QddSimulator {
                 }
             }
 
-            explorerAI.logExplorer(action);
+            explorerAI.logExplorer(action, actionCounter);
         }
     }
 }
