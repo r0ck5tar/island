@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Created by hbinluqman on 15/12/2015.
  */
-public class UpdateMapThroughEchoTest extends IslandMapTest {
+public class UpdateMapThroughEchoTest extends IslandMapTester {
     private static final int WIDTH = 30, HEIGHT = 30, RANGE = 9;
     private static final int SOUTH_BORDER = 1, WEST_BORDER = 1, NORTH_BORDER = 28, EAST_BORDER = 28;
 
@@ -119,5 +119,29 @@ public class UpdateMapThroughEchoTest extends IslandMapTest {
         Assert.assertTrue(getTileMethod(14, 0).isGround());
         Assert.assertTrue(getTileMethod(14, 1).isGround());
         Assert.assertTrue(getTileMethod(14, 2).isGround());
+    }
+
+    @Test
+    public void testEchoGroundEast() {
+        createXByYMap(WIDTH, HEIGHT);
+        setCurrentPositionMethod(WEST_BORDER, SOUTH_BORDER);
+
+        map.updateMapThroughEcho(true, 4, Compass.EAST);
+
+        Assert.assertTrue(getTileMethod(15, 0).isGround());
+        Assert.assertTrue(getTileMethod(15, 1).isGround());
+        Assert.assertTrue(getTileMethod(15, 2).isGround());
+    }
+
+    @Test
+    public void testEchoGroundSouth() {
+        createXByYMap(WIDTH, HEIGHT);
+        setCurrentPositionMethod(EAST_BORDER, NORTH_BORDER);
+
+        map.updateMapThroughEcho(true, 4, Compass.SOUTH);
+
+        Assert.assertTrue(getTileMethod(27, 14).isGround());
+        Assert.assertTrue(getTileMethod(28, 14).isGround());
+        Assert.assertTrue(getTileMethod(29, 14).isGround());
     }
 }

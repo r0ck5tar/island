@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by hbinluqman on 14/12/2015.
  */
-public class GetTileAndGetPointTest extends IslandMapTest {
+public class GetTileAndGetPointTest extends IslandMapTester {
 
     @Test
     public void testCreateTileAndGetTileOnTenByTenMap() {

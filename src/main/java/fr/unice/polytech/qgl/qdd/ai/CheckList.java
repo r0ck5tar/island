@@ -36,7 +36,7 @@ public class CheckList {
         return false;
     }
 
-    public boolean isCloseToBoundary(){
+    public boolean isApproachingBoundary(){
         int buffer = 6;
         switch (nav.front()){
             case NORTH:return nav.map().y() > nav.map().height() - buffer - 1;

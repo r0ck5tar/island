@@ -37,12 +37,4 @@ public class InitialDiscoverySequence extends Sequence {
         }
         return instance;
     }
-
-    public Action goSomewhere() {
-        Action action = null;
-
-        nav.finder().neighbouringTiles();
-
-        return action;
-    }
 }

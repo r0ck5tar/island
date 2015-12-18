@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Created by hbinluqman on 15/12/2015.
  */
-public class GetTilesInDirectionTest extends IslandMapTest {
+public class GetTilesInDirectionTest extends IslandMapTester {
     @Test
     public void testGetTilesInDirectionNorth() {
         createXByYMap(10, 10);

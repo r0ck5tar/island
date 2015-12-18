@@ -5,5 +5,4 @@ package fr.unice.polytech.qgl.qdd.navigation;
  */
 public enum Direction {
     FRONT, LEFT, RIGHT, BACK,
-    BACK_RIGHT, BACK_LEFT
 }

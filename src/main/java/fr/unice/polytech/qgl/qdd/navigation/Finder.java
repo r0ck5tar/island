@@ -92,7 +92,6 @@ public class Finder {
     }
 
     //TODO: Test this method
-
     public Tile getNearestUnscannedGroundTile() {
         List<Tile> unscanned = new ArrayList<>();
         map.getGroundTiles().stream().filter(tile -> tile.isUnscanned()).forEach(tile -> unscanned.add(tile));
@@ -104,6 +103,52 @@ public class Finder {
         return nav.relativeDirection(map.direction(map.currentTile(), tile));
     }
 
+    public Direction relativeDirectionOfTileByAir(Tile tile) {
+        if (nav.front() == Compass.NORTH) {
+            if (map.isVerticallyAligned(tile) && map.yDiff(tile) > 0) {
+                return Direction.FRONT;
+            }
+            else if (map.xDiff(tile) >= 1 || map.x() - 1 < 0) {
+                return Direction.RIGHT;
+            }
+            else{
+                return Direction.LEFT;
+            }
+        }
+        else if (nav.front() == Compass.EAST) {
+            if (map.isHorizontallyAligned(tile) && map.xDiff(tile) > 0) {
+                return Direction.FRONT;
+            }
+            else if (map.yDiff(tile) <= -1 || map.y() + 1 > map.height()) {
+                return Direction.RIGHT;
+            }
+            else {
+                return Direction.LEFT;
+            }
+        }
+        else if (nav.front() == Compass.SOUTH) {
+            if (map.isVerticallyAligned(tile) && map.yDiff(tile) < 0) {
+                return Direction.FRONT;
+            }
+            else if (map.xDiff(tile) >= 1 || map.x() + 1 > map.width()) {
+                return Direction.RIGHT;
+            }
+            else{
+                return Direction.LEFT;
+            }
+        }
+        else {
+            if (map.isHorizontallyAligned(tile) && map.xDiff(tile) < 0) {
+                return Direction.FRONT;
+            }
+            else if (map.yDiff(tile) >= 1 || map.y() - 1 < 0) {
+                return Direction.RIGHT;
+            }
+            else{
+                return Direction.LEFT;
+            }
+        }
+    }
 
     /*=====================================================
     Private and static methods for singleton implementation
@@ -129,30 +174,30 @@ public class Finder {
 
     private Tile frontTileByAir(Compass direction) {
         switch (direction) {
-            case NORTH: return map.getTile(map.x(), map.y() + Move.AIR_DISTANCE);
-            case EAST: return map.getTile(map.x() + Move.AIR_DISTANCE, map.y());
-            case SOUTH: return map.getTile(map.x(), map.y() - Move.AIR_DISTANCE);
-            case WEST:return map.getTile(map.x() - Move.AIR_DISTANCE, map.y());
+            case NORTH: return map.getTile(map.x(), map.y() + 1);
+            case EAST: return map.getTile(map.x() + 1, map.y());
+            case SOUTH: return map.getTile(map.x(), map.y() - 1);
+            case WEST:return map.getTile(map.x() - 1, map.y());
             default: return null;
         }
     }
 
     private Tile rightTileByAir(Compass direction) {
         switch (direction) {
-            case NORTH: return map.getTile(map.x() - Move.AIR_DISTANCE, map.y() + Move.AIR_DISTANCE);
-            case EAST: return map.getTile(map.x() + Move.AIR_DISTANCE, map.y() + Move.AIR_DISTANCE);
-            case SOUTH: return map.getTile(map.x() + Move.AIR_DISTANCE, map.y() - Move.AIR_DISTANCE);
-            case WEST:return map.getTile(map.x() - Move.AIR_DISTANCE, map.y() - Move.AIR_DISTANCE);
+            case NORTH: return map.getTile(map.x() - 1, map.y() + 1);
+            case EAST: return map.getTile(map.x() + 1, map.y() + 1);
+            case SOUTH: return map.getTile(map.x() + 1, map.y() - 1);
+            case WEST:return map.getTile(map.x() - 1, map.y() - 1);
             default: return null;
         }
     }
 
     private Tile leftTileByAir(Compass direction) {
         switch (direction) {
-            case NORTH: return map.getTile(map.x() + Move.AIR_DISTANCE, map.y() + Move.AIR_DISTANCE);
-            case EAST: return map.getTile(map.x() + Move.AIR_DISTANCE, map.y() - Move.AIR_DISTANCE);
-            case SOUTH: return map.getTile(map.x() - Move.AIR_DISTANCE, map.y() - Move.AIR_DISTANCE);
-            case WEST:return map.getTile(map.x() - Move.AIR_DISTANCE, map.y() + Move.AIR_DISTANCE);
+            case NORTH: return map.getTile(map.x() + 1, map.y() + 1);
+            case EAST: return map.getTile(map.x() + 1, map.y() - 1);
+            case SOUTH: return map.getTile(map.x() - 1, map.y() - 1);
+            case WEST:return map.getTile(map.x() - 1, map.y() + 1);
             default: return null;
         }
     }

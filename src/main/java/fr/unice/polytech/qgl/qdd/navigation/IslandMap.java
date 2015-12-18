@@ -269,11 +269,11 @@ public class IslandMap implements TileListener{
     }
 
     int yDiff(Tile tile) {
-        return getX(tile) - x();
+        return getY(tile) - y();
     }
 
     int xDiff(Tile tile) {
-        return getY(tile) - y();
+        return getX(tile) - x();
     }
 
     void setX(int x) {
@@ -324,6 +324,14 @@ public class IslandMap implements TileListener{
         }
     }
 
+    boolean isVerticallyAligned(Tile tile) {
+        return Math.abs(x() - getX(tile)) <= 1;
+    }
+
+    boolean isHorizontallyAligned(Tile tile) {
+        return Math.abs(y() - getY(tile)) <= 1;
+    }
+
     /*==================
     TileListener methods
     ==================*/
@@ -361,23 +369,6 @@ public class IslandMap implements TileListener{
     Point (private class representing coordinates) and private helper methods
     =======================================================================*/
 
-    private static class Point {
-        private int x, y;
-        private Point(int x, int y) {this.x = x; this.y =y;}
-        @Override
-        public boolean equals(Object o) {
-            if (o == null) { return false; }
-            if (!(o instanceof Point)) { return false; }
-            if (((Point)o).x != x) return false;
-            if (((Point)o).y != y) return false;
-            return true;
-        }
-        @Override
-        public int hashCode() {
-            return ((x+1) << 16) + (y+1);
-        }
-    }
-
     private boolean outOfBounds(int x, int y) {
         return x < 0 || x >= width || y < 0 || y>= height;
     }
@@ -385,10 +376,6 @@ public class IslandMap implements TileListener{
     private Point point(int x, int y) {
         return new Point(x, y);
     }
-
-    /*======================================
-    Private helper methods for finding tiles
-     ======================================*/
 
     private Set<Tile> getSurroundingTiles(int xCoordinate, int yCoordinate) {
         Set<Tile> tiles = new HashSet<>();
@@ -400,6 +387,10 @@ public class IslandMap implements TileListener{
         tiles.remove(getTile(xCoordinate, yCoordinate));
         return tiles;
     }
+
+    /*======================================
+    Private helper methods for finding tiles
+     ======================================*/
 
     private Set<Tile> getTilesNorth(Point reference, int range) {
         Set<Tile> tiles = new HashSet<>();
@@ -441,10 +432,6 @@ public class IslandMap implements TileListener{
         return tiles;
     }
 
-    /*====================================
-     Private  methods for initializing map
-     ====================================*/
-
     private void initializeMap() {
         //create all the tiles for the map of size width * height
         for(int x = 0; x < width; x++) {
@@ -478,10 +465,31 @@ public class IslandMap implements TileListener{
         }
     }
 
+    /*====================================
+     Private  methods for initializing map
+     ====================================*/
+
     private void createTile(int x, int y){
         Point coordinates = new Point(x, y);
         Tile tile = new Tile(this);
         pointsToTiles.put(coordinates, tile);
         tilesToPoints.put(tile, coordinates);
+    }
+
+    private static class Point {
+        private int x, y;
+        private Point(int x, int y) {this.x = x; this.y =y;}
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) { return false; }
+            if (!(o instanceof Point)) { return false; }
+            if (((Point)o).x != x) return false;
+            if (((Point)o).y != y) return false;
+            return true;
+        }
+        @Override
+        public int hashCode() {
+            return ((x+1) << 16) + (y+1);
+        }
     }
 }

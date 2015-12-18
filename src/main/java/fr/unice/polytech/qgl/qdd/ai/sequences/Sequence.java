@@ -1,7 +1,6 @@
 package fr.unice.polytech.qgl.qdd.ai.sequences;
 
 import fr.unice.polytech.qgl.qdd.Action;
-import fr.unice.polytech.qgl.qdd.ExplorerLogger;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
 import fr.unice.polytech.qgl.qdd.enums.Resource;
 import fr.unice.polytech.qgl.qdd.navigation.Compass;
@@ -38,7 +37,7 @@ public abstract class Sequence {
     protected Action scan() { return new Action(Action.SCAN); }
 
     protected Action fly() {
-        return checkList.isCloseToBoundary()?  chooseTurningDirection(): new Action(Action.FLY);
+        return checkList.isApproachingBoundary()?  chooseTurningDirection(): new Action(Action.FLY);
     }
 
     protected Action heading(Compass direction){

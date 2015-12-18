@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * Created by hbinluqman on 14/12/2015.
  */
-public class IslandMapTest {
+public class IslandMapTester {
     protected IslandMap map;
 
     /*

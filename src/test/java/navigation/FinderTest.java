@@ -1,9 +1,6 @@
 package navigation;
 
-import fr.unice.polytech.qgl.qdd.navigation.Compass;
-import fr.unice.polytech.qgl.qdd.navigation.IslandMap;
-import fr.unice.polytech.qgl.qdd.navigation.Navigator;
-import fr.unice.polytech.qgl.qdd.navigation.Tile;
+import fr.unice.polytech.qgl.qdd.navigation.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,52 +13,15 @@ import java.util.*;
 /**
  * Created by hbinluqman on 15/12/2015.
  */
-public class FinderTest {
-    protected Navigator nav;
-    protected IslandMap map;
-
-    protected static final int HEIGHT = 18, WIDTH = 18;
-
-    private Method getTileMethod;
-    private Method setFacingDirectionMethod;
-    private Method getXMethod;
-    private Method getYMethod;
-    private Field mapField;
-
+public class FinderTest extends FinderTester{
     @Before
     public void setup() {
-        nav = new Navigator(Compass.NORTH);
-
-        try {
-            setFacingDirectionMethod = Navigator.class.getDeclaredMethod("setFacingDirection", Compass.class);
-            setFacingDirectionMethod.setAccessible(true);
-
-            getTileMethod = IslandMap.class.getDeclaredMethod("getTile", int.class, int.class);
-            getTileMethod.setAccessible(true);
-
-            getXMethod = IslandMap.class.getDeclaredMethod("getX", Tile.class);
-            getXMethod.setAccessible(true);
-
-            getYMethod = IslandMap.class.getDeclaredMethod("getY", Tile.class);
-            getYMethod.setAccessible(true);
-
-            mapField = Navigator.class.getDeclaredField("map");
-            mapField.setAccessible(true);
-
-            map = (IslandMap) mapField.get(nav);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        initializeMap(18, 18, 1, 1);
+        setFacingDirection(Compass.NORTH);
     }
 
     @Test
     public void testGetRandomNearbyTile() {
-        map.initializeMapThroughEcho(Compass.NORTH, HEIGHT/3 - 1);
-        map.initializeMapThroughEcho(Compass.EAST, WIDTH/3 - 1);
 
         Tile currentTile = nav.map().currentTile();
 
@@ -77,74 +37,100 @@ public class FinderTest {
             Assert.assertTrue(getX(t) >= 0 && getX(t) <= 9);
             Assert.assertTrue(getY(t) >= 0 && getY(t) <= 9);
         }
-
-        System.out.print("hello");
-    }
-
-    protected Tile getTileMethod(int x, int y) {
-        Tile tile = null;
-        try {
-            tile =  (Tile)getTileMethod.invoke(map, x, y);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
-        return tile;
-    }
-
-    protected void setFacingDirection(Compass direction) {
-        try {
-            setFacingDirectionMethod.invoke(nav, direction);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
-
-    int getX(Tile tile) {
-        try {
-            return (int) getXMethod.invoke(map, tile);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    int getY(Tile tile) {
-        try {
-            return (int) getYMethod.invoke(map, tile);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return -1;
     }
 
     @Test
-    public void testLambda() {
-        List<Integer> values = new ArrayList<>();
+    public void testRelativeDirectionOfTileByAirFacingNorth() {
+        setPosition(4, 4);
+        setFacingDirection(Compass.NORTH);
 
-        values.add(13);
-        values.add(5);
-        values.add(7);
-        values.add(1);
-        values.add(7);
-        values.add(34);
-        values.add(8);
-        values.add(17);
-        values.add(1);
+        Tile x4y4 = getTile(4, 4);
 
-        int minValue = values.get(0);
+        //sanity check
+        Assert.assertTrue(nav.map().currentTile() == x4y4);
 
-        //values.re
+        /*
+        Tile in front
+         */
+        Assert.assertEquals(Direction.FRONT, nav.finder().relativeDirectionOfTileByAir(getTile(4, 7)));
+        Assert.assertEquals(Direction.FRONT, nav.finder().relativeDirectionOfTileByAir(getTile(5, 8)));
+        Assert.assertEquals(Direction.FRONT, nav.finder().relativeDirectionOfTileByAir(getTile(3, 11)));
+        Assert.assertEquals(Direction.FRONT, nav.finder().relativeDirectionOfTileByAir(getTile(5, 17)));
 
-        //Assert.assertEquals(1, values.size());
+        /*
+        To to the right
+         */
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(6, 8)));
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(7, 4)));
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(7, 6)));
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(6, 6)));
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(7, 17)));
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(17, 13)));
 
+        /*
+        To to the left
+         */
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(2, 5)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(0, 10)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(1, 3)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(2, 17)));
+
+        /*
+        cases where the tile is really behind the drone, but relativeDirection returns right. This happens when:
+            - the tile is not aligned with the line of sight of the drone
+            - AND the tile is located at the back but to the right of the drone.
+            - AND the tile is outside the neighbourhood of the current tile (the drone occupies the square of 3 x 3 tiles
+            around the current tile)
+
+        This is so the drone can turn right, and subsequently reevaluate the relative direction of the tile when it is
+        facing the new direction.
+         */
+
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(5, 2)));
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(5, 1)));
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(5, 0)));
+
+        /*
+        Cases where the tile is really behind the drone, but relativeDirection returns left. This happens when:
+            - the tile is aligned with the line of sight of the drone (directly behind the drone)
+            - OR the tile is located at the back but to the left of the drone.
+            - AND the tile is outside the neighbourhood of the current tile (the drone occupies the square of 3 x 3 tiles
+            around the current tile)
+
+        This is so the drone can turn left, and subsequently reevaluate the relative direction of the tile when it is
+        facing the new direction.
+         */
+
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(4, 2)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(4, 0)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(3, 2)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(3, 1)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(2, 0)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(2, 2)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(0, 0)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(0, 0)));
+
+        /*
+        Untested: relative direction to current tile, relativeDirection to tile in the neighbourhood of current tile.
+        The relative direction is undetermined when the tile is within the neighbourhood of the current tile.
+        When using the relativeDirectionOfTileByAir method to decide whether to fly forward, turn left or turn right,
+        the destinationTile must not be in the the neighbourhood of the current tile.
+         */
+
+        Assert.assertEquals(Direction.FRONT, nav.finder().relativeDirectionOfTileByAir(getTile(3, 5)));
+        Assert.assertEquals(Direction.FRONT, nav.finder().relativeDirectionOfTileByAir(getTile(4, 5))); //directly in front
+        Assert.assertEquals(Direction.FRONT, nav.finder().relativeDirectionOfTileByAir(getTile(5, 5))); //front right
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(3, 4)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(4, 4))); //current tile
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(5, 4)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(3, 3)));
+        Assert.assertEquals(Direction.LEFT, nav.finder().relativeDirectionOfTileByAir(getTile(4, 3)));
+        Assert.assertEquals(Direction.RIGHT, nav.finder().relativeDirectionOfTileByAir(getTile(5, 3)));
+    }
+
+    @Test
+    public void testRelativeDirectionOfTileByAirFacingEast() {
+        setPosition(4, 4);
+        setFacingDirection(Compass.NORTH);
     }
 }

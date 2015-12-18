@@ -90,7 +90,7 @@ public class Navigator {
             this.left = left;
         }
 
-        Compass getDirection(Direction direction) {
+        private Compass getDirection(Direction direction) {
             switch (direction) {
                 case FRONT: return front;
                 case RIGHT: return right;
