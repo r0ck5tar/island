@@ -98,7 +98,7 @@ public class Finder {
     public Tile getNearestUnscannedGroundTile() {
         List<Tile> unscanned = new ArrayList<>();
         map.getGroundTiles().stream().filter(tile -> tile.isUnscanned()).forEach(tile -> unscanned.add(tile));
-        return unscanned.stream().min((tile1, tile2) -> Integer.compare(map.distanceToTile(tile1), map.distanceToTile(tile2))).get();
+        return unscanned.stream().min((tile1, tile2) -> Integer.compare(map.distanceToTile(tile1), map.distanceToTile(tile2))).orElse(getRandomNearbyTile());
     }
 
     public Direction relativeDirectionOfTile(Tile tile) {
