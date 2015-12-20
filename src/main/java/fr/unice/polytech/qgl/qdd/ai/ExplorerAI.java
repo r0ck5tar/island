@@ -82,7 +82,7 @@ public class ExplorerAI {
         else{
             if(!checkList.contractCompleted()) {
                 if(checkList.exploitableResourceFound()) {
-                    return new ExploitSequence(nav, checkList, explorer.getContract().keySet());
+                    return new ExploitSequence(nav, checkList, explorer.getContract(), explorer.getResources());
                 }
                 return new ExploreSequence(nav, checkList);
             }

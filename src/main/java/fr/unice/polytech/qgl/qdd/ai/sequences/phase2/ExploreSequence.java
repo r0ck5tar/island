@@ -20,7 +20,6 @@ public class ExploreSequence extends MoveSequence {
     @Override
     public Action execute() {
         counter++;
-        Tile currentTile = nav.map().currentTile();
         if(isExplorable(nav.map().currentTile())) {
             destinationTile = null;
             return explore(); }
@@ -30,16 +29,19 @@ public class ExploreSequence extends MoveSequence {
                 if(isExplorable(t)) { destinationTile = t; }
             }
         }
+        if (destinationTile == null) {
+            destinationTile = nav.finder().getRandomNearbyTile(15);
+        }
 
         return super.execute();
     }
 
     @Override
     public boolean completed() {
-        return counter>8;
+        return !isExplorable(nav.map().currentTile()) || counter>8;
     }
 
     public boolean isExplorable(Tile tile) {
-        return !tile.isSea() && tile.isUnexplored(); /*&& !tile.isExploited();*/
+        return !tile.isSea() && !tile.isExplored() && !tile.isExploited();
     }
 }

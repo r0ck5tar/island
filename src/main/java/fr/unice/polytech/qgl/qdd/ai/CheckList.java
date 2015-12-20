@@ -16,8 +16,8 @@ public class CheckList {
     private QddExplorer explorer;
 
     //Must discover at least 30% of map for echo coverage to be considered sufficient.
-    private static final float  ECHO_COVERAGE_QUOTA = 20;
-    private static final int MISSION_ABORT_BUDGET_THRESHOLD = 130;
+    private static final float  ECHO_COVERAGE_QUOTA = 30;
+    private static final int MISSION_ABORT_BUDGET_THRESHOLD = 150;
 
     public CheckList(Navigator nav, QddExplorer explorer) {
         this.nav = nav;
@@ -90,7 +90,9 @@ public class CheckList {
     public boolean exploitableResourceFound() {
         for(Resource resource : explorer.getContract().keySet()) {
             if (nav.map().currentTile().hasResource(resource)) {
-                return true;
+                if(explorer.getContract().get(resource) > explorer.getResourceQuantity(resource)) {
+                    return true;
+                }
             }
         }
         return false;

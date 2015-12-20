@@ -65,8 +65,7 @@ public class Finder {
         return tiles;
     }
 
-    public Tile getRandomNearbyTile(){
-        int range = 3;
+    public Tile getRandomNearbyTile(int range) {
         int minX = map.x() - range < 0 ? 0 : (map.x() - range);
         int maxX = (map.x() + range) >= map.getWidth() ? map.getHeight()-1 : (map.x() + range);
         int minY = map.y() - range < 0 ? 0 : (map.y() - range);
@@ -77,9 +76,12 @@ public class Finder {
             randomX = minX + random.nextInt(maxX - minX);
             randomY = minY + random.nextInt(maxY - minY);
         }
-        while (randomX == map.x() && randomY == map.y());
+        while (randomX == map.x() && randomY == map.y() || map.getTile(randomX, randomY) == null);
 
         return map.getTile(randomX, randomY);
+    }
+    public Tile getRandomNearbyTile(){
+        return getRandomNearbyTile(3);
     }
 
     /*

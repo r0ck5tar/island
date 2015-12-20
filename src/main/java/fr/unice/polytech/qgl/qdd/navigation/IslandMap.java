@@ -128,6 +128,7 @@ public class IslandMap implements TileListener{
 
     public void updateMapWithResources(Map<Resource, String> resources) {
         currentTile().addResources(resources);
+        currentTile().setExplored();
     }
 
     public void updateMapAfterExploit(Resource resource) {
@@ -308,18 +309,18 @@ public class IslandMap implements TileListener{
         int xDiff = tilesToPoints.get(destination).x - tilesToPoints.get(reference).x;
         int yDiff = tilesToPoints.get(destination).y - tilesToPoints.get(reference).y;
 
-        if(Math.abs(yDiff) > Math.abs(xDiff)) {
+        if(Math.abs(yDiff) >= Math.abs(xDiff)) {
             if(xDiff < 0) {
                 return Compass.WEST;
             }
-            else {
+            else if(xDiff > 0) {
                 return Compass.EAST;
             }
         }
-        else if (yDiff < 0){
+        if (yDiff < 0){
             return Compass.SOUTH;
         }
-        else{
+        else {
             return Compass.NORTH;
         }
     }

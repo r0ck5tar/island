@@ -92,6 +92,8 @@ public class QddExplorer {
         getMap().updateMapAfterExploit(resource);
         resources.put(resource, resources.containsKey(resource)? resources.get(resource) + amount : amount);
 
+        getMap().currentTile().getResources().remove(resource);
+
         boolean fullyExploited = true;
 
         for(Resource r: getMap().currentTile().getResources().keySet()) {
@@ -155,6 +157,12 @@ public class QddExplorer {
             sb.append("\tCurrent tile type : " + nav.map().currentTile().getType());
             if (nav.map().currentTile().isUnscanned()) {
                 sb.append("\t Unscanned");
+            }
+            if (nav.map().currentTile().isExplored()) {
+                sb.append("\t Explored");
+            }
+            if (nav.map().currentTile().isExploited()) {
+                sb.append("\t Exploited");
             }
         }
         sb.append("\n");

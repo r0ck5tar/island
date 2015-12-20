@@ -15,6 +15,7 @@ import java.util.Map;
 public class Tile {
     static final String UNKNOWN = "UNKNOWN", GROUND = "GROUND", SEA = "SEA";
     private String type = null;
+    private boolean explored = false;
     private boolean exploited = false;
     private List<Biome> biomes = new ArrayList<>();
     private Map<Resource, String> resources = new HashMap<>();
@@ -43,16 +44,8 @@ public class Tile {
 
     public boolean isUnscouted() { return resources.isEmpty(); }
 
-    public boolean isUnexplored() {
-        if(isUnscouted()) {
-            return true;
-        }
-        else {
-            for(Resource r: resources.keySet()) {
-                if (resources.get(r).length() > 0) { return false; }
-            }
-        }
-        return true;
+    public boolean isExplored() {
+        return explored;
     }
 
     public boolean hasCreek() {
@@ -158,6 +151,10 @@ public class Tile {
 
     public void setExploited(boolean exploited) {
         this.exploited = exploited;
+    }
+
+    public void setExplored() {
+        explored = true;
     }
 
     public String toString() {
