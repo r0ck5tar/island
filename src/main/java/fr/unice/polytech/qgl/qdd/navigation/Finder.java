@@ -11,6 +11,9 @@ public class Finder {
     private Navigator nav;
     private Random random;
 
+    private static final int TURNING_BUFFER = Move.AIR_DISTANCE + 1;
+    private static final int BORDER_BUFFER = 2 * Move.AIR_DISTANCE;
+
     public Set<Tile> neighbouringTiles() {
         return map.getSurroundingTiles(map.currentTile());
     }
@@ -103,11 +106,21 @@ public class Finder {
     }
 
     public Direction relativeDirectionOfTileByAir(Tile tile) {
+        int x = map.x(), y = map.y();
+        int xDiff = map.xDiff(tile), yDiff = map.yDiff(tile);
+        boolean verticallyAligned = map.isVerticallyAligned(tile), horizontallyAligned = map.isHorizontallyAligned(tile);
+
         if (nav.front() == Compass.NORTH) {
-            if (map.isVerticallyAligned(tile) && map.yDiff(tile) > 0) {
+            if (verticallyAligned && yDiff > 0 && y < map.height() - BORDER_BUFFER) {
                 return Direction.FRONT;
             }
-            else if (map.xDiff(tile) >= 1 || map.x() - Move.AIR_DISTANCE < 0) {
+            else if (horizontallyAligned && Math.abs(xDiff) <= TURNING_BUFFER) {
+                return Direction.FRONT;
+            }
+            else if (yDiff > TURNING_BUFFER) {
+                return Direction.FRONT;
+            }
+            else if (xDiff >= 1 && x < map.width() - BORDER_BUFFER) {
                 return Direction.RIGHT;
             }
             else{
@@ -115,10 +128,16 @@ public class Finder {
             }
         }
         else if (nav.front() == Compass.EAST) {
-            if (map.isHorizontallyAligned(tile) && map.xDiff(tile) > 0) {
+            if (horizontallyAligned && xDiff > 0 && x < map.width() - BORDER_BUFFER) {
                 return Direction.FRONT;
             }
-            else if (map.yDiff(tile) <= -1 || map.y() + Move.AIR_DISTANCE > map.height()) {
+            else if (verticallyAligned && Math.abs(yDiff) <= TURNING_BUFFER) {
+                return Direction.FRONT;
+            }
+            else if (xDiff > TURNING_BUFFER) {
+                return Direction.FRONT;
+            }
+            else if (yDiff <= -1 && y > BORDER_BUFFER) {
                 return Direction.RIGHT;
             }
             else {
@@ -126,10 +145,16 @@ public class Finder {
             }
         }
         else if (nav.front() == Compass.SOUTH) {
-            if (map.isVerticallyAligned(tile) && map.yDiff(tile) < 0) {
+            if (verticallyAligned && yDiff < 0 && y > BORDER_BUFFER) {
                 return Direction.FRONT;
             }
-            else if (map.xDiff(tile) <= -1 || map.x() + Move.AIR_DISTANCE > map.width()) {
+            else if (horizontallyAligned && Math.abs(xDiff) <= TURNING_BUFFER) {
+                return Direction.FRONT;
+            }
+            else if (yDiff < -TURNING_BUFFER) {
+                return Direction.FRONT;
+            }
+            else if (xDiff <= -1 && x < map.width() - BORDER_BUFFER) {
                 return Direction.RIGHT;
             }
             else{
@@ -137,10 +162,16 @@ public class Finder {
             }
         }
         else {
-            if (map.isHorizontallyAligned(tile) && map.xDiff(tile) < 0) {
+            if (horizontallyAligned && xDiff < 0 && x > BORDER_BUFFER) {
                 return Direction.FRONT;
             }
-            else if (map.yDiff(tile) >= 1 || map.y() - Move.AIR_DISTANCE < 0) {
+            else if (verticallyAligned && Math.abs(yDiff) <= TURNING_BUFFER) {
+                return Direction.FRONT;
+            }
+            else if (xDiff < -TURNING_BUFFER) {
+                return Direction.FRONT;
+            }
+            else if (yDiff >= 1 && y < map.height() - BORDER_BUFFER) {
                 return Direction.RIGHT;
             }
             else{
