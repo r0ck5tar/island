@@ -13,13 +13,15 @@ public class FlyToUnscannedGroundSequence extends FlyToDestinationSequence {
         super(nav, checkList, nav.finder().getNearestUnscannedGroundTile());
     }
 
-    @Override
+    /*@Override
     public boolean completed() {
         return checkList.isAboveGround() || super.completed() ;
-    }
+    }*/
 
     public Action execute() {
-        ExplorerLogger.getInstance().shortLog("FlyToUnscannedGroundTile");
+        ExplorerLogger.shortLog("FlyToUnscannedGroundTile: (" +
+                ExplorerLogger.getX(destinationTile) +
+                ", " + ExplorerLogger.getY(destinationTile) + ")");
         return super.execute();
     }
 }

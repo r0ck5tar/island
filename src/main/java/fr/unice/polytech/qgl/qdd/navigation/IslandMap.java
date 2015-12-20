@@ -442,9 +442,7 @@ public class IslandMap implements TileListener{
 
         //set the tiles at the current position and surrounding the current position as sea tiles
         currentTile().setSea();
-        for(Tile t: getSurroundingTiles(currentTile())) {
-            t.setSea();
-        }
+        getSurroundingTiles(currentTile()).forEach(Tile::setSea);
 
         //set the previously echoed borders as sea tiles.
         int vRangeToBorder = (height - INITIAL_HEIGHT)/3;
@@ -458,10 +456,10 @@ public class IslandMap implements TileListener{
         }
 
         if (x() == 1) {
-            updateMapThroughEcho(false, vRangeToBorder, Compass.EAST);
+            updateMapThroughEcho(false, hRangeToBorder, Compass.EAST);
         }
         else{
-            updateMapThroughEcho(false, vRangeToBorder, Compass.WEST);
+            updateMapThroughEcho(false, hRangeToBorder, Compass.WEST);
         }
     }
 

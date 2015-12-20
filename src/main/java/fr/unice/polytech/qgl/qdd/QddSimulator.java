@@ -12,7 +12,7 @@ public class QddSimulator {
     private ExplorerAI explorerAI;
     private int phase;
     Action action;
-    int actionCounter;
+    public static int actionCounter;
     JSONObject result;
 
     public QddSimulator(String context) {

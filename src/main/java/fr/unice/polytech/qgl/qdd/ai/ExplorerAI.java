@@ -36,7 +36,7 @@ public class ExplorerAI {
 
     public Action computeAerialStrategy() {
         activeSequence = chooseSequenceAerial();
-        ExplorerLogger.getInstance().log("Active sequence: " + activeSequence);
+        ExplorerLogger.log("Active sequence: " + activeSequence);
         return activeSequence.execute();
     }
 
@@ -69,7 +69,7 @@ public class ExplorerAI {
 
     public Action computeTerrestrialStrategy() {
         activeSequence = chooseSequenceTerrestrial();
-        ExplorerLogger.getInstance().log("Active sequence: " + activeSequence);
+        ExplorerLogger.log("Active sequence: " + activeSequence);
         return activeSequence.execute();
     }
 

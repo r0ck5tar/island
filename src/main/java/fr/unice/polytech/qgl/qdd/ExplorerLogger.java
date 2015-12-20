@@ -2,8 +2,11 @@ package fr.unice.polytech.qgl.qdd;
 
 import fr.unice.polytech.qgl.qdd.navigation.IslandMap;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
+import fr.unice.polytech.qgl.qdd.navigation.Tile;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -17,6 +20,8 @@ public class ExplorerLogger {
     private QddExplorer explorer;
     private QddSimulator simulator;
     public Logger infoLogger;
+    private Method getXMethod;
+    private Method getYMethod;
     private static ExplorerLogger instance;
 
     private ExplorerLogger(IslandMap map, Navigator nav, QddExplorer explorer, QddSimulator simulator) {
@@ -33,6 +38,17 @@ public class ExplorerLogger {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            getXMethod = IslandMap.class.getDeclaredMethod("getX", Tile.class);
+            getXMethod.setAccessible(true);
+
+            getYMethod = IslandMap.class.getDeclaredMethod("getY", Tile.class);
+            getYMethod.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void init (QddExplorer explorer, QddSimulator simulator) {
@@ -41,26 +57,44 @@ public class ExplorerLogger {
         }
     }
 
-    public void log(String info) {
+    public static void log(String info) {
         StringBuilder sb = new StringBuilder("\n");
-        sb.append(explorer.toString());
-        sb.append("\nStep: " +simulator.actionCounter + "\t");
-        sb.append(simulator.action==null?"null":simulator.action.toJSON());
-        sb.append("\n" + simulator.result +"\n");
+        sb.append(instance.explorer.toString());
+        sb.append("\nStep: " + instance.simulator.actionCounter + "\t");
+        sb.append(instance.simulator.action==null?"null":instance.simulator.action.toJSON());
+        sb.append("\n" + instance.simulator.result +"\n");
         sb.append(info + "\n\n");
 
-        infoLogger.info(sb.toString());
+        instance.infoLogger.info(sb.toString());
     }
 
-    public static ExplorerLogger getInstance(){
-        return instance;
-    }
-
-    public void shortLog(String info) {
+    public static void shortLog(String info) {
         StringBuilder sb = new StringBuilder();
         sb.append("******************************\n");
-        sb.append("Step: " + simulator.actionCounter + "\t" + info + "\n\n");
+        sb.append("Step: " + instance.simulator.actionCounter + "\t" + info + "\n\n");
 
-        infoLogger.info(sb.toString());
+        instance.infoLogger.info(sb.toString());
+    }
+
+    public static int getX(Tile tile) {
+        try {
+            return (int) instance.getXMethod.invoke(instance.map, tile);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public static int getY(Tile tile) {
+        try {
+            return (int) instance.getYMethod.invoke(instance.map, tile);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

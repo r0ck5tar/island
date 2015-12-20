@@ -151,7 +151,13 @@ public class QddExplorer {
         sb.append("\nResources: ");
         resources.forEach((resource, quantity) -> sb.append(resource + ": " + quantity + "\t"));
         sb.append("\nFacing " + nav.front() + "  Coordinates: (" + getMap().x() + ", " + getMap().y() + ")" );
-        sb.append(nav.map().isInitialized()? "\tCurrent tile type : " + nav.map().currentTile().getType() + "\n" : "\n");
+        if(nav.map().isInitialized()) {
+            sb.append("\tCurrent tile type : " + nav.map().currentTile().getType());
+            if (nav.map().currentTile().isUnscanned()) {
+                sb.append("\t Unscanned");
+            }
+        }
+        sb.append("\n");
         return sb.toString();
     }
 

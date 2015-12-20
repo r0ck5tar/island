@@ -1,6 +1,7 @@
 package fr.unice.polytech.qgl.qdd.ai.sequences.phase1;
 
 import fr.unice.polytech.qgl.qdd.Action;
+import fr.unice.polytech.qgl.qdd.ExplorerLogger;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
 import fr.unice.polytech.qgl.qdd.ai.sequences.Sequence;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
@@ -22,11 +23,11 @@ public class FlyToDestinationSequence extends Sequence {
 
     @Override
     public Action execute() {
-        switch (nav.finder().relativeDirectionOfTile(destinationTile)) {
+        switch (nav.finder().relativeDirectionOfTileByAir(destinationTile)) {
             case FRONT: return fly();
             case RIGHT: return heading(nav.right());
             case LEFT: return heading(nav.left());
-            case BACK: return chooseTurningDirection(destinationTile);
+            //case BACK: return chooseTurningDirection(destinationTile);
         }
         return fly();
     }
@@ -37,8 +38,8 @@ public class FlyToDestinationSequence extends Sequence {
     }
 
     private boolean destinationReached(){
-        if (destinationTile.equals(nav.map().currentTile())
-                || (neighbouringDestinationReached() && destinationOutOfReach()) ){
+        if (destinationTile == nav.map().currentTile()
+                || (neighbouringDestinationReached() || destinationOutOfReach()) ){
             destinationTile = null;
             return true;
         }
@@ -46,7 +47,8 @@ public class FlyToDestinationSequence extends Sequence {
     }
 
     private boolean neighbouringDestinationReached() {
-        return !Collections.disjoint(nav.finder().getSurroundingTiles(destinationTile), nav.finder().neighbouringTiles());
+        return nav.finder().neighbouringTiles().contains(destinationTile);
+        //return !Collections.disjoint(nav.finder().getSurroundingTiles(destinationTile), nav.finder().neighbouringTiles());
     }
 
     //TODO: implement properly

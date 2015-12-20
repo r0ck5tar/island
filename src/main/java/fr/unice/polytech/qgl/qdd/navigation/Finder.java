@@ -95,7 +95,6 @@ public class Finder {
     public Tile getNearestUnscannedGroundTile() {
         List<Tile> unscanned = new ArrayList<>();
         map.getGroundTiles().stream().filter(tile -> tile.isUnscanned()).forEach(tile -> unscanned.add(tile));
-
         return unscanned.stream().min((tile1, tile2) -> Integer.compare(map.distanceToTile(tile1), map.distanceToTile(tile2))).get();
     }
 
@@ -108,7 +107,7 @@ public class Finder {
             if (map.isVerticallyAligned(tile) && map.yDiff(tile) > 0) {
                 return Direction.FRONT;
             }
-            else if (map.xDiff(tile) >= 1 || map.x() - 1 < 0) {
+            else if (map.xDiff(tile) >= 1 || map.x() - Move.AIR_DISTANCE < 0) {
                 return Direction.RIGHT;
             }
             else{
@@ -119,7 +118,7 @@ public class Finder {
             if (map.isHorizontallyAligned(tile) && map.xDiff(tile) > 0) {
                 return Direction.FRONT;
             }
-            else if (map.yDiff(tile) <= -1 || map.y() + 1 > map.height()) {
+            else if (map.yDiff(tile) <= -1 || map.y() + Move.AIR_DISTANCE > map.height()) {
                 return Direction.RIGHT;
             }
             else {
@@ -130,7 +129,7 @@ public class Finder {
             if (map.isVerticallyAligned(tile) && map.yDiff(tile) < 0) {
                 return Direction.FRONT;
             }
-            else if (map.xDiff(tile) >= 1 || map.x() + 1 > map.width()) {
+            else if (map.xDiff(tile) <= -1 || map.x() + Move.AIR_DISTANCE > map.width()) {
                 return Direction.RIGHT;
             }
             else{
@@ -141,7 +140,7 @@ public class Finder {
             if (map.isHorizontallyAligned(tile) && map.xDiff(tile) < 0) {
                 return Direction.FRONT;
             }
-            else if (map.yDiff(tile) >= 1 || map.y() - 1 < 0) {
+            else if (map.yDiff(tile) >= 1 || map.y() - Move.AIR_DISTANCE < 0) {
                 return Direction.RIGHT;
             }
             else{
