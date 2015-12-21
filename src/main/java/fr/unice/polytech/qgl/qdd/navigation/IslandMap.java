@@ -82,8 +82,10 @@ public class IslandMap implements TileListener{
                     tiles.addAll(getTiles(x()-1, y()+1, direction, distance));
                     break;
             }
-            tiles.addAll(getSurroundingTiles(currentTile()));
-            tiles.add(currentTile());
+            if(currentTile().isUnknown()) {
+                tiles.addAll(getSurroundingTiles(currentTile()));
+                tiles.add(currentTile());
+            }
             for(Tile t: tiles) { t.setSea(); }
         }
         //update map with ground detected by echo
@@ -219,7 +221,7 @@ public class IslandMap implements TileListener{
         int range = 0;
         switch (direction) {
             case NORTH: range = height - y() - 1; break;
-            case EAST: range = width - y() - 1; break;
+            case EAST: range = width - x() - 1; break;
             case SOUTH: range = y(); break;
             case WEST: range = x(); break;
         }

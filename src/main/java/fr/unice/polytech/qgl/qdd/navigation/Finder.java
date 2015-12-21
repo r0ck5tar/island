@@ -184,65 +184,56 @@ public class Finder {
     }
 
 
-    public boolean detectShore(Direction direction) {
-        Set<Tile> tiles = map.getTiles(nav.absoluteDirection(direction));
-        Set<Tile> groundTiles = tiles.stream().filter(Tile::isGround).collect(Collectors.toSet());
-        Set<Tile> seaTiles = tiles.stream().filter(Tile::isSea).collect(Collectors.toSet());
-        Set<Tile> unknownTiles = tiles.stream().filter(Tile::isUnknown).collect(Collectors.toSet());
-        int furthestGroundTile, nearestSeaTile;
-
-        //We cannot be sure that there is a shore if we have not detected any ground or sea tiles.
-        if(groundTiles.size() == 0 && seaTiles.size() == 0 || seaTiles.size() == tiles.size()) {
-            return false;
+    public Tile detectShore(Direction direction) {
+        Compass absoluteDirection = nav.absoluteDirection(direction);
+        Set<Tile> tiles = map.getTiles(absoluteDirection);
+        List<Tile> sortedTiles = null;
+        if(absoluteDirection == Compass.NORTH || absoluteDirection == Compass.SOUTH) {
+            sortedTiles = tiles.stream().sorted((tile1, tile2)
+                    -> Integer.compare(Math.abs(map.yDiff(tile1)), Math.abs(map.yDiff(tile2))))
+                    .collect(Collectors.toList());
         }
 
-        switch(nav.absoluteDirection(direction)) {
-            case NORTH:
-                furthestGroundTile = groundTiles.stream().mapToInt(map::getY).max().orElse(-1);
-                nearestSeaTile = seaTiles.stream().mapToInt(map::getY).min().getAsInt();
-
-                if(furthestGroundTile < nearestSeaTile) { return true; }
-
-                if (unknownTiles.stream().mapToInt(map::getY).
-                        filter(distance -> distance > furthestGroundTile).toArray().length > 0) {
-                    return true;
-                }
-                break;
-            case EAST:
-                furthestGroundTile = groundTiles.stream().mapToInt(map::getX).max().getAsInt();
-                nearestSeaTile = seaTiles.stream().mapToInt(map::getX).min().getAsInt();
-
-                if(furthestGroundTile < nearestSeaTile) { return true; }
-
-                if (unknownTiles.stream().mapToInt(map::getX).
-                        filter(distance -> distance > furthestGroundTile).toArray().length > 0) {
-                    return true;
-                }
-                break;
-            case SOUTH:
-                furthestGroundTile = groundTiles.stream().mapToInt(map::getY).min().getAsInt();
-                nearestSeaTile = seaTiles.stream().mapToInt(map::getY).max().getAsInt();
-
-                if(furthestGroundTile > nearestSeaTile) { return true; }
-
-                if (unknownTiles.stream().mapToInt(map::getY).
-                        filter(distance -> distance < furthestGroundTile).toArray().length > 0) {
-                    return true;
-                }
-                break;
-            case WEST:
-                furthestGroundTile = groundTiles.stream().mapToInt(map::getX).min().getAsInt();
-                nearestSeaTile = seaTiles.stream().mapToInt(map::getX).max().getAsInt();
-
-                if(furthestGroundTile > nearestSeaTile) { return true; }
-
-                if (unknownTiles.stream().mapToInt(map::getX).
-                        filter(distance -> distance < furthestGroundTile).toArray().length > 0) {
-                    return true;
-                }
-                break;
+        else {
+            sortedTiles = tiles.stream().sorted((tile1, tile2)
+                    -> Integer.compare(Math.abs(map.xDiff(tile1)), Math.abs(map.xDiff(tile2))))
+                    .collect(Collectors.toList());
         }
-        return false;
+
+        for (int i = 0; i < sortedTiles.size(); i++) {
+            if (sortedTiles.get(i).isGround()) {
+                while (i < sortedTiles.size()) {
+                    i++;
+                    if (sortedTiles.get(i).isSea()) {
+                        return sortedTiles.get(i -1);
+                    }
+                }
+                return null;
+            }
+            else if (sortedTiles.get(i).isUnknown()) {
+                while (++i < sortedTiles.size()) {
+                    if(sortedTiles.get(i).isGround() || sortedTiles.get(i).isSea()) {
+                        return sortedTiles.get(i -1);
+                    }
+                }
+                return null;
+            }
+            else if (sortedTiles.get(i).isSea()) {
+                while (++i < sortedTiles.size()) {
+                    if(sortedTiles.get(i).isGround()) {
+                        while (++i < sortedTiles.size()) {
+                            if(sortedTiles.get(i).isUnknown()) {
+                                return sortedTiles.get(i);
+                            }
+                        }
+                        return null;
+                    }
+                }
+                return null;
+            }
+        }
+
+        return null;
     }
 
     /*=====================================================

@@ -22,8 +22,8 @@ public class DetectShoreTest extends FinderTester {
         nav.map().updateMapThroughEcho(false, 5, Compass.NORTH);
         nav.map().updateMapThroughEcho(false, 5, Compass.EAST);
 
-        Assert.assertFalse(nav.finder().detectShore(Direction.LEFT));
-        Assert.assertFalse(nav.finder().detectShore(Direction.FRONT));
+        Assert.assertNull(nav.finder().detectShore(Direction.LEFT));
+        Assert.assertNull(nav.finder().detectShore(Direction.FRONT));
 
         nav.move().fly();
         nav.map().updateMapThroughEcho(true, 3, Compass.NORTH);
@@ -31,35 +31,48 @@ public class DetectShoreTest extends FinderTester {
         nav.move().fly();
         nav.map().updateMapThroughEcho(true, 2, Compass.NORTH);
 
-        Assert.assertTrue(nav.finder().detectShore(Direction.LEFT));
+        Assert.assertSame(getTile(7, 10), nav.finder().detectShore(Direction.LEFT));
 
         nav.move().fly();
         nav.map().updateMapThroughEcho(true, 2, Compass.NORTH);
 
-        Assert.assertTrue(nav.finder().detectShore(Direction.LEFT));
+        Assert.assertSame(getTile(10, 10), nav.finder().detectShore(Direction.LEFT));
 
         nav.move().fly();
         nav.map().updateMapThroughEcho(true, 1, Compass.NORTH);
 
-        Assert.assertTrue(nav.finder().detectShore(Direction.LEFT));
+        Assert.assertSame(getTile(13, 7), nav.finder().detectShore(Direction.LEFT));
 
         nav.move().turn(Compass.NORTH);
         nav.map().updateMapThroughEcho(false, 5, Compass.WEST);
 
-        Assert.assertFalse(nav.finder().detectShore(Direction.LEFT));
+        Assert.assertNull(nav.finder().detectShore(Direction.LEFT));
 
         nav.move().fly();
         nav.map().updateMapThroughEcho(true, 0, Compass.WEST);
 
-        Assert.assertTrue(nav.finder().detectShore(Direction.LEFT));
+        Assert.assertSame(getTile(13, 7), nav.finder().detectShore(Direction.LEFT));
 
-        nav.move();
+        nav.move().fly();
         nav.map().updateMapThroughEcho(true, 0, Compass.WEST);
 
-        nav.move();
+        nav.move().fly();
         nav.map().updateMapThroughEcho(true, 1, Compass.WEST);
 
-        Assert.assertTrue(nav.finder().detectShore(Direction.LEFT));
+        Assert.assertSame(getTile(10, 13), nav.finder().detectShore(Direction.LEFT));
+
+        nav.move().fly();
+
+        Assert.assertSame(getTile(3, 16), nav.finder().detectShore(Direction.LEFT));
+
+        setPosition(9, 11);
+
+        Assert.assertSame(getTile(13, 11), nav.finder().detectShore(Direction.RIGHT));
+        Assert.assertSame(getTile(6, 11), nav.finder().detectShore(Direction.LEFT));
+
+        setPosition(13, 7);
+        Assert.assertSame(getTile(14, 7), nav.finder().detectShore(Direction.RIGHT));
+        Assert.assertSame(getTile(12, 7), nav.finder().detectShore(Direction.LEFT));
 
     }
 }
