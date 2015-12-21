@@ -1,6 +1,7 @@
 package fr.unice.polytech.qgl.qdd.navigation;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by hbinluqman on 15/12/2015.
@@ -180,6 +181,68 @@ public class Finder {
                 return Direction.LEFT;
             }
         }
+    }
+
+
+    public boolean detectShore(Direction direction) {
+        Set<Tile> tiles = map.getTiles(nav.absoluteDirection(direction));
+        Set<Tile> groundTiles = tiles.stream().filter(Tile::isGround).collect(Collectors.toSet());
+        Set<Tile> seaTiles = tiles.stream().filter(Tile::isSea).collect(Collectors.toSet());
+        Set<Tile> unknownTiles = tiles.stream().filter(Tile::isUnknown).collect(Collectors.toSet());
+        int furthestGroundTile, nearestSeaTile;
+
+        //We cannot be sure that there is a shore if we have not detected any ground or sea tiles.
+        if(groundTiles.size() == 0 && seaTiles.size() == 0) {
+            return false;
+        }
+
+        switch(nav.absoluteDirection(direction)) {
+            case NORTH:
+                furthestGroundTile = groundTiles.stream().mapToInt(map::getY).max().getAsInt();
+                nearestSeaTile = seaTiles.stream().mapToInt(map::getY).min().getAsInt();
+
+                if(furthestGroundTile < nearestSeaTile) { return true; }
+
+                if (unknownTiles.stream().mapToInt(map::getY).
+                        filter(distance -> distance > furthestGroundTile).toArray().length > 0) {
+                    return true;
+                }
+                break;
+            case EAST:
+                furthestGroundTile = groundTiles.stream().mapToInt(map::getX).max().getAsInt();
+                nearestSeaTile = seaTiles.stream().mapToInt(map::getX).min().getAsInt();
+
+                if(furthestGroundTile < nearestSeaTile) { return true; }
+
+                if (unknownTiles.stream().mapToInt(map::getX).
+                        filter(distance -> distance > furthestGroundTile).toArray().length > 0) {
+                    return true;
+                }
+                break;
+            case SOUTH:
+                furthestGroundTile = groundTiles.stream().mapToInt(map::getY).min().getAsInt();
+                nearestSeaTile = seaTiles.stream().mapToInt(map::getY).max().getAsInt();
+
+                if(furthestGroundTile > nearestSeaTile) { return true; }
+
+                if (unknownTiles.stream().mapToInt(map::getY).
+                        filter(distance -> distance < furthestGroundTile).toArray().length > 0) {
+                    return true;
+                }
+                break;
+            case WEST:
+                furthestGroundTile = groundTiles.stream().mapToInt(map::getX).min().getAsInt();
+                nearestSeaTile = seaTiles.stream().mapToInt(map::getX).max().getAsInt();
+
+                if(furthestGroundTile > nearestSeaTile) { return true; }
+
+                if (unknownTiles.stream().mapToInt(map::getX).
+                        filter(distance -> distance < furthestGroundTile).toArray().length > 0) {
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 
     /*=====================================================

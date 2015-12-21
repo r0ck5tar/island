@@ -1,4 +1,4 @@
-package navigation;
+package navigation.navigator;
 
 import fr.unice.polytech.qgl.qdd.navigation.Compass;
 import fr.unice.polytech.qgl.qdd.navigation.Direction;

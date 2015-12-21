@@ -42,8 +42,9 @@ public class ScanSequence extends Sequence {
             ExplorerLogger.shortLog("Scan Sequence " + counter + "-> head left");
             return  heading(nav.left());
         }
-        else{ return scanNearbyUnscannedGround(); }
+        else{ return new FlyToUnscannedGroundSequence(nav, checkList).execute(); }
     }
+
 
     @Override
     public boolean completed() {
@@ -54,26 +55,5 @@ public class ScanSequence extends Sequence {
     private boolean isUnscannedGround(Tile tile) {
         //return tile != null & !tile.isSea() && tile.isUnscanned();
         return tile.isUnscanned();
-    }
-
-    private Action scanNearbyUnscannedGround() {
-        ExplorerLogger.shortLog("Scan Sequence " + counter + "-> scan nearby unscanned ground");
-        return new FlyToUnscannedGroundSequence(nav, checkList).execute();
-        /*int range = 9;
-        Set<Tile> nearbyTiles = new HashSet<>();
-        nearbyTiles.addAll(nav.finder().allTiles(Direction.FRONT, range));
-        nearbyTiles.addAll(nav.finder().allTiles(Direction.RIGHT, range));
-        nearbyTiles.addAll(nav.finder().allTiles(Direction.LEFT, range));
-
-
-        for(Tile t: nearbyTiles) {
-            if(isUnscannedGround(t)) {
-                ExplorerLogger.getInstance().shortLog("Scan Sequence " + counter + "-> scan nearby unscanned ground");
-                return new FlyToDestinationSequence(nav, checkList, t).execute();
-            }
-        }
-
-        ExplorerLogger.getInstance().shortLog("Scan Sequence " + counter + "-> fly to random nearby tile");
-        return new FlyToRandomNearbyTileSequence(nav, checkList).execute();*/
     }
 }

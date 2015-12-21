@@ -1,4 +1,4 @@
-package navigation;
+package navigation.finder;
 
 import fr.unice.polytech.qgl.qdd.navigation.*;
 import org.hamcrest.core.Is;
