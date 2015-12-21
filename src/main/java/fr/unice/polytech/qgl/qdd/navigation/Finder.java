@@ -192,13 +192,13 @@ public class Finder {
         int furthestGroundTile, nearestSeaTile;
 
         //We cannot be sure that there is a shore if we have not detected any ground or sea tiles.
-        if(groundTiles.size() == 0 && seaTiles.size() == 0) {
+        if(groundTiles.size() == 0 && seaTiles.size() == 0 || seaTiles.size() == tiles.size()) {
             return false;
         }
 
         switch(nav.absoluteDirection(direction)) {
             case NORTH:
-                furthestGroundTile = groundTiles.stream().mapToInt(map::getY).max().getAsInt();
+                furthestGroundTile = groundTiles.stream().mapToInt(map::getY).max().orElse(-1);
                 nearestSeaTile = seaTiles.stream().mapToInt(map::getY).min().getAsInt();
 
                 if(furthestGroundTile < nearestSeaTile) { return true; }
