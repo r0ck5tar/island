@@ -6,6 +6,9 @@ import fr.unice.polytech.qgl.qdd.ai.sequences.Sequence;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 
 /**
+ * The land sequence decides which creek to land at depending on the resources available in proximity to the creek and
+ * the resources to be collected to fulfil the contract. The land sequence can deduce the resources available around a
+ * creek based on the type of biomes in the area.
  * Created by Hakim on 12/13/2015.
  */
 public class LandSequence extends Sequence {

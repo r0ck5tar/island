@@ -50,15 +50,11 @@ public class ExplorerAI {
             if(!checkList.isEchoCoverageSufficient()) {
                 return new EchoForGroundSequence(nav, checkList);
             }
-            else if(!checkList.isAboveGround()) {
-                return new FlyToUnscannedGroundSequence(nav, checkList);
-            }
-            else if(!checkList.foundCreek()) {
+            else if(!checkList.foundCreeks()) {
                 return new ScanSequence(nav, checkList);
             }
             else{
-
-                if(checkList.foundCreek()) {
+                if(checkList.foundCreeks()) {
                     return new LandSequence(nav, checkList, explorer.getMen()-1);
                 }
                 //return new FlyToRandomNearbyTileSequence(nav, checkList);

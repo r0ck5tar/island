@@ -25,7 +25,12 @@ public class ScanSequence extends Sequence {
     @Override
     public Action execute() {
         counter++;
-        //TODO don't call adjacentTile, instead call adjacentTileByAir.
+
+        if(isAboveIsland() && nav.map().currentTile().isUnknown()) {
+            ExplorerLogger.shortLog("We are flying above the island!");
+            return scan();
+        }
+
         if(isUnscannedGround(nav.map().currentTile())) {
             ExplorerLogger.shortLog("Scan Sequence " + counter + "-> scan current tile");
             return scan();
@@ -42,7 +47,7 @@ public class ScanSequence extends Sequence {
             ExplorerLogger.shortLog("Scan Sequence " + counter + "-> head left");
             return  heading(nav.left());
         }
-        else{ return new FlyToUnscannedGroundSequence(nav, checkList).execute(); }
+        else{ return new FlyToDestinationSequence(nav, checkList, nav.finder().getNearestUnscannedGroundTile()).execute(); }
     }
 
 
@@ -53,7 +58,15 @@ public class ScanSequence extends Sequence {
     }
 
     private boolean isUnscannedGround(Tile tile) {
-        //return tile != null & !tile.isSea() && tile.isUnscanned();
-        return tile.isUnscanned();
+        return tile.isGround() && tile.isUnscanned();
+        //return tile.isUnscanned();
+    }
+
+    private boolean isAboveIsland() {
+        if(nav.finder().neighbouringTiles().stream().filter(Tile::isSea).toArray().length > 0) {
+            return false;
+        }
+        return (!nav.map().currentTile().isSea() && (nav.finder().detectShore(Direction.FRONT) != null && nav.finder().detectShore(Direction.BACK) != null
+        || nav.finder().detectShore(Direction.LEFT) != null && nav.finder().detectShore(Direction.RIGHT) != null));
     }
 }

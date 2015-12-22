@@ -123,7 +123,7 @@ public class Finder {
             else if (yDiff > TURNING_BUFFER) {
                 return Direction.FRONT;
             }
-            else if (xDiff >= 1 && x < map.width() - BORDER_BUFFER) {
+            else if (xDiff >= 1 && x < map.width() - BORDER_BUFFER || x < BORDER_BUFFER) {
                 return Direction.RIGHT;
             }
             else{
@@ -140,7 +140,7 @@ public class Finder {
             else if (xDiff > TURNING_BUFFER) {
                 return Direction.FRONT;
             }
-            else if (yDiff <= -1 && y > BORDER_BUFFER) {
+            else if (yDiff <= -1 && y > BORDER_BUFFER || y > map.height() - BORDER_BUFFER) {
                 return Direction.RIGHT;
             }
             else {
@@ -157,7 +157,7 @@ public class Finder {
             else if (yDiff < -TURNING_BUFFER) {
                 return Direction.FRONT;
             }
-            else if (xDiff <= -1 && x < map.width() - BORDER_BUFFER) {
+            else if (xDiff <= -1 && x > BORDER_BUFFER || x > map.width() - BORDER_BUFFER) {
                 return Direction.RIGHT;
             }
             else{
@@ -174,7 +174,7 @@ public class Finder {
             else if (xDiff < -TURNING_BUFFER) {
                 return Direction.FRONT;
             }
-            else if (yDiff >= 1 && y < map.height() - BORDER_BUFFER) {
+            else if (yDiff >= 1 && y < map.height() - BORDER_BUFFER || y < BORDER_BUFFER) {
                 return Direction.RIGHT;
             }
             else{
@@ -202,8 +202,7 @@ public class Finder {
 
         for (int i = 0; i < sortedTiles.size(); i++) {
             if (sortedTiles.get(i).isGround()) {
-                while (i < sortedTiles.size()) {
-                    i++;
+                while (++i < sortedTiles.size()) {
                     if (sortedTiles.get(i).isSea()) {
                         return sortedTiles.get(i -1);
                     }

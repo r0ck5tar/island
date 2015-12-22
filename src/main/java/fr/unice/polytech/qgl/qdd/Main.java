@@ -32,10 +32,11 @@ public class Main {
                 //.startingAt(1, 1, "NORTH")     //fails (unsupported starting position)
                 //.startingAt(1, 1, "WEST")      //fails (unsupported starting position)
 
-                .backBefore(7000)
+                .backBefore(7500)
                 .withCrew(15)
-                .collecting(1000, "WOOD")
-                .collecting(300,  "QUARTZ")
+                .collecting(500, "WOOD")
+                .collecting(200, "FISH")
+                .collecting(200,  "QUARTZ")
                 .collecting(10,   "FLOWER")
                 .storingInto("./outputs")
                 .fire();
