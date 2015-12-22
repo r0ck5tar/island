@@ -16,6 +16,7 @@ import java.util.Set;
  */
 public class ScanSequence extends Sequence {
     private int counter;
+    private FlyToDestinationSequence flyToDestinationSequence;
 
     public ScanSequence(Navigator nav, CheckList checkList) {
         super(nav, checkList);
@@ -25,6 +26,12 @@ public class ScanSequence extends Sequence {
     @Override
     public Action execute() {
         counter++;
+
+        if(flyToDestinationSequence !=null && flyToDestinationSequence.completed()) {
+            flyToDestinationSequence = null;
+            return scan();
+        }
+
 
         if(isAboveIsland() && nav.map().currentTile().isUnknown()) {
             ExplorerLogger.shortLog("We are flying above the island!");
@@ -47,7 +54,14 @@ public class ScanSequence extends Sequence {
             ExplorerLogger.shortLog("Scan Sequence " + counter + "-> head left");
             return  heading(nav.left());
         }
-        else{ return new FlyToDestinationSequence(nav, checkList, nav.finder().getNearestUnscannedGroundTile()).execute(); }
+        else{
+            if (flyToDestinationSequence == null) {
+                flyToDestinationSequence = new FlyToDestinationSequence(nav,checkList, nav.finder().getNearestUnscannedGroundTile());
+            }
+            ExplorerLogger.shortLog("Destination: (" + ExplorerLogger.getX(flyToDestinationSequence.destinationTile)
+                    + ", " + ExplorerLogger.getY(flyToDestinationSequence.destinationTile) + ")");
+            return flyToDestinationSequence.execute(); }
+
     }
 
 

@@ -18,8 +18,8 @@ public class Main {
                 //.startingAt(1, 1, "EAST") //works
                 //.startingAt(159, 1, "WEST") //works
                 //.startingAt(159, 1, "SOUTH") //works
-                //.startingAt(1, 159, "NORTH") //works
-                .startingAt(1, 159, "EAST") //works
+                .startingAt(1, 159, "NORTH") //works
+                //.startingAt(1, 159, "EAST") //works
 
                 /*Our explorer is not designed to handle the following eight starting positions. It is also not
                   designed to work with any starting position that is not shown here */
