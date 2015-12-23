@@ -9,4 +9,6 @@ public interface TileListener {
     public void biomeDiscovered(Tile tile);
 
     public void creekDiscovered(Tile tile);
+
+    public void tileExploited(Tile tile);
 }

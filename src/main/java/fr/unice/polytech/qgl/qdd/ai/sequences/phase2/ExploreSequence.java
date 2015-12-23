@@ -2,8 +2,13 @@ package fr.unice.polytech.qgl.qdd.ai.sequences.phase2;
 
 import fr.unice.polytech.qgl.qdd.Action;
 import fr.unice.polytech.qgl.qdd.ai.CheckList;
+import fr.unice.polytech.qgl.qdd.enums.Biome;
+import fr.unice.polytech.qgl.qdd.enums.Resource;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Hakim on 12/13/2015.
@@ -25,12 +30,11 @@ public class ExploreSequence extends MoveSequence {
             return explore(); }
 
         if(destinationTile == null) {
-            for(Tile t: nav.finder().neighbouringTiles()) {
-                if(isExplorable(t)) { destinationTile = t; }
-            }
+            destinationTile = nav.finder().neighbouringTiles().stream().filter(this::isExplorable).findFirst().orElse(null);
         }
         if (destinationTile == null) {
-            destinationTile = nav.finder().getRandomNearbyTile(15);
+            //destinationTile = nav.finder().getRandomNearbyTile(15);
+            destinationTile = nav.finder().getNearestPotentiallyExploitableTile();
         }
 
         return super.execute();
@@ -42,6 +46,15 @@ public class ExploreSequence extends MoveSequence {
     }
 
     public boolean isExplorable(Tile tile) {
-        return !tile.isSea() && !tile.isExplored() && !tile.isExploited();
+        if (!tile.isSea() && !tile.isExplored() && !tile.isExploited()) {
+            if(tile.getBiomes().isEmpty()) {
+                return true;
+            }
+
+            Set<Biome> preferredBiomes = new HashSet<>();
+            checkList.getResourcesToCollect().forEach(resource -> preferredBiomes.addAll(resource.getBiomes()));
+            return tile.getBiomes().stream().filter(preferredBiomes::contains).toArray().length >0;
+        }
+        return false;
     }
 }

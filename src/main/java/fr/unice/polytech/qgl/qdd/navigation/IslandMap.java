@@ -119,10 +119,13 @@ public class IslandMap implements TileListener{
         }
     }
 
-    public void updateMapThroughScan(List<Biome> biomes) {
-        currentTile().addBiomes(biomes);
-        for(Tile t : getSurroundingTiles(currentTile())) {
-            t.addBiomes(biomes);
+    public void updateMapThroughScan(List<Biome> biomes, boolean potentiallyExploitable) {
+        Set<Tile> scannedTiles = getSurroundingTiles(currentTile());
+        scannedTiles.add(currentTile());
+        scannedTiles.forEach(tile -> tile.addBiomes(biomes));
+
+        if(potentiallyExploitable) {
+            potentiallyExploitableTiles.addAll(scannedTiles);
         }
     }
 
@@ -137,6 +140,11 @@ public class IslandMap implements TileListener{
 
     public void updateMapAfterExploit(Resource resource) {
         currentTile().removeResource(resource);
+    }
+
+    public void updatePotentiallyExploitableTiles(Set<Resource> resourcesToCollect) {
+        potentiallyExploitableTiles.removeIf(tile -> !tile.hasOrPotentiallyHasResourcesOfType(resourcesToCollect));
+        System.out.print("updatedPotentiallyExploitableTiles");
     }
 
     /*================================
@@ -309,6 +317,10 @@ public class IslandMap implements TileListener{
         return groundTiles;
     }
 
+    Set<Tile> getPotentiallyExploitableTiles() {
+        return potentiallyExploitableTiles;
+    }
+
     Compass direction(Tile reference, Tile destination) {
         int xDiff = tilesToPoints.get(destination).x - tilesToPoints.get(reference).x;
         int yDiff = tilesToPoints.get(destination).y - tilesToPoints.get(reference).y;
@@ -367,6 +379,11 @@ public class IslandMap implements TileListener{
     @Override
     public void creekDiscovered(Tile tile) {
         creeks.addAll(tile.getCreeks());
+    }
+
+    @Override
+    public void tileExploited(Tile tile) {
+        potentiallyExploitableTiles.remove(tile);
     }
 
 

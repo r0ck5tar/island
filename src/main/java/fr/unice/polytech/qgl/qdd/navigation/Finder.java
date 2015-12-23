@@ -97,6 +97,13 @@ public class Finder {
         }
     }
 
+    public Tile getNearestPotentiallyExploitableTile() {
+        return nav.map().getPotentiallyExploitableTiles().stream()
+                .filter(Tile::isGround)
+                .min((tile1, tile2) -> Integer.compare(map.distanceToTile(tile1), map.distanceToTile(tile2)))
+                .orElse(null);
+    }
+
     //TODO: Test this method
     public Tile getNearestUnscannedGroundTile() {
         List<Tile> unscanned = new ArrayList<>();
@@ -211,7 +218,7 @@ public class Finder {
             }
             else if (sortedTiles.get(i).isUnknown()) {
                 while (++i < sortedTiles.size()) {
-                    if(sortedTiles.get(i).isGround() || sortedTiles.get(i).isSea()) {
+                    if(sortedTiles.get(i).isGround()) {
                         return sortedTiles.get(i -1);
                     }
                 }

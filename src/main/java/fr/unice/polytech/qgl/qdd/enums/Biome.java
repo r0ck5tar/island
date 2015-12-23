@@ -8,6 +8,7 @@ public enum Biome {
 	BEACH,
 	GLACIER,
 	GRASSLAND,
+	LAKE,
 	MANGROVE,
 	OCEAN,
 	SHRUBLAND,

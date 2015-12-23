@@ -3,13 +3,13 @@ package fr.unice.polytech.qgl.qdd;
 import fr.unice.polytech.qgl.qdd.enums.Biome;
 import fr.unice.polytech.qgl.qdd.enums.Resource;
 import fr.unice.polytech.qgl.qdd.navigation.Compass;
-import fr.unice.polytech.qgl.qdd.navigation.Direction;
 import fr.unice.polytech.qgl.qdd.navigation.IslandMap;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by danial on 04/12/15.
@@ -57,7 +57,10 @@ public class QddExplorer {
         for (int i=0; i<biomesJson.length(); i++) {
             biomes.add(Biome.valueOf(biomesJson.getString(i)));
         }
-        getMap().updateMapThroughScan(biomes);
+        Set<Biome> preferredBiomes = new HashSet<>();
+        contract.keySet().forEach(resource -> preferredBiomes.addAll(resource.getBiomes()));
+        boolean potentiallyExploitable = biomes.stream().filter(preferredBiomes::contains).count() > 0;
+        getMap().updateMapThroughScan(biomes, potentiallyExploitable);
         getMap().updateMapWithCreeks(creeks);
     }
 
@@ -103,6 +106,16 @@ public class QddExplorer {
         }
 
         getMap().currentTile().setExploited(fullyExploited);
+
+        if (resources.get(resource) > contract.get(resource)) {
+            getMap().updatePotentiallyExploitableTiles(getResourcesToCollect());
+        }
+    }
+
+    public Set<Resource> getResourcesToCollect() {
+        return contract.keySet().stream()
+                .filter(resource -> contract.get(resource) > getResourceQuantity(resource))
+                .collect(Collectors.toSet());
     }
     
     /*======================

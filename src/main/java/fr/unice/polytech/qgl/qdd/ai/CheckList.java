@@ -6,7 +6,9 @@ import fr.unice.polytech.qgl.qdd.QddExplorer;
 import fr.unice.polytech.qgl.qdd.navigation.Navigator;
 import fr.unice.polytech.qgl.qdd.navigation.Tile;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by danial on 12/12/2015.
@@ -18,7 +20,11 @@ public class CheckList {
     //Must discover at least 30% of map for echo coverage to be considered sufficient.
     private static final float  ECHO_COVERAGE_QUOTA = 35;
     private static final int MISSION_ABORT_BUDGET_THRESHOLD = 200;
-    private static final int CREEK_DISCOVER_QUOTA = 3;
+    private static final int CREEK_DISCOVER_QUOTA = 2;
+
+    public Set<Resource> getResourcesToCollect() {
+        return explorer.getResourcesToCollect();
+    }
 
     public CheckList(Navigator nav, QddExplorer explorer) {
         this.nav = nav;

@@ -4,10 +4,7 @@ package fr.unice.polytech.qgl.qdd.navigation;
 import fr.unice.polytech.qgl.qdd.enums.Biome;
 import fr.unice.polytech.qgl.qdd.enums.Resource;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by danial on 10/12/15.
@@ -48,12 +45,6 @@ public class Tile {
         return explored;
     }
 
-    public boolean hasCreek() {
-        return creeks.size() > 0;
-    }
-
-
-
     public boolean hasResources() {
         return !resources.isEmpty();
     }
@@ -61,7 +52,6 @@ public class Tile {
     public boolean hasResource(Resource resource) {
         return resources.containsKey(resource);
     }
-
 
     public void addResources(Map<Resource, String> resources) {
         for(Resource resource: resources.keySet() ){
@@ -113,22 +103,29 @@ public class Tile {
         if(this.isGround()) {
             //do not change the type
         }
-        else if (!this.isSea() && !this.hasOnlyOceanBiomes(biomes)){
+        else if (!this.isSea() && !this.hasUniqueBiome(Biome.OCEAN)){
             this.setType(Tile.GROUND);
         }
-        else if (this.hasOnlyOceanBiomes(biomes) && this.isUnknown()) {
+        else if (this.hasUniqueBiome(Biome.OCEAN) && this.isUnknown()) {
             this.setType(Tile.SEA);
         }
         listener.biomeDiscovered(this);
     }
 
-    public boolean hasOnlyOceanBiomes(List<Biome> biomes){
-        for (int i = 0; i<biomes.size(); i++) {
-            if (!biomes.get(i).equals(Biome.OCEAN)) {
-                return false;
-            }
+
+    public boolean hasUniqueBiome(Biome uniqueBiomeType) {
+        return biomes.stream().filter(biome -> biome == uniqueBiomeType).count() == biomes.size();
+    }
+
+    public boolean hasOrPotentiallyHasResourcesOfType(Set<Resource> resourcesToCollect) {
+        if (resources.keySet().stream().filter(resourcesToCollect::contains).count() > 0) {
+            return true;
         }
-        return true;
+
+        Set<Biome> preferredBiomes = new HashSet<>();
+        resourcesToCollect.forEach(resource -> preferredBiomes.addAll(resource.getBiomes()));
+
+        return biomes.stream().filter(preferredBiomes::contains).count() > 0;
     }
 
     private void setType(String type) {

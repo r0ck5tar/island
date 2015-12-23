@@ -1,26 +1,28 @@
 package fr.unice.polytech.qgl.qdd.enums;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public enum Resource {
 
-	WOOD("MANGROVE","TEMPERATE_RAIN_FOREST","TEMPERATE_DECIDUOUS_FOREST","TROPICAL_RAIN_FOREST","TROPICAL_SEASONAL_FOREST"),
-	FISH("OCEAN","LAKE"),
-	FLOWER("MANGROVE","ALPINE","GLACIER"),
-	FUR("GRASSLAND","TEMPERATE_RAIN_FOREST","TUNDRA","SHRUBLAND"),
-	QUARTZ("BEACH","TEMPERATE_DESERT"),
-	FRUITS("TROPICAL_RAIN_FOREST","TROPICAL_SEASONAL_FOREST"),
-	SUGAR_CANE("TROPICAL_RAIN_FOREST","TROPICAL_SEASONAL_FOREST"),
-	ORE("TEMPERATE_DESERT","ALPINE","GLACIER","SNOW","TAIGA","TUNDRA");
+	WOOD(Biome.MANGROVE,Biome.TEMPERATE_RAIN_FOREST,Biome.TEMPERATE_DECIDUOUS_FOREST,Biome.TROPICAL_RAIN_FOREST, Biome.TROPICAL_SEASONAL_FOREST),
+	FISH(Biome.OCEAN, Biome.LAKE),
+	FLOWER(Biome.MANGROVE, Biome.ALPINE,Biome.GLACIER),
+	FUR(Biome.GRASSLAND, Biome.TEMPERATE_RAIN_FOREST, Biome.TUNDRA, Biome.SHRUBLAND),
+	QUARTZ(Biome.BEACH, Biome.TEMPERATE_DESERT),
+	FRUITS(Biome.TROPICAL_RAIN_FOREST, Biome.TROPICAL_SEASONAL_FOREST),
+	SUGAR_CANE(Biome.TROPICAL_RAIN_FOREST, Biome.TROPICAL_SEASONAL_FOREST),
+	ORE(Biome.TEMPERATE_DESERT, Biome.ALPINE, Biome.GLACIER, Biome.SNOW, Biome.TAIGA, Biome.TUNDRA);
 
-	private ArrayList<String> biomes = new ArrayList<>();
+	private Set<Biome> biomes = new HashSet<>();
 
-	Resource(String... args){
-		for( String arg : args )
+	Resource(Biome ... args){
+		for( Biome arg : args )
 			biomes.add( arg );
 	}
 
-	public ArrayList<String> getBiomes(){
+	public Set<Biome> getBiomes(){
 		return biomes;
 	}
 }
